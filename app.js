@@ -35,8 +35,8 @@ function main(){
     const url = 'mongodb+srv://' + contents + '@chickencoop.hyaw3.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'; //db
     const mongoClient = new MongoClient(url, { useUnifiedTopology: true });
     mongoClient.connect(function(err) {
-        if (err == null){
-            debugging.chickenScratch("MONGO DB ERROR: " + err, 2);
+        if (err){
+            debugging.chickenScratch(err, 2);
             return;
         }
         const db = mongoClient.db(dbName);
