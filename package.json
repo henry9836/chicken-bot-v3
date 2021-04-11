@@ -1,0 +1,25 @@
+{
+  "name": "chicken-bot",
+  "version": "1.0.0",
+  "description": "A Discord Bot Built By Nitro",
+  "main": "app.js",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "discord.js": "^12.5.3",
+    "mongodb": "^3.6.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/henry9836/chicken-bot.git"
+  },
+  "author": "Henry Oliver",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/henry9836/chicken-bot/issues"
+  },
+  "homepage": "https://github.com/henry9836/chicken-bot#readme"
+}

@@ -1,3 +1,7 @@
+#Secrets
+token
+mongocreds
+
 # Logs
 logs
 *.log
