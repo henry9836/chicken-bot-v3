@@ -21,9 +21,7 @@ client.on('ready', () => {
   
 //When we recieve a message
 client.on('message', msg => {
-    if (msg.content === 'ping') {
-        msg.reply('Pong!');
-    }
+    discordUtil.processMessage(msg);
 });
 
 function main(){

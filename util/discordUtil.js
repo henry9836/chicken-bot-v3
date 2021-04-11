@@ -1,11 +1,9 @@
-
-function test() {
-	console.log('succ');
-}
-
-function auth(){
+//Process Incoming Messages
+function processMessage(msg){
+    if (msg.content === 'ping') {
+        msg.reply('Pong!');
+    }
 }
 
 //Export Functions
-module.exports.test = test;
-module.exports.auth = auth;
+module.exports.processMessage = processMessage;
