@@ -13,6 +13,7 @@ function processMessage(msg){
 
     //Command
     if (msg.content.startsWith('!')){
+        //KICK
         if (msg.content.startsWith('!kick')){
             //Kick the mentioned user
             const punishedUser = msg.mentions.users.first();
@@ -21,6 +22,7 @@ function processMessage(msg){
             if (punishedUser){
                 //Kick the member
                 const punishedMember = msg.guild.member(punishedUser);
+                if (punishedMember){
                 punishedMember
                     .kick("Testing")
                     .then(() => {
@@ -30,11 +32,45 @@ function processMessage(msg){
                         msg.reply('I was unable to kick the member');
                         debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
                     });
-                
+                }
+                //User doesn't exist
+                else{
+                    msg.reply("That user does not exist");
+                }
             }
             //User doesn't exist
             else{
-                msg.reply("That user does not exist");
+                msg.reply("You didn't mention a user to kick!");
+            }
+        }
+
+        //BAN
+        else if (msg.content.startsWith('!ban')){
+            //Kick the mentioned user
+            const punishedUser = msg.mentions.users.first();
+
+            //User exists
+            if (punishedUser){
+                //Kick the member
+                const punishedMember = msg.guild.member(punishedUser);
+                if (punishedMember){
+                    punishedMember
+                        .ban({reason: "Testing"})
+                        .then(() => {
+                            msg.reply(`Successfully banned ${punishedUser.tag}`)
+                        })
+                        .catch(err => {
+                            msg.reply('I was unable to ban the member');
+                            debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
+                        });
+                }
+                //User doesn't exist
+                else{
+                    msg.reply("That user does not exist");
+                }
+            }
+            else{
+                msg.reply("You didn't mention a user to ban!");
             }
         }
     }
