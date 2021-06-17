@@ -1,12 +1,15 @@
-console.log("Chicken-Bot 3.0 is starting...")
-console.log("Loading Modules...")
+console.log("[ Chicken-Bot 3.0 is starting... ]")
+console.log("[+] Loading Modules...")
 
-const debugging = require("./util/debugging.js");
-const discordUtil = require("./util/discordUtil.js");
 const fs = require('fs');
 const colors = require('colors');
 const Discord = require('discord.js');
 const MongoClient = require('mongodb').MongoClient;
+const { exit } = require("process");
+
+const debugging = require("./util/debugging.js");
+const discordUtil = require("./util/discordUtil.js");
+
 
 const client = new Discord.Client();
 const dbName = 'chickenbot';
@@ -29,8 +32,16 @@ function main(){
     //Connect to Database
     debugging.chickenScratch("Connecting To MongoDB");
 
-    var contents = fs.readFileSync('./mongocreds', 'utf8');
-    const url = 'mongodb+srv://' + contents + '@chickencoop.hyaw3.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'; //db
+    //Database Credentials
+    var databaseCredentials;
+    try {
+        databaseCredentials = fs.readFileSync('./mongocreds', 'utf8');
+    } catch (err) {
+        debugging.chickenScratch('CANNOT LOAD/FIND <mongocreds> FILE, PLEASE CREATE ONE AND CHECK READING PERMISSIONS', debugging.DEBUGLVLS.FATAL);
+        exit();
+    }
+
+    const url = 'mongodb+srv://' + databaseCredentials; //db
     const mongoClient = new MongoClient(url, { useUnifiedTopology: true });
     mongoClient.connect(function(err) {
         if (err){
@@ -43,12 +54,19 @@ function main(){
 
     //Connect To Discord API
     debugging.chickenScratch("Authenticating With Discord...")
-	contents = fs.readFileSync('./token', 'utf8');
-	client.login(contents).then(val =>{
+    //Database Credentials
+    var discordToken;
+    try {
+        discordToken = fs.readFileSync('./token', 'utf8');
+    } catch (err) {
+        debugging.chickenScratch('CANNOT LOAD/FIND <token> FILE, PLEASE CREATE ONE AND CHECK READING PERMISSIONS', debugging.DEBUGLVLS.FATAL);
+        exit();
+    }
+	client.login(discordToken).then(val =>{
         debugging.chickenScratch("Authenticated Successfully With Discord")
     }).catch(err =>{
-        debugging.chickenScratch(err, 2);
-        return;
+        debugging.chickenScratch(err, debugging.DEBUGLVLS.FATAL);
+        exit();
     });
     
 
