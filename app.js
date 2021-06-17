@@ -27,6 +27,13 @@ client.on('message', msg => {
     discordUtil.processMessage(msg);
 });
 
+//When someone joins
+client.on('guildMemberAdd', member => {
+    discordUtil.welcomeMember(member);
+});
+  
+
+
 function main(){
 
     //Connect to Database
@@ -54,7 +61,7 @@ function main(){
 
     //Connect To Discord API
     debugging.chickenScratch("Authenticating With Discord...")
-    //Database Credentials
+    //Discord Token
     var discordToken;
     try {
         discordToken = fs.readFileSync('./token', 'utf8');
@@ -62,6 +69,8 @@ function main(){
         debugging.chickenScratch('CANNOT LOAD/FIND <token> FILE, PLEASE CREATE ONE AND CHECK READING PERMISSIONS', debugging.DEBUGLVLS.FATAL);
         exit();
     }
+
+    //Login
 	client.login(discordToken).then(val =>{
         debugging.chickenScratch("Authenticated Successfully With Discord")
     }).catch(err =>{
