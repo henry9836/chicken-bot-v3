@@ -1,4 +1,5 @@
 const debugging = require("./debugging.js");
+const botConfig = require('.././config.json');
 
 //Process Incoming Messages
 function processMessage(msg){
@@ -6,15 +7,15 @@ function processMessage(msg){
     // Ignore messages that aren't from a guild
     if (!msg.guild) return;
 
-    if (msg.content === 'ping') {
-        msg.reply('Pong!');
-        return;
-    }
-
     //Command
-    if (msg.content.startsWith('!')){
+    if (msg.content.startsWith(botConfig.prefix)){
+        //Ping
+        if (msg.content.startsWith(`${botConfig.prefix}ping`) || msg.content.startsWith(`${botConfig.prefix}echo`)){
+            msg.channel.send('Pong!');
+            return;
+        }
         //KICK
-        if (msg.content.startsWith('!kick')){
+        else if (msg.content.startsWith(`${botConfig.prefix}kick `)){
             //Kick the mentioned user
             const punishedUser = msg.mentions.users.first();
 
@@ -45,7 +46,7 @@ function processMessage(msg){
         }
 
         //BAN
-        else if (msg.content.startsWith('!ban')){
+        else if (msg.content.startsWith(`${botConfig.prefix}ban `)){
             //Kick the mentioned user
             const punishedUser = msg.mentions.users.first();
 
@@ -74,7 +75,6 @@ function processMessage(msg){
             }
         }
     }
-
 }
 
 function welcomeMember(member){

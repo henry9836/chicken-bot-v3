@@ -1,6 +1,7 @@
 #Secrets
 token
 mongocreds
+config.json
 
 # Logs
 logs

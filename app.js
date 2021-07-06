@@ -3,6 +3,7 @@ console.log("[+] Loading Modules...")
 
 const fs = require('fs');
 const colors = require('colors');
+const botConfig = require('./config.json');
 const Discord = require('discord.js');
 const MongoClient = require('mongodb').MongoClient;
 const { exit } = require("process");
@@ -40,16 +41,7 @@ function main(){
     debugging.chickenScratch("Connecting To MongoDB");
 
     //Database Credentials
-    var databaseCredentials;
-    try {
-        databaseCredentials = fs.readFileSync('./mongocreds', 'utf8');
-    } catch (err) {
-        debugging.chickenScratch('CANNOT LOAD/FIND <mongocreds> FILE, PLEASE CREATE ONE AND CHECK READING PERMISSIONS', debugging.DEBUGLVLS.FATAL);
-        exit();
-    }
-
-    const url = 'mongodb+srv://' + databaseCredentials; //db
-    const mongoClient = new MongoClient(url, { useUnifiedTopology: true });
+    const mongoClient = new MongoClient(botConfig.mongocreds, { useUnifiedTopology: true });
     mongoClient.connect(function(err) {
         if (err){
             debugging.chickenScratch(err, 2);
@@ -61,23 +53,11 @@ function main(){
 
     //Connect To Discord API
     debugging.chickenScratch("Authenticating With Discord...")
-    //Discord Token
-    var discordToken;
-    try {
-        discordToken = fs.readFileSync('./token', 'utf8');
-    } catch (err) {
-        debugging.chickenScratch('CANNOT LOAD/FIND <token> FILE, PLEASE CREATE ONE AND CHECK READING PERMISSIONS', debugging.DEBUGLVLS.FATAL);
-        exit();
-    }
-
-    //Login
-	client.login(discordToken).then(val =>{
+    //Login With Discord Token
+	client.login(botConfig.token).then(val =>{
         debugging.chickenScratch("Authenticated Successfully With Discord")
     }).catch(err =>{
         debugging.chickenScratch(err, debugging.DEBUGLVLS.FATAL);
         exit();
     });
-    
-
-
 }
