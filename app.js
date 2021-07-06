@@ -53,7 +53,7 @@ function main(){
     mongoClient.connect(function(err) {
         if (err){
             debugging.chickenScratch(err, 2);
-            return;
+            exit(9);
         }
         const db = mongoClient.db(dbName);
         debugging.chickenScratch("Connected To Database!");
