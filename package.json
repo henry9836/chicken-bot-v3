@@ -8,7 +8,8 @@
     "discord.js": "^12.5.3",
     "fs": "0.0.1-security",
     "mongodb": "^3.6.9",
-    "process": "^0.11.10"
+    "process": "^0.11.10",
+    "semver": "^7.3.5"
   },
   "devDependencies": {},
   "scripts": {

@@ -7,6 +7,7 @@ const botConfig = require('./config.json');
 const Discord = require('discord.js');
 const MongoClient = require('mongodb').MongoClient;
 const { exit } = require("process");
+const semver = require('semver')
 
 const debugging = require("./util/debugging.js");
 const discordUtil = require("./util/discordUtil.js");
@@ -36,6 +37,14 @@ client.on('guildMemberAdd', member => {
 
 
 function main(){
+    //Check node verison
+    if (semver.gte(process.version, '12.0.0')) {
+        debugging.chickenScratch(process.version);
+    }
+    else{
+        //Bad Node Verison Certain discord.js calls are not supported :(
+        debugging.chickenScratch(`DETECTED UNSUPPORTED NODE VERSION: ${process.version}, THIS CAN CAUSE INSTABILTY AND CRASHES. PLEASE UPDATE TO NODE V12`, debugging.DEBUGLVLS.WARN);
+    }
 
     //Connect to Database
     debugging.chickenScratch("Connecting To MongoDB");
@@ -44,7 +53,7 @@ function main(){
     const mongoClient = new MongoClient(botConfig.mongocreds, { useUnifiedTopology: true });
     mongoClient.connect(function(err) {
         if (err){
-            debugging.chickenScratch(err, 2);
+            debugging.chickenScratch(err, debugging.DEBUGLVLS.FATAL);
             exit(9);
         }
         const db = mongoClient.db(dbName);

@@ -1,5 +1,6 @@
 const debugging = require("./debugging.js");
 const botConfig = require('.././config.json');
+const { MessageEmbed, Message } = require("discord.js");
 
 //Process Incoming Messages
 function processMessage(msg){
@@ -7,12 +8,34 @@ function processMessage(msg){
     // Ignore messages that aren't from a guild
     if (!msg.guild) return;
 
+    //Get args for the message
+    const args = msg.content.slice(botConfig.prefix.length).trim().split(' ');
+
     //Command
     if (msg.content.startsWith(botConfig.prefix)){
+
+        //ADMIN COMMANDS
+
         //Ping
         if (msg.content.startsWith(`${botConfig.prefix}ping`) || msg.content.startsWith(`${botConfig.prefix}echo`)){
             msg.channel.send('Pong!');
             return;
+        }
+        //PRUNE
+        else if (msg.content.startsWith(`${botConfig.prefix}prune`)){
+            let deleteNum = parseInt(args[1]);
+
+            if (isNaN(deleteNum)) {
+                return msg.reply("You didn't supply an amount to prune");
+            }
+            else {
+                msg.channel
+                .bulkDelete(deleteNum, true)
+                .catch(err=>{
+                    msg.reply(`${err}`);
+                    debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
+                })
+            }
         }
         //KICK
         else if (msg.content.startsWith(`${botConfig.prefix}kick `)){
@@ -30,7 +53,7 @@ function processMessage(msg){
                         msg.reply(`Successfully kicked ${punishedUser.tag}`)
                     })
                     .catch(err => {
-                        msg.reply('I was unable to kick the member');
+                        msg.reply(`I was unable to kick ${punishedUser.tag}`);
                         debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
                     });
                 }
@@ -44,7 +67,6 @@ function processMessage(msg){
                 msg.reply("You didn't mention a user to kick!");
             }
         }
-
         //BAN
         else if (msg.content.startsWith(`${botConfig.prefix}ban `)){
             //Kick the mentioned user
@@ -74,6 +96,36 @@ function processMessage(msg){
                 msg.reply("You didn't mention a user to ban!");
             }
         }
+
+        //SAFE
+        //Avatar grabber
+        else if (msg.content.startsWith(`${botConfig.prefix}avatar`)){
+            //No users supplied just grab author info
+            if (!msg.mentions.users.size){
+                //Create an embed message
+                const embed = new MessageEmbed()
+                    .setTitle(`${msg.author.username}`)
+                    .setImage(`${msg.author.displayAvatarURL({format: 'png', dynamic: true})}`);
+
+                return msg.reply(embed);
+            }
+            //Return a list of users
+            const listOfAvatars = msg.mentions.users.map(user =>{
+                const embed = new MessageEmbed()
+                    .setTitle(`${user.username}`)
+                    .setImage(`${user.displayAvatarURL({format: 'png', dynamic: true})}`);
+
+                msg.reply(embed);
+            });
+        }
+
+        //Server info
+        else if (msg.content.startsWith(`${botConfig.prefix}serverinfo`)){
+            msg.channel.send(`${msg.guild.bannerUrl}\`\`\` 
+            ${msg.guild.name}\n Total members: ${msg.guild.memberCount}\n Created At: ${msg.guild.createdAt}\n 
+            Region: ${msg.guild.region}\n Current Boost Count: ${msg.guild.premiumSubscriptionCount} \`\`\``);
+        }
+
     }
 }
 
