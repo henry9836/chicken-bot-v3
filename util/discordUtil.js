@@ -7,12 +7,10 @@ const { MessageEmbed, Message } = require("discord.js");
 USERMOD = {
     MAKEADMIN : 0,
     MAKEMOD : 1,
-    MAKEDEV : 2,
-    REMOVEADMIN : 3,
-    REMOVEMOD : 4,
-    REMOVEDEV : 5,
-    BAN : 6,
-    KICK : 7
+    REMOVEADMIN : 2,
+    REMOVEMOD : 3,
+    BAN : 4,
+    KICK : 5
 }
 
 //Updates the config file via discord command
@@ -30,13 +28,6 @@ function saveConfig(){
     });
 }
 
-//Update the config to have new infomation
-function updateConfig(data){
-    debugging.chickenScratch(botConfig.data);
-    botConfig.data = data;
-    saveConfig();
-}
-
 function isOwner(msg){
     return (msg.guild.ownerID === msg.author.id);
 }
@@ -47,15 +38,25 @@ function isAdmin(msg){
         return true;
     }
     //Has admin role
+    if (botConfig.adminRoleID){
+        
+    }
+
 
     return false;
 }
 
-function isCurator(msg){
-    return false;
-}
+function isMod(msg){
+    //If we are an admin or above the server
+    if (isAdmin(msg)){
+        return true;
+    }
 
-function isDeveloper(msg){
+    //Has mod role
+    if (botConfig.modRoleID){
+        
+    }
+
     return false;
 }
 
@@ -64,6 +65,7 @@ function effectMember(member, msg, mod){
     debugging.chickenScratch(member.user.tag);
     const user = member.user;
     if (member){
+        //Bans
         if (mod === USERMOD.BAN){
             member
                 .ban("Testing")
@@ -75,6 +77,7 @@ function effectMember(member, msg, mod){
                     return msg.reply(`I was unable to ban ${user.tag}`);
                 });
         }
+        //Kick
         else if (mod === USERMOD.KICK){
             member
                 .kick("Testing")
@@ -86,8 +89,53 @@ function effectMember(member, msg, mod){
                     return msg.reply(`I was unable to kick ${user.tag}`);
                 });
         }
+        //Assign Admin
+        else if (mod == USERMOD.MAKEADMIN){
+            if (botConfig.adminRoleID){
+                member.roles.add(botConfig.adminRoleID);
+                var welcome = botConfig.welcometoAdmin;
+                welcome = welcome.replace("<user>", `<@${user.id}>`);
+                return msg.channel.send(welcome);
+            }
+            else{
+                return msg.reply("Admin role un-assigned in config");
+            }
+        }
+        //Assign Mod
+        else if (mod == USERMOD.MAKEMOD){
+            if (botConfig.modRoleID){
+                member.roles.add(botConfig.modRoleID);
+                var welcome = botConfig.welcometoMod;
+                welcome = welcome.replace("<user>", `<@${user.id}>`);
+                return msg.channel.send(welcome);
+            }
+            else{
+                return msg.reply("Mod role un-assigned in config");
+            }
+        }
+        //Remove Admin
+        else if (mod == USERMOD.REMOVEADMIN){
+            if (botConfig.adminRoleID){
+                member.roles.remove(botConfig.adminRoleID);
+                return msg.reply(`Removed ${user.tag}'s Admin Role`);
+            }
+            else{
+                return msg.reply("Admin role un-assigned in config");
+            }
+        }
+        //Remove Mod
+        else if (mod == USERMOD.REMOVEMOD){
+            if (botConfig.modRoleID){
+                member.roles.remove(botConfig.modRoleID);
+                return msg.reply(`Removed ${user.tag}'s Mod Role`);
+            }
+            else{
+                return msg.reply("Mod role un-assigned in config");
+            }
+        }
+        //Assign Dev
         else{
-            return msg.reply("I didn't understand the command");
+            return msg.reply("ERROR CODE 500");
         }
     }
     else{
@@ -98,9 +146,7 @@ function effectMember(member, msg, mod){
 //Process Incoming Messages
 function processMessage(msg){
 
-    var ffff = "1";
     e6.e6Echo();
-    updateConfig(ffff);
 
     // Ignore messages that aren't from a guild????
     if (!msg.guild) return;
@@ -111,19 +157,83 @@ function processMessage(msg){
     //Commands
     if (msg.content.startsWith(botConfig.prefix)){
 
-        //If we are an admin
-        debugging.chickenScratch(isAdmin(msg));
-
         //OWNER COMMANDS
         if (isOwner(msg)){
             //Add an admin
-            if (msg.content.startsWith(`${botConfig.prefix}make-admin `)){
-
+            if (msg.content.startsWith(`${botConfig.prefix}add-admin`)){
+                return effectMember(msg.guild.member(msg.mentions.users.first()), msg, USERMOD.MAKEADMIN);
             }
+            //Remove an admin
+            else if (msg.content.startsWith(`${botConfig.prefix}remove-admin`)){
+                return effectMember(msg.guild.member(msg.mentions.users.first()), msg, USERMOD.REMOVEADMIN);
+            }
+
+
+            //OWNER CONFIG
+            //Assign Admin Role
+            else if (msg.content.startsWith(`${botConfig.prefix}assign-admin-role`)){
+                if (args[1]){
+                    //Validate role exists
+                    msg.guild.roles.fetch(args[1])
+                        .then(role => {
+                            if (role !== null){
+                                botConfig.adminRoleID = role.id;
+                                saveConfig();
+                                return msg.reply(`Assigned ${role} as admin role`);
+                            }
+                            else {
+                                return msg.reply("Role ID doesn't exist"); 
+                            }
+                        })
+                        .catch(err => {
+                            return msg.reply(err);
+                        })
+                }
+                else{
+                    return msg.reply("You must supply a role id");
+                }
+                return;
+            }
+            //Assign Mod Role
+            else if (msg.content.startsWith(`${botConfig.prefix}assign-mod-role`)){
+                if (args[1]){
+                    //Validate role exists
+                    msg.guild.roles.fetch(args[1])
+                        .then(role => {
+                            if (role !== null){
+                                botConfig.modRoleID = role.id;
+                                saveConfig();
+                                return msg.reply(`Assigned ${role} as mod role`);
+                            }
+                            else {
+                                return msg.reply("Role ID doesn't exist"); 
+                            }role
+                        })
+                        .catch(err => {
+                            return msg.reply(err);
+                        })
+                }
+                else{
+                    return msg.reply("You must supply a role id");
+                }
+                return;
+            }
+            
         }
 
         //ADMIN COMMANDS
         if (isAdmin(msg)){
+            //Assign Mod Role
+            if (msg.content.startsWith(`${botConfig.prefix}add-mod`)){
+                return effectMember(msg.guild.member(msg.mentions.users.first()), msg, USERMOD.MAKEMOD);
+            }
+            //Remove a mod
+            else if (msg.content.startsWith(`${botConfig.prefix}remove-mod`)){
+                return effectMember(msg.guild.member(msg.mentions.users.first()), msg, USERMOD.REMOVEMOD);
+            }
+        }
+
+        if (isMod(msg)){
             //PRUNE
             if (msg.content.startsWith(`${botConfig.prefix}prune`)){
                 let deleteNum = parseInt(args[1]);
@@ -138,16 +248,17 @@ function processMessage(msg){
                         debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
                         return msg.reply(`${err}`);
                     })
+                    return;
                 }
             }
             //KICK
-            else if (msg.content.startsWith(`${botConfig.prefix}kick `)){
+            else if (msg.content.startsWith(`${botConfig.prefix}kick`)){
                 //Kick the mentioned user
                 const punishedUser = msg.mentions.users.first();
                 return effectMember(msg.guild.member(punishedUser), msg, USERMOD.KICK);
             }
             //BAN
-            else if (msg.content.startsWith(`${botConfig.prefix}ban `)){
+            else if (msg.content.startsWith(`${botConfig.prefix}ban`)){
                 const punishedUser = msg.mentions.users.first();
                 return effectMember(msg.guild.member(punishedUser), msg, USERMOD.BAN);
             }
