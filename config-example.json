@@ -1,5 +1,6 @@
 {
 	"prefix": "!",
 	"token": "your token here",
-    "mongocreds" : "mongosrv connection infomation here"
+    "mongocreds" : "mongosrv connection infomation here",
+	"eAPI" : "API KEY"
 }

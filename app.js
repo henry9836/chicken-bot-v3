@@ -21,7 +21,7 @@ main();
 
 //When the discord client is ready
 client.on('ready', () => {
-    console.log(`Logged in as ${client.user.tag}!`);
+    debugging.chickenScratch(`Logged in as ${client.user.tag}!`);
 });
   
 //When we recieve a message
