@@ -7,11 +7,11 @@ const botConfig = require('./config.json');
 const Discord = require('discord.js');
 const MongoClient = require('mongodb').MongoClient;
 const { exit } = require("process");
-const semver = require('semver')
+const semver = require('semver');
 
 const debugging = require("./util/debugging.js");
 const discordUtil = require("./util/discordUtil.js");
-
+const e6 = require("./util/e6.js");
 
 const client = new Discord.Client();
 const dbName = 'chickenbot';
@@ -59,6 +59,9 @@ function main(){
         const db = mongoClient.db(dbName);
         debugging.chickenScratch("Connected To Database!");
     });
+
+    //Connect To E6
+    e6.initE6();
 
     //Connect To Discord API
     debugging.chickenScratch("Authenticating With Discord...")

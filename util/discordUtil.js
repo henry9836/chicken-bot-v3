@@ -2,7 +2,7 @@ const fs = require('fs');
 const debugging = require("./debugging.js");
 const botConfig = require('.././config.json');
 const e6 = require('./e6.js');
-const { MessageEmbed, Message } = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 
 USERMOD = {
     MAKEADMIN : 0,
@@ -146,8 +146,6 @@ function effectMember(member, msg, mod){
 //Process Incoming Messages
 function processMessage(msg){
 
-    e6.e6Echo();
-
     // Ignore messages that aren't from a guild????
     if (!msg.guild) return;
 
@@ -157,7 +155,9 @@ function processMessage(msg){
     //Commands
     if (msg.content.startsWith(botConfig.prefix)){
 
-        //OWNER COMMANDS
+        ///==================================
+        //OWNER LEVEL
+        ///==================================
         if (isOwner(msg)){
             //Add an admin
             if (msg.content.startsWith(`${botConfig.prefix}add-admin`)){
@@ -221,7 +221,9 @@ function processMessage(msg){
             
         }
 
-        //ADMIN COMMANDS
+        ///==================================
+        //ADMIN LEVEL
+        ///==================================
         if (isAdmin(msg)){
             //Assign Mod Role
             if (msg.content.startsWith(`${botConfig.prefix}add-mod`)){
@@ -231,8 +233,19 @@ function processMessage(msg){
             else if (msg.content.startsWith(`${botConfig.prefix}remove-mod`)){
                 return effectMember(msg.guild.member(msg.mentions.users.first()), msg, USERMOD.REMOVEMOD);
             }
+
+            //----
+            //E6
+            //----
+            else if (msg.content.startsWith(`${botConfig.prefix}reset-tags`)){
+                e6.clearTags();
+                return msg.reply("Done.");
+            }
         }
 
+        ///==================================
+        //MODERATOR LEVEL
+        ///==================================
         if (isMod(msg)){
             //PRUNE
             if (msg.content.startsWith(`${botConfig.prefix}prune`)){
@@ -262,12 +275,68 @@ function processMessage(msg){
                 const punishedUser = msg.mentions.users.first();
                 return effectMember(msg.guild.member(punishedUser), msg, USERMOD.BAN);
             }
+
+            //----
+            //E6
+            //----
+
+            else if (msg.content.startsWith(`${botConfig.prefix}blacklist-tag`)){
+                if (args.length > 1){
+                    e6.updateTags(e6.TAGUPDATE.ADD_BLACK, args, msg);
+                }
+                else{
+                    msg.reply("Please specify tags seperated with spaces");
+                }
+                return;
+            }
+            else if (msg.content.startsWith(`${botConfig.prefix}whitelist-tag`)){
+                if (args.length > 1){
+                    e6.updateTags(e6.TAGUPDATE.ADD_WHITE, args, msg);
+                }
+                else{
+                    msg.reply("Please specify tags seperated with spaces");
+                }
+                return;
+            }
+            else if (msg.content.startsWith(`${botConfig.prefix}force-tag`)){
+                if (args.length > 1){
+                    e6.updateTags(e6.TAGUPDATE.ADD_FORCE, args, msg);
+                }
+                else{
+                    msg.reply("Please specify tags seperated with spaces");
+                }
+                return;
+            }
+            else if (msg.content.startsWith(`${botConfig.prefix}remove-tag`)){
+                if (args.length > 1){
+                    e6.updateTags(e6.TAGUPDATE.REMOVE, args, msg);
+                }
+                else{
+                    msg.reply("Please specify tags seperated with spaces");
+                }
+                return;
+            }
+            else if (msg.content.startsWith(`${botConfig.prefix}get-tags`)){
+                return e6.getTags(msg);
+            }
         }
+
+        ///==================================
         //SAFE
+        ///==================================
+
         //Ping
         if (msg.content.startsWith(`${botConfig.prefix}ping`) || msg.content.startsWith(`${botConfig.prefix}echo`)){
             return msg.channel.send('Pong!');
         }
+
+        //-----
+        //e6
+        //-----
+        else if (msg.content.startsWith((`${botConfig.prefix}lewd`))){
+            e6.give_lewd(msg, args);
+        }
+
         //Avatar grabber
         else if (msg.content.startsWith(`${botConfig.prefix}avatar`)){
             //No users supplied just grab author info
@@ -314,3 +383,4 @@ function welcomeMember(member){
 //Export Functions
 module.exports.processMessage = processMessage;
 module.exports.welcomeMember = welcomeMember;
+module.exports.saveConfig = saveConfig;

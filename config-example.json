@@ -2,7 +2,14 @@
 	"prefix": "!",
 	"token": "your token here",
     "mongocreds" : "mongosrv connection infomation here",
-	"eAPI" : "API KEY",
+    "e621" : {
+		"username" : "username",
+        "api" : "api key",
+        "blacklist" : [],
+        "whitelist" : [],
+        "forceList" : [],
+		"maxPosts" : 10
+    },
 	"welcomeMessage" : "Welcome to the server! <user>",
 	"welcometoMod" : "Congrats <user>! You are a mod now!",
 	"welcometoAdmin" : "Congrats <user>! You are an admin now!"
