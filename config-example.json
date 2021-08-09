@@ -8,7 +8,8 @@
     "blacklist" : [],
     "whitelist" : [],
     "forceList" : [],
-    "maxPosts" : 10
+    "maxPosts" : 3,
+    "maxDownload" : 30
   },
   "verifyThreshold" : {
     "min" : 10, 

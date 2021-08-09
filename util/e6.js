@@ -1,8 +1,8 @@
 const debugging = require("./debugging.js");
 const discordUtil = require("./discordUtil.js");
+const mongoUtil = require("./mongoUtil.js");
 const botConfig = require('.././config.json');
 const e6Class = require("e621");
-const { MessageEmbed } = require("discord.js");
 
 var e6 = undefined;
 var e6Tags = [];
@@ -121,36 +121,9 @@ function give_lewd(msg, args){
             msg.reply(":3");
 
             //Grab a bunch of posts
-            e6.getPosts(e6Tags, 5)
+            e6.getPosts(e6Tags, botConfig.e621.maxDownload)
             .then((posts) => {
-                //Iterate through all the results posting them
-                for (let i = 0; i < posts.length; i++) {
-                    //If we haven't seen this post before
-                    if (post[i].is_favorited){
-                        continue;
-                    }
-
-                    //package doesn't give us a post url just image so make one
-                    const url = "https://e621.net/posts/" + posts[i].id;
-                    const embed = new MessageEmbed()
-                    .setTitle(`${posts[i].id}`)
-                    .setAuthor(`${posts[i].uploader_id}`)
-                    .setURL(`${url}`)
-                    .setImage(`${posts[i].file.url}`)
-                    msg.channel.send(embed);
-
-
-                    //=======================
-                    //IMPLEMENT
-                    //========================
-                    //Mark this as a post we have made on our db and make it TTL
-                    //https://e621.net/help/cheatsheet
-                    //you can use order: to sort VERY HANDY AND IMPLEMENT
-                    debugging.chickenScratch("Not Implemented", debugging.DEBUGLVLS.WARN)
-                }
-
-
-                return msg.reply(Done);
+                mongoUtil.postE6Content(posts, msg);
             })
         }
         else{

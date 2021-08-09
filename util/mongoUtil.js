@@ -1,4 +1,5 @@
 const MongoClient = require('mongodb').MongoClient;
+const { MessageEmbed } = require("discord.js");
 const mongoose = require('mongoose');
 const { exit } = require("process");
 
@@ -15,11 +16,11 @@ const userSchema = ({
     verified: Boolean
 });
 const e6Schema = ({
-    postID: String
+    postID: Number
 });
 
 const dbUser = mongoose.model('userModel', userSchema);
-const E6Post = mongoose.model('e6Model', e6Schema);
+const dbE6Post = mongoose.model('e6Model', e6Schema);
 
 function dbAction(err, done){
     if (err){
@@ -28,6 +29,68 @@ function dbAction(err, done){
     else{
         //debugging.chickenScratch("Added to DB!");
     }
+}
+
+//Grab all our latest e6 posts and verify we haven't posted this
+function postE6Content(posts, msg){
+    dbE6Post.find({}, function (err, archivedPosts){
+        if (err){
+            debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
+            msg.reply("An Error Occured")
+        }
+        else{
+            console.log(archivedPosts);
+
+            //Start the max post counter
+            var postCount = 0;
+
+            //Iterate through all the e6 posts we retrieved
+            for (let i = 0; i < posts.length; i++) {
+                console.log("1");
+                var seen = false;
+                //Check if we have posted this
+                for (let arPost = 0; arPost < archivedPosts.length; arPost++) {
+                    //We have posted this before
+                    if (archivedPosts[arPost].postID === posts[i].id){
+                        seen = true;
+                        break;
+                    }
+                }
+
+                if (seen){
+                    continue;
+                }
+
+                //CRAFT EMBED Message
+                //e621 npm package doesn't give us a post url, so make one
+                const url = "https://e621.net/posts/" + posts[i].id;
+                const embed = new MessageEmbed()
+                .setTitle(`${posts[i].id}`)
+                .setAuthor(`${posts[i].uploader_id}`)
+                .setURL(`${url}`)
+                .setImage(`${posts[i].file.url}`)
+                
+                //Send in channel
+                msg.channel.send(embed);
+                postCount++;
+
+                //Mark this as a post we have posted on our db and make it TTL
+                var newPost = new dbE6Post({
+                    postID: posts[i].id
+                })
+
+                //Apply changes to db
+                newPost.save();
+                
+                //If we have posted enough e6 content for now break
+                if (postCount >= botConfig.e621.maxPosts){
+                    break;
+                }
+
+            }
+            //archivedPosts.save();
+        }
+    })
 }
 
 //Log into mongo
@@ -162,3 +225,4 @@ module.exports.initMongo = initMongo;
 module.exports.messageTick = messageTick;
 module.exports.pardon = pardon;
 module.exports.punish = punish;
+module.exports.postE6Content = postE6Content;
