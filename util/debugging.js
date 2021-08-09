@@ -1,3 +1,5 @@
+const colors = require('colors');
+
 const DEBUGLVLS = {
     FATAL: 0,
     WARN: 1,

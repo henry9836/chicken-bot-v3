@@ -1,5 +1,6 @@
 const fs = require('fs');
 const debugging = require("./debugging.js");
+const mongoUtil = require("./mongoUtil.js");
 const botConfig = require('.././config.json');
 const e6 = require('./e6.js');
 const { MessageEmbed } = require("discord.js");
@@ -11,6 +12,13 @@ USERMOD = {
     REMOVEMOD : 3,
     BAN : 4,
     KICK : 5
+}
+
+function applyMessageEffectors(msg, user){
+
+    msg = msg.replace("<user>", `<@${user.id}>`);
+
+    return msg;
 }
 
 //Updates the config file via discord command
@@ -38,10 +46,9 @@ function isAdmin(msg){
         return true;
     }
     //Has admin role
-    if (botConfig.adminRoleID){
-        
+    if (msg.member.roles.cache.has(botConfig.roles.adminRole)){
+        return true;
     }
-
 
     return false;
 }
@@ -53,8 +60,8 @@ function isMod(msg){
     }
 
     //Has mod role
-    if (botConfig.modRoleID){
-        
+    if (msg.member.roles.cache.has(botConfig.roles.modRole)){
+        return true;
     }
 
     return false;
@@ -91,10 +98,9 @@ function effectMember(member, msg, mod){
         }
         //Assign Admin
         else if (mod == USERMOD.MAKEADMIN){
-            if (botConfig.adminRoleID){
-                member.roles.add(botConfig.adminRoleID);
-                var welcome = botConfig.welcometoAdmin;
-                welcome = welcome.replace("<user>", `<@${user.id}>`);
+            if (botConfig.roles.adminRole){
+                member.roles.add(botConfig.roles.adminRole);
+                var welcome = applyMessageEffectors(botConfig.welcometoAdmin, user);
                 return msg.channel.send(welcome);
             }
             else{
@@ -103,10 +109,9 @@ function effectMember(member, msg, mod){
         }
         //Assign Mod
         else if (mod == USERMOD.MAKEMOD){
-            if (botConfig.modRoleID){
-                member.roles.add(botConfig.modRoleID);
-                var welcome = botConfig.welcometoMod;
-                welcome = welcome.replace("<user>", `<@${user.id}>`);
+            if (botConfig.roles.modRole){
+                member.roles.add(botConfig.roles.modRole);
+                var welcome = applyMessageEffectors(botConfig.welcometoMod, user);
                 return msg.channel.send(welcome);
             }
             else{
@@ -115,8 +120,8 @@ function effectMember(member, msg, mod){
         }
         //Remove Admin
         else if (mod == USERMOD.REMOVEADMIN){
-            if (botConfig.adminRoleID){
-                member.roles.remove(botConfig.adminRoleID);
+            if (botConfig.roles.adminRole){
+                member.roles.remove(botConfig.roles.adminRole);
                 return msg.reply(`Removed ${user.tag}'s Admin Role`);
             }
             else{
@@ -125,8 +130,8 @@ function effectMember(member, msg, mod){
         }
         //Remove Mod
         else if (mod == USERMOD.REMOVEMOD){
-            if (botConfig.modRoleID){
-                member.roles.remove(botConfig.modRoleID);
+            if (botConfig.roles.modRole){
+                member.roles.remove(botConfig.roles.modRole);
                 return msg.reply(`Removed ${user.tag}'s Mod Role`);
             }
             else{
@@ -149,6 +154,9 @@ function processMessage(msg){
     // Ignore messages that aren't from a guild????
     if (!msg.guild) return;
 
+    //Tick Message Counter
+    mongoUtil.messageTick(msg.member);
+    
     //Get args for the message
     const args = msg.content.slice(botConfig.prefix.length).trim().split(' ');
 
@@ -177,7 +185,7 @@ function processMessage(msg){
                     msg.guild.roles.fetch(args[1])
                         .then(role => {
                             if (role !== null){
-                                botConfig.adminRoleID = role.id;
+                                botConfig.roles.adminRole = role.id;
                                 saveConfig();
                                 return msg.reply(`Assigned ${role} as admin role`);
                             }
@@ -194,6 +202,22 @@ function processMessage(msg){
                 }
                 return;
             }
+            
+            
+        }
+
+        ///==================================
+        //ADMIN LEVEL
+        ///==================================
+        if (isAdmin(msg)){
+            //Assign Mod Role
+            if (msg.content.startsWith(`${botConfig.prefix}add-mod`)){
+                return effectMember(msg.guild.member(msg.mentions.users.first()), msg, USERMOD.MAKEMOD);
+            }
+            //Remove a mod
+            else if (msg.content.startsWith(`${botConfig.prefix}remove-mod`)){
+                return effectMember(msg.guild.member(msg.mentions.users.first()), msg, USERMOD.REMOVEMOD);
+            }
             //Assign Mod Role
             else if (msg.content.startsWith(`${botConfig.prefix}assign-mod-role`)){
                 if (args[1]){
@@ -201,7 +225,7 @@ function processMessage(msg){
                     msg.guild.roles.fetch(args[1])
                         .then(role => {
                             if (role !== null){
-                                botConfig.modRoleID = role.id;
+                                botConfig.roles.modRole = role.id;
                                 saveConfig();
                                 return msg.reply(`Assigned ${role} as mod role`);
                             }
@@ -218,22 +242,6 @@ function processMessage(msg){
                 }
                 return;
             }
-            
-        }
-
-        ///==================================
-        //ADMIN LEVEL
-        ///==================================
-        if (isAdmin(msg)){
-            //Assign Mod Role
-            if (msg.content.startsWith(`${botConfig.prefix}add-mod`)){
-                return effectMember(msg.guild.member(msg.mentions.users.first()), msg, USERMOD.MAKEMOD);
-            }
-            //Remove a mod
-            else if (msg.content.startsWith(`${botConfig.prefix}remove-mod`)){
-                return effectMember(msg.guild.member(msg.mentions.users.first()), msg, USERMOD.REMOVEMOD);
-            }
-
             //----
             //E6
             //----
@@ -275,7 +283,52 @@ function processMessage(msg){
                 const punishedUser = msg.mentions.users.first();
                 return effectMember(msg.guild.member(punishedUser), msg, USERMOD.BAN);
             }
-
+            //Allow user to have verified role
+            else if (msg.content.startsWith(`${botConfig.prefix}punish`)){
+                if (args[1]){
+                    const punishedUser = msg.mentions.members.first();
+                    mongoUtil.punish(punishedUser);
+                }
+                else{
+                    return msg.reply("You must supply a role id");
+                }
+                return;
+            }
+            //Allow user to have verified role
+            else if (msg.content.startsWith(`${botConfig.prefix}pardon`)){
+                if (args[1]){
+                    const punishedUser = msg.mentions.members.first();
+                    mongoUtil.pardon(punishedUser);
+                }
+                else{
+                    return msg.reply("You must supply a role id");
+                }
+                return;
+            }
+            //Assign Verify Role
+            else if (msg.content.startsWith(`${botConfig.prefix}assign-verify-role`)){
+                if (args[1]){
+                    //Validate role exists
+                    msg.guild.roles.fetch(args[1])
+                        .then(role => {
+                            if (role !== null){
+                                botConfig.roles.verifiedRole = role.id;
+                                saveConfig();
+                                return msg.reply(`Assigned ${role} as verified role`);
+                            }
+                            else {
+                                return msg.reply("Role ID doesn't exist"); 
+                            }role
+                        })
+                        .catch(err => {
+                            return msg.reply(err);
+                        })
+                }
+                else{
+                    return msg.reply("You must supply a role id");
+                }
+                return;
+            }
             //----
             //E6
             //----
@@ -373,11 +426,14 @@ function processMessage(msg){
 
 function welcomeMember(member){
     // Send the message to a designated channel on a server:
-    const channel = member.guild.channels.cache.find(ch => ch.name === 'member-log');
+    const channel = member.guild.channels.cache.find(ch => ch.name === `${botConfig.welcomeChannel}`);
     // Do nothing if the channel wasn't found on this server
-    if (!channel) {debugging.chickenScratch("Couldn't Find the new memeber channel", debugging.DEBUGLVLS.WARN)};
-    // Send the message, mentioning the member
-    channel.send(`Welcome to the server, ${member}`);
+    if (!channel) {
+        debugging.chickenScratch("Couldn't Find the welcome channel", debugging.DEBUGLVLS.WARN)
+    };
+
+    var welcome = applyMessageEffectors(botConfig.welcomeMessage, member.user);
+    return channel.send(welcome);
 }
 
 //Export Functions

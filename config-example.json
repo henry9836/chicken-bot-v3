@@ -1,16 +1,26 @@
 {
 	"prefix": "!",
 	"token": "your token here",
-    "mongocreds" : "mongosrv connection infomation here",
-    "e621" : {
-		"username" : "username",
-        "api" : "api key",
-        "blacklist" : [],
-        "whitelist" : [],
-        "forceList" : [],
-		"maxPosts" : 10
-    },
+  "mongocreds" : "mongosrv connection infomation here",
+  "e621" : {
+    "username" : "username",
+    "api" : "api key",
+    "blacklist" : [],
+    "whitelist" : [],
+    "forceList" : [],
+    "maxPosts" : 10
+  },
+  "verifyThreshold" : {
+    "min" : 10, 
+    "max" : 50
+  },
+  "roles" : {
+    "adminRole" : "",
+    "modRole" : "",
+    "verifiedRole" : ""
+  },
 	"welcomeMessage" : "Welcome to the server! <user>",
 	"welcometoMod" : "Congrats <user>! You are a mod now!",
-	"welcometoAdmin" : "Congrats <user>! You are an admin now!"
+	"welcometoAdmin" : "Congrats <user>! You are an admin now!",
+  "welcomeChannel" : "general"
 }
