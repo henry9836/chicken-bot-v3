@@ -233,7 +233,8 @@ function postLoop(){
         return
     }
     e6LoopActive = true;
-    setTimeout(function(){
+    setInterval(function(){
+        console.log("loop")
         //If e621 posts are not disabled
         if (botConfig.e621.bonked === false){
             if (e6channel != undefined){
@@ -243,8 +244,7 @@ function postLoop(){
         else{
             debugging.chickenScratch("E6 posting is disabled, skipping...")
         }
-    }, ((1 * 1000)* 30));
-    //}, ((botConfig.e621.postInterval * 1000)* 60));
+    }, ((botConfig.e621.postInterval * 1000)* 60));
 }
 
 //Export Functions
