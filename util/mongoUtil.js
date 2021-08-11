@@ -32,15 +32,13 @@ function dbAction(err, done){
 }
 
 //Grab all our latest e6 posts and verify we haven't posted this
-function postE6Content(posts, msg){
+function postE6Content(posts, channel){
     dbE6Post.find({}, function (err, archivedPosts){
         if (err){
             debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
-            msg.reply("An Error Occured")
+            channel.send("An Error Occured")
         }
         else{
-            console.log(archivedPosts);
-
             //Start the max post counter
             var postCount = 0;
 
@@ -70,7 +68,7 @@ function postE6Content(posts, msg){
                 .setImage(`${posts[i].file.url}`)
                 
                 //Send in channel
-                msg.channel.send(embed);
+                channel.send(embed);
                 postCount++;
 
                 //Mark this as a post we have posted on our db and make it TTL
@@ -87,7 +85,6 @@ function postE6Content(posts, msg){
                 }
 
             }
-            //archivedPosts.save();
         }
     })
 }

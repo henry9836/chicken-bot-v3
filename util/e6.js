@@ -5,6 +5,8 @@ const botConfig = require('.././config.json');
 const e6Class = require("e621");
 
 var e6 = undefined;
+var e6LoopActive = false;
+var e6channel = undefined;
 var orderTag = [""];
 
 const TAGUPDATE = {
@@ -16,17 +18,28 @@ const TAGUPDATE = {
 }
 
 //Start the module and login using our api key
-function initE6(){
-    debugging.chickenScratch("Initalizing e621 module...");
+function initE6(guild){
+    if (e6 == undefined){
+        debugging.chickenScratch("Initalizing e621 module...");
 
-    if (botConfig.e621.api === undefined){
-        debugging.chickenScratch("API Key is undefined", debugging.DEBUGLVLS.WARN);
-        return;
-    }
+        if (botConfig.e621.api === undefined){
+            debugging.chickenScratch("API Key is undefined", debugging.DEBUGLVLS.WARN);
+            return;
+        }
 
-    e6 = new e6Class(botConfig.e621.username, botConfig.e621.api);
+        debugging.chickenScratch("Connecting To e621.net...");
+        e6 = new e6Class(botConfig.e621.username, botConfig.e621.api);
+        debugging.chickenScratch("Connected To e621.net");
 
-    debugging.chickenScratch("Connected To e621.net");
+        //Assign e6channel
+        if (botConfig.e621.e6Channel){
+            if (botConfig.e621.e6Channel.length > 10){
+                e6channel = guild.channels.cache.get(botConfig.e621.e6Channel)
+            }
+        }
+        postLoop();
+        debugging.chickenScratch(`Loaded e621 channel as ${e6channel}`);
+    }  
 }
 
 //Replies with a pm to user for debugging
@@ -186,33 +199,52 @@ function updateTags(updateType, args, msg){
 }
 
 //:3
-function give_lewd(msg, args){
+function give_lewd(){
     if (e6 != undefined){
-        //If we are in a nsfw channel
-        if (msg.channel.nsfw){
-            msg.reply(":3");
+        if (e6channel != undefined){
+            //If we are in a nsfw channel
+            if (e6channel.nsfw){
+                e6channel.send(":3");
 
-            //Grab a bunch of posts
-            for (let i = 0; i < botConfig.e621.whitelists.length; i++) {
-                console.log(botConfig.e621.whitelists[i].concat(botConfig.e621.blacklist).concat(orderTag))
-                e6.getPosts(botConfig.e621.whitelists[i].concat(botConfig.e621.blacklist).concat(orderTag), botConfig.e621.maxDownload)
-                .then((posts) => {
-                    mongoUtil.postE6Content(posts, msg);
-                })
+                //Grab a bunch of posts
+                for (let i = 0; i < botConfig.e621.whitelists.length; i++) {
+                    e6.getPosts(botConfig.e621.whitelists[i].concat(botConfig.e621.blacklist).concat(orderTag), botConfig.e621.maxDownload)
+                    .then((posts) => {
+                        mongoUtil.postE6Content(posts, e6channel);
+                    })
+                }
+            }
+            else{
+                //We are in a sfw channel no horny *bonk*
+                e6channel.send("This is is a sfw channel *bonk*");
             }
         }
         else{
-            //We are in a sfw channel no horny *bonk*
-            msg.reply("This is is a sfw channel *bonk*");
+            debugging.chickenScratch("E6 channel not assigned!", debugging.DEBUGLVLS.WARN);
         }
-
     }
     else{
         debugging.chickenScratch("E6 not Initalized!", debugging.DEBUGLVLS.WARN);
-
-        //Try and init e6 if it isn't
-        initE6();
     }
+}
+
+function postLoop(){
+    if (e6LoopActive){
+        return
+    }
+    e6LoopActive = true;
+    setTimeout(function(){
+        //If e621 posts are not disabled
+        if (botConfig.e621.bonked === false){
+            if (e6channel != undefined){
+                give_lewd();
+            }
+        }
+        else{
+            debugging.chickenScratch("E6 posting is disabled, skipping...")
+        }
+    }, ((1 * 1000)* 30));
+    //}, ((botConfig.e621.postInterval * 1000)* 60));
 }
 
 //Export Functions
@@ -222,4 +254,5 @@ module.exports.updateTags = updateTags;
 module.exports.clearTags = clearTags;
 module.exports.getTags = getTags;
 module.exports.updateSort = updateSort;
+module.exports.postLoop = postLoop;
 module.exports.TAGUPDATE = TAGUPDATE;

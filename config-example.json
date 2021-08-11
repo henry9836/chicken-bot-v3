@@ -8,9 +8,12 @@
     "blacklist" : [],
     "whitelists" : [
     ],
+    "e6Channel" : "",
+    "postInterval" : 5,
     "maxPosts" : 3,
     "maxDownload" : 30,
-    "sortType" : ""
+    "sortType" : "",
+    "bonked" : true
   },
   "verifyThreshold" : {
     "min" : 10, 

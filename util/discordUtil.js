@@ -151,7 +151,7 @@ function effectMember(member, msg, mod){
 //Process Incoming Messages
 function processMessage(msg){
 
-    // Ignore messages that aren't from a guild????
+    // Ignore messages that aren't from a guild
     if (!msg.guild) return;
 
     //Tick Message Counter
@@ -329,17 +329,21 @@ function processMessage(msg){
                 }
                 return;
             }
+
             //----
             //E6
             //----
-            else if (msg.content.startsWith(`${botConfig.prefix}e6-sort`)){
-                if (args.length > 1){
-                    e6.updateSort(args[1], msg);
-                }
-                else{
-                    msg.reply("Please specify sort type");
-                }
-                return;
+            
+            else if (msg.content.startsWith(`${botConfig.prefix}e6-info`)){
+                return e6.getTags(msg);
+            }
+            else if ((msg.content.startsWith(`${botConfig.prefix}e6-disable`)) || (msg.content.startsWith(`${botConfig.prefix}e6-bonk`))){
+                botConfig.e621.bonked = true;
+                saveConfig();
+            }
+            else if (msg.content.startsWith(`${botConfig.prefix}e6-enable`)){
+                botConfig.e621.bonked = false;
+                saveConfig();
             }
             else if (msg.content.startsWith(`${botConfig.prefix}e6-blacklist-tag`)){
                 if (args.length > 1){
@@ -356,6 +360,15 @@ function processMessage(msg){
                 }
                 else{
                     msg.reply("Please specify tags seperated with spaces");
+                }
+                return;
+            }
+            else if (msg.content.startsWith(`${botConfig.prefix}e6-sort`)){
+                if (args.length > 1){
+                    e6.updateSort(args[1], msg);
+                }
+                else{
+                    msg.reply("Please specify sort type");
                 }
                 return;
             }
@@ -377,8 +390,24 @@ function processMessage(msg){
                 }
                 return;
             }
-            else if (msg.content.startsWith(`${botConfig.prefix}e6-info`)){
-                return e6.getTags(msg);
+            else if (msg.content.startsWith(`${botConfig.prefix}e6-set-channel`)){
+                if (args.length > 1){
+                    //Validate role exists
+                    let channel = msg.guild.channels.cache.get(args[1])
+                    //console.log(channel);
+                    if (channel !== undefined){
+                        botConfig.e621.e6Channel = channel.id;
+                        saveConfig();
+                        return msg.reply(`Assigned ${channel} as e621 channel`);
+                    }
+                    else{
+                        msg.reply("Channel ID doesn't exist or hidden")
+                    }
+                }
+                else{
+                    msg.reply("Please specify a channel id");
+                }
+                return;
             }
         }
 
@@ -395,7 +424,7 @@ function processMessage(msg){
         //e6
         //-----
         else if (msg.content.startsWith((`${botConfig.prefix}lewd`))){
-            e6.give_lewd(msg, args);
+            e6.give_lewd();
         }
 
         //Avatar grabber
@@ -405,6 +434,7 @@ function processMessage(msg){
                 //Create an embed message
                 const embed = new MessageEmbed()
                     .setTitle(`${msg.author.username}`)
+                    .setURL(`${msg.author.displayAvatarURL()}`)
                     .setImage(`${msg.author.displayAvatarURL({format: 'png', dynamic: true})}`);
 
                 return msg.reply(embed);
@@ -413,6 +443,7 @@ function processMessage(msg){
             const listOfAvatars = msg.mentions.users.map(user =>{
                 const embed = new MessageEmbed()
                     .setTitle(`${user.username}`)
+                    .setURL(`${msg.author.displayAvatarURL()}`)
                     .setImage(`${user.displayAvatarURL({format: 'png', dynamic: true})}`);
 
                 return msg.reply(embed);
@@ -420,10 +451,17 @@ function processMessage(msg){
         }
 
         //Server info
-        else if (msg.content.startsWith(`${botConfig.prefix}serverinfo`)){
-            return  msg.channel.send(`${msg.guild.bannerUrl}\`\`\` 
-            ${msg.guild.name}\n Total members: ${msg.guild.memberCount}\n Created At: ${msg.guild.createdAt}\n 
-            Region: ${msg.guild.region}\n Current Boost Count: ${msg.guild.premiumSubscriptionCount} \`\`\``);
+        else if (msg.content.startsWith(`${botConfig.prefix}server-info`)){
+            const embed = new MessageEmbed()
+                .setTitle(`${msg.guild.name}`)
+                .setImage(`${msg.guild.iconURL()}`)
+                .addFields(
+                    { name: 'Member Count', value: `${msg.guild.memberCount}` },
+                    { name: 'Created At', value: `${msg.guild.createdAt}` },
+                    { name: 'Region', value: `${msg.guild.region}`},
+                    { name: 'Current Boost Count', value: `${msg.guild.premiumSubscriptionCount}`}
+                )
+            return  msg.channel.send(embed);
         }
         else{
             return msg.reply("I did not understand your command");

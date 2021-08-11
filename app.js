@@ -14,6 +14,8 @@ const e6 = require("./util/e6.js");
 
 const client = new Discord.Client();
 
+var e6Started = false;
+
 //Go into main func
 main();
 
@@ -24,6 +26,12 @@ client.on('ready', () => {
   
 //When we recieve a message
 client.on('message', msg => {
+
+    //E6 not initalised
+    if (e6.e6 === undefined){
+        e6.initE6(msg.guild)
+    }
+
     //Process Message
     discordUtil.processMessage(msg);
 });
@@ -45,9 +53,6 @@ function main(){
 
     //Connect to Database
     mongoUtil.initMongo();
-
-    //Connect To E6
-    e6.initE6();
 
     //Connect To Discord API
     debugging.chickenScratch("Authenticating With Discord...")
