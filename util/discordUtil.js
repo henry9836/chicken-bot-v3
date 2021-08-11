@@ -332,8 +332,16 @@ function processMessage(msg){
             //----
             //E6
             //----
-
-            else if (msg.content.startsWith(`${botConfig.prefix}blacklist-tag`)){
+            else if (msg.content.startsWith(`${botConfig.prefix}e6-sort`)){
+                if (args.length > 1){
+                    e6.updateSort(args[1], msg);
+                }
+                else{
+                    msg.reply("Please specify sort type");
+                }
+                return;
+            }
+            else if (msg.content.startsWith(`${botConfig.prefix}e6-blacklist-tag`)){
                 if (args.length > 1){
                     e6.updateTags(e6.TAGUPDATE.ADD_BLACK, args, msg);
                 }
@@ -342,7 +350,7 @@ function processMessage(msg){
                 }
                 return;
             }
-            else if (msg.content.startsWith(`${botConfig.prefix}whitelist-tag`)){
+            else if (msg.content.startsWith(`${botConfig.prefix}e6-add-tag`)){
                 if (args.length > 1){
                     e6.updateTags(e6.TAGUPDATE.ADD_WHITE, args, msg);
                 }
@@ -351,16 +359,16 @@ function processMessage(msg){
                 }
                 return;
             }
-            else if (msg.content.startsWith(`${botConfig.prefix}force-tag`)){
+            else if (msg.content.startsWith(`${botConfig.prefix}e6-remove-list`)){
                 if (args.length > 1){
-                    e6.updateTags(e6.TAGUPDATE.ADD_FORCE, args, msg);
+                    e6.updateTags(e6.TAGUPDATE.REMOVE_LIST, args, msg);
                 }
                 else{
-                    msg.reply("Please specify tags seperated with spaces");
+                    msg.reply("Please specify list index number to remove");
                 }
                 return;
             }
-            else if (msg.content.startsWith(`${botConfig.prefix}remove-tag`)){
+            else if ((msg.content.startsWith(`${botConfig.prefix}e6-remove`)) || (msg.content.startsWith(`${botConfig.prefix}e6-remove-tag`))){
                 if (args.length > 1){
                     e6.updateTags(e6.TAGUPDATE.REMOVE, args, msg);
                 }
@@ -369,7 +377,7 @@ function processMessage(msg){
                 }
                 return;
             }
-            else if (msg.content.startsWith(`${botConfig.prefix}get-tags`)){
+            else if (msg.content.startsWith(`${botConfig.prefix}e6-info`)){
                 return e6.getTags(msg);
             }
         }

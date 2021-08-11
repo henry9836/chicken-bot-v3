@@ -6,10 +6,11 @@
     "username" : "username",
     "api" : "api key",
     "blacklist" : [],
-    "whitelist" : [],
-    "forceList" : [],
+    "whitelists" : [
+    ],
     "maxPosts" : 3,
-    "maxDownload" : 30
+    "maxDownload" : 30,
+    "sortType" : ""
   },
   "verifyThreshold" : {
     "min" : 10, 

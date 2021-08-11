@@ -46,7 +46,6 @@ function postE6Content(posts, msg){
 
             //Iterate through all the e6 posts we retrieved
             for (let i = 0; i < posts.length; i++) {
-                console.log("1");
                 var seen = false;
                 //Check if we have posted this
                 for (let arPost = 0; arPost < archivedPosts.length; arPost++) {
@@ -195,7 +194,6 @@ function messageTick(member){
                 newUser.save(dbAction);
             }
             else{
-                console.log(user);
                 user.amountOfMsgs += 1;
 
                 //If the user is not punished
