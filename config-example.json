@@ -19,10 +19,15 @@
     "min" : 10, 
     "max" : 50
   },
+  "channels":{
+    "quotes" : "",
+    "nsfwquotes" : ""
+  },
   "roles" : {
     "adminRole" : "",
     "modRole" : "",
-    "verifiedRole" : ""
+    "verifiedRole" : "",
+    "publicRoles" : []
   },
 	"welcomeMessage" : "Welcome to the server! <user>",
 	"welcometoMod" : "Congrats <user>! You are a mod now!",

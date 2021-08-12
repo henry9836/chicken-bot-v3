@@ -32,7 +32,7 @@ function dbAction(err, done){
 }
 
 //Grab all our latest e6 posts and verify we haven't posted this
-function postE6Content(posts, channel){
+function postE6Content(posts, channel, repostList){
     dbE6Post.find({}, function (err, archivedPosts){
         if (err){
             debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
@@ -49,6 +49,14 @@ function postE6Content(posts, channel){
                 for (let arPost = 0; arPost < archivedPosts.length; arPost++) {
                     //We have posted this before
                     if (archivedPosts[arPost].postID === posts[i].id){
+                        seen = true;
+                        break;
+                    }
+                }
+
+                //Check if we have posted this during this session
+                for (let post = 0; post < repostList.length; post++) {
+                    if (repostList[post] == posts[i].id){
                         seen = true;
                         break;
                     }
@@ -79,6 +87,9 @@ function postE6Content(posts, channel){
                 //Apply changes to db
                 newPost.save();
                 
+                //Add to repost list as to prevent repeats
+                repostList.push(posts[i].id);
+
                 //If we have posted enough e6 content for now break
                 if (postCount >= botConfig.e621.maxPosts){
                     break;
@@ -196,17 +207,14 @@ function messageTick(member){
                 //If the user is not punished
                 if (user.punished == false){
                     //If the user has exceeded the threshold then assign verified role
-                    if (user.verified == false){
-                        if (user.threshold <= user.amountOfMsgs){
-                            console.log(botConfig.roles.verifiedRole);
-                            if (botConfig.roles.modRole){
-                                member.roles.add(botConfig.roles.verifiedRole);
-                            }
-                            else{
-                                debugging.chickenScratch("Mod Role Not Assigned!", debugging.DEBUGLVLS.WARN);
-                            }
-                            user.verified = true;
+                    if (user.threshold <= user.amountOfMsgs){
+                        if (botConfig.roles.modRole){
+                            member.roles.add(botConfig.roles.verifiedRole);
                         }
+                        else{
+                            debugging.chickenScratch("Verified Role Not Assigned!", debugging.DEBUGLVLS.WARN);
+                        }
+                        user.verified = true;
                     }
                 }
                 user.save(dbAction);

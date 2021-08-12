@@ -14,6 +14,9 @@ USERMOD = {
     KICK : 5
 }
 
+var quoteChannel = undefined;
+var nsfwQuoteChannel = undefined;
+
 function applyMessageEffectors(msg, user){
 
     msg = msg.replace("<user>", `<@${user.id}>`);
@@ -156,6 +159,18 @@ function processMessage(msg){
 
     //Tick Message Counter
     mongoUtil.messageTick(msg.member);
+
+    //Attempt to setup quote channels if it doesn't exist
+    if (quoteChannel == undefined){
+        if (botConfig.channels.quotes != ""){
+            quoteChannel = msg.guild.channels.cache.get(botConfig.channels.quotes)
+        }
+    }
+    if (nsfwQuoteChannel == undefined){
+        if (botConfig.channels.nsfwquotes != ""){
+            nsfwQuoteChannel = msg.guild.channels.cache.get(botConfig.channels.nsfwquotes)
+        }
+    }
     
     //Get args for the message
     const args = msg.content.slice(botConfig.prefix.length).trim().split(' ');
@@ -242,12 +257,77 @@ function processMessage(msg){
                 }
                 return;
             }
+            else if (msg.content.startsWith(`${botConfig.prefix}set-quote-channel`)){
+                if (args.length > 1){
+                    //Validate role exists
+                    let channel = msg.guild.channels.cache.get(args[1])
+                    //console.log(channel);
+                    if (channel !== undefined){
+                        botConfig.channels.quotes = channel.id;
+                        quoteChannel = channel;
+                        saveConfig();
+                        return msg.reply(`Assigned ${channel} as quote channel`);
+                    }
+                    else{
+                        msg.reply("Channel ID doesn't exist or hidden")
+                    }
+                }
+                else{
+                    msg.reply("Please specify a channel id");
+                }
+                return;
+            }
+
+            else if (msg.content.startsWith(`${botConfig.prefix}set-nsfw-quote-channel`)){
+                if (args.length > 1){
+                    //Validate role exists
+                    let channel = msg.guild.channels.cache.get(args[1])
+                    //console.log(channel);
+                    if (channel !== undefined){
+                        if (channel.nsfw){
+                            botConfig.channels.nsfwquotes = channel.id;
+                            saveConfig();
+                            nsfwQuoteChannel = channel;
+                            return msg.reply(`Assigned ${channel} as nsfw quote channel`);
+                        }
+                        else{
+                            msg.reply("Channel isn't marked nsfw!")
+                        }
+                    }
+                    else{
+                        msg.reply("Channel ID doesn't exist or hidden")
+                    }
+                }
+                else{
+                    msg.reply("Please specify a channel id");
+                }
+                return;
+            }
             //----
             //E6
             //----
-            else if (msg.content.startsWith(`${botConfig.prefix}reset-tags`)){
+            else if (msg.content.startsWith(`${botConfig.prefix}e6-reset`)){
                 e6.clearTags();
                 return msg.reply("Done.");
+            }
+            else if (msg.content.startsWith(`${botConfig.prefix}e6-set-channel`)){
+                if (args.length > 1){
+                    //Validate role exists
+                    let channel = msg.guild.channels.cache.get(args[1])
+                    //console.log(channel);
+                    if (channel !== undefined){
+                        botConfig.e621.e6Channel = channel.id;
+                        saveConfig();
+                        return msg.reply(`Assigned ${channel} as e621 channel`);
+                    }
+                    else{
+                        msg.reply("Channel ID doesn't exist or hidden")
+                    }
+                }
+                else{
+                    msg.reply("Please specify a channel id");
+                }
+                return;
             }
         }
 
@@ -330,6 +410,7 @@ function processMessage(msg){
                 return;
             }
 
+
             //----
             //E6
             //----
@@ -390,24 +471,11 @@ function processMessage(msg){
                 }
                 return;
             }
-            else if (msg.content.startsWith(`${botConfig.prefix}e6-set-channel`)){
-                if (args.length > 1){
-                    //Validate role exists
-                    let channel = msg.guild.channels.cache.get(args[1])
-                    //console.log(channel);
-                    if (channel !== undefined){
-                        botConfig.e621.e6Channel = channel.id;
-                        saveConfig();
-                        return msg.reply(`Assigned ${channel} as e621 channel`);
-                    }
-                    else{
-                        msg.reply("Channel ID doesn't exist or hidden")
-                    }
-                }
-                else{
-                    msg.reply("Please specify a channel id");
-                }
-                return;
+            //-----
+            //e6
+            //-----
+            else if (msg.content.startsWith((`${botConfig.prefix}lewd`))){
+                e6.give_lewd();
             }
         }
 
@@ -415,16 +483,99 @@ function processMessage(msg){
         //SAFE
         ///==================================
 
+        //Help
+        if (msg.content.startsWith(`${botConfig.prefix}help`)){
+            return msg.author.send("```" + `
+            [ 🐔 ] 𝗖𝗵𝗶𝗰𝗸𝗲𝗻𝗕𝗼𝘁 - 𝘃𝟯.𝟬
+            𝘉𝘶𝘪𝘭𝘵 𝘣𝘺 𝘕𝘪𝘵𝘳𝘰\n
+            [ Owner ]
+            ${botConfig.prefix}add-admin <id> - assigns the admin role to a user
+            ${botConfig.prefix}assign-admin-role <id> - assigns the admin role
+            ${botConfig.prefix}remove-admin <id> - removes the admin role from a user
+
+            [ Admin ]
+            ${botConfig.prefix}add-mod <member> - assigns the mod role to a user
+            ${botConfig.prefix}assign-mod-role <id> - assigns the mod role
+            ${botConfig.prefix}e6-reset - resets all lists to nothing, including blacklist
+            ${botConfig.prefix}e6-set-channel <id> - Assigns e6 channel
+            ${botConfig.prefix}remove-mod <member> - removes the mod role from a user
+            ${botConfig.prefix}set-quote-channel <id> - Assign quote channel
+            ${botConfig.prefix}set-nsfw-quote-channel <id> - Assign nsfw quote channel
+
+            [ Moderator ]
+            ${botConfig.prefix}assign-verify-role <id> - assigns the verified role
+            ${botConfig.prefix}ban <id> - bans member
+            ${botConfig.prefix}e6-bonk/e6-disable - disables e6 posting
+            ${botConfig.prefix}e6-enable - enables e6 posting
+            ${botConfig.prefix}e6-blacklist-tag <tag>... - adds tag(s) to a global e6 blacklist list
+            ${botConfig.prefix}e6-add-tag <id/tag> <tag>... - adds e6 tag(s) to a list, if id is supplied will add to the list that matches the id
+            ${botConfig.prefix}e6-sort <none, random, score> - switches sorting for e6 posts
+            ${botConfig.prefix}e6-remove <tag> ... - Removes a e6 tag(s) from all lists
+            ${botConfig.prefix}e6-remove-list <id> - Removes an e6 tag list
+            ${botConfig.prefix}kick <id> - kicks member
+            ${botConfig.prefix}lewd - Forces bot to post in the e6 channel (overrides disabled status)
+            ${botConfig.prefix}pardon <member> - allows user to be verified
+            ${botConfig.prefix}punish <member> - removes verified from user
+            ${botConfig.prefix}prune <amount> - removes last amount of messages (max is 100)
+
+            [ Public ]
+            ${botConfig.prefix}avatar <member> - Displays users profile picture
+            ${botConfig.prefix}help - Display help
+            ${botConfig.prefix}ping - Makes the bot respond with Pong  
+            ${botConfig.prefix}info - Displays server info
+
+            𝒸𝓁𝓊𝒸𝓀` + "```");
+        }
+
         //Ping
         if (msg.content.startsWith(`${botConfig.prefix}ping`) || msg.content.startsWith(`${botConfig.prefix}echo`)){
             return msg.channel.send('Pong!');
         }
 
-        //-----
-        //e6
-        //-----
-        else if (msg.content.startsWith((`${botConfig.prefix}lewd`))){
-            e6.give_lewd();
+        //Quote
+        else if (msg.content.startsWith(`${botConfig.prefix}quote`)){
+            if (msg.attachments.array().length > 0){
+                if (quoteChannel != undefined){
+
+                    const embed = new MessageEmbed()
+                    .setTitle(msg.author.username)
+                    .setImage(msg.attachments.array()[0].url)
+                    .setTimestamp(Date.now())
+
+                    return quoteChannel.send(embed);
+                }
+                else{
+                    msg.reply("quote channel not assigned")
+                }
+            }
+            else{
+                msg.reply("You need to attach an image")
+            }
+        }
+
+        //NSFW-Quote
+        else if (msg.content.startsWith(`${botConfig.prefix}nsfw-quote`)){
+            if (msg.attachments.array().length > 0){
+                if (nsfwQuoteChannel != undefined){
+                    if (nsfwQuoteChannel.nsfw){
+                        const embed = new MessageEmbed()
+                        .setTitle(msg.author.username)
+                        .setImage(msg.attachments.array()[0].url)
+                        .setTimestamp(Date.now())
+
+                        return nsfwQuoteChannel.send(embed);
+                    }
+                    else {
+                     return msg.reply("Assigned NSFW Quote channel not a nsfw channel!")
+                    }
+                }
+                else{
+                    msg.reply("quote channel not assigned")
+                }
+            }
+            else{
+                msg.reply("You need to attach an image")
+            }
         }
 
         //Avatar grabber
@@ -451,7 +602,7 @@ function processMessage(msg){
         }
 
         //Server info
-        else if (msg.content.startsWith(`${botConfig.prefix}server-info`)){
+        else if (msg.content.startsWith(`${botConfig.prefix}info`)){
             const embed = new MessageEmbed()
                 .setTitle(`${msg.guild.name}`)
                 .setImage(`${msg.guild.iconURL()}`)

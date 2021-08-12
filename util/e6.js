@@ -103,7 +103,7 @@ function updateTags(updateType, args, msg){
     var createdNow = false;
     //Get list number
     if (isNaN(args[1]) === false){
-        if (args[1] < botConfig.e621.whitelists.length){
+        if ((args[1] < botConfig.e621.whitelists.length) && args[1] >= 0){
             e6Index = args[1];
             //Remove unneeded args
             args.splice(0, 2);
@@ -204,13 +204,16 @@ function give_lewd(){
         if (e6channel != undefined){
             //If we are in a nsfw channel
             if (e6channel.nsfw){
-                e6channel.send(":3");
+                //e6channel.send(":3");
 
+                //Create a list of posts to prevent resposting before the database aquires the knowledge 
+                alreadyPosted = []
+                
                 //Grab a bunch of posts
                 for (let i = 0; i < botConfig.e621.whitelists.length; i++) {
                     e6.getPosts(botConfig.e621.whitelists[i].concat(botConfig.e621.blacklist).concat(orderTag), botConfig.e621.maxDownload)
                     .then((posts) => {
-                        mongoUtil.postE6Content(posts, e6channel);
+                        mongoUtil.postE6Content(posts, e6channel, alreadyPosted);
                     })
                 }
             }
