@@ -572,6 +572,7 @@ function processMessage(msg){
             //-----
             else if (msg.content.startsWith((`${botConfig.prefix}lewd`))){
                 e6.give_lewd();
+                return;
             }
         }
 
@@ -581,32 +582,37 @@ function processMessage(msg){
 
         //Help
         if (msg.content.startsWith(`${botConfig.prefix}help`)){
-            return msg.author.send("```" + `
+            msg.author.send(`
             [ 🐔 ] 𝗖𝗵𝗶𝗰𝗸𝗲𝗻𝗕𝗼𝘁 - 𝘃𝟯.𝟬
-            𝘉𝘶𝘪𝘭𝘵 𝘣𝘺 𝘕𝘪𝘵𝘳𝘰\n
+            𝘉𝘶𝘪𝘭𝘵 𝘣𝘺 𝘕𝘪𝘵𝘳𝘰\n`);
+
+            msg.author.send("```" + `
             [ Owner ]
-            ${botConfig.prefix}add-admin <id> - assigns the admin role to a user
+            ${botConfig.prefix}add-admin  - assigns the admin role to a user
             ${botConfig.prefix}assign-admin-role <id> - assigns the admin role
             ${botConfig.prefix}remove-admin <id> - removes the admin role from a user
-
+            ` + "```");
+            msg.author.send("```" + `
             [ Admin ]
             ${botConfig.prefix}add-mod <member> - assigns the mod role to a user
             ${botConfig.prefix}add-role-assignable - adds a role to the assignable list
             ${botConfig.prefix}assign-mod-role <id> - assigns the mod role
             ${botConfig.prefix}e6-reset - resets all lists to nothing, including blacklist
-            ${botConfig.prefix}e6-set-channel <id> - Assigns e6 channel
+            ${botConfig.prefix}e6-set-channel- Assigns e6 channel
             ${botConfig.prefix}remove-mod <member> - removes the mod role from a user
             ${botConfig.prefix}set-quote-channel <id> - Assign quote channel
             ${botConfig.prefix}set-nsfw-quote-channel <id> - Assign nsfw quote channel
             ${botConfig.prefix}remove-role-assignable - removes a role from the assignable list
-
+            ` + "```");
+            msg.author.send("```" + `
             [ Moderator ]
             ${botConfig.prefix}assign-verify-role <id> - assigns the verified role
             ${botConfig.prefix}ban <id> - bans member
+            ${botConfig.prefix}e6-add-tag <id/tag> <tag>... - adds e6 tag(s) to a list, if id is supplied will add to the list that matches the id
+            ${botConfig.prefix}e6-blacklist-tag <tag>... - adds tag(s) to a global e6 blacklist list
             ${botConfig.prefix}e6-bonk/e6-disable - disables e6 posting
             ${botConfig.prefix}e6-enable - enables e6 posting
-            ${botConfig.prefix}e6-blacklist-tag <tag>... - adds tag(s) to a global e6 blacklist list
-            ${botConfig.prefix}e6-add-tag <id/tag> <tag>... - adds e6 tag(s) to a list, if id is supplied will add to the list that matches the id
+            ${botConfig.prefix}e6-info - displays e6 infomation
             ${botConfig.prefix}e6-sort <none, random, score> - switches sorting for e6 posts
             ${botConfig.prefix}e6-remove <tag> ... - Removes a e6 tag(s) from all lists
             ${botConfig.prefix}e6-remove-list <id> - Removes an e6 tag list
@@ -615,7 +621,8 @@ function processMessage(msg){
             ${botConfig.prefix}pardon <member> - allows user to be verified
             ${botConfig.prefix}punish <member> - removes verified from user
             ${botConfig.prefix}prune <amount> - removes last amount of messages (max is 100)
-
+            ` + "```");
+            msg.author.send("```" + `
             [ Public ]
             ${botConfig.prefix}avatar <member> - Displays users profile picture
             ${botConfig.prefix}add-role - Assigns a public role
