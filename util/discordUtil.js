@@ -591,12 +591,14 @@ function processMessage(msg){
 
             [ Admin ]
             ${botConfig.prefix}add-mod <member> - assigns the mod role to a user
+            ${botConfig.prefix}add-role-assignable - adds a role to the assignable list
             ${botConfig.prefix}assign-mod-role <id> - assigns the mod role
             ${botConfig.prefix}e6-reset - resets all lists to nothing, including blacklist
             ${botConfig.prefix}e6-set-channel <id> - Assigns e6 channel
             ${botConfig.prefix}remove-mod <member> - removes the mod role from a user
             ${botConfig.prefix}set-quote-channel <id> - Assign quote channel
             ${botConfig.prefix}set-nsfw-quote-channel <id> - Assign nsfw quote channel
+            ${botConfig.prefix}remove-role-assignable - removes a role from the assignable list
 
             [ Moderator ]
             ${botConfig.prefix}assign-verify-role <id> - assigns the verified role
@@ -616,10 +618,13 @@ function processMessage(msg){
 
             [ Public ]
             ${botConfig.prefix}avatar <member> - Displays users profile picture
+            ${botConfig.prefix}add-role - Assigns a public role
             ${botConfig.prefix}help - Display help
-            ${botConfig.prefix}ping - Makes the bot respond with Pong  
             ${botConfig.prefix}info - Displays server info
             ${botConfig.prefix}petition - Create a petition
+            ${botConfig.prefix}ping - Makes the bot respond with Pong  
+            ${botConfig.prefix}remove-role - Removes a public role
+            ${botConfig.prefix}role-list - List public roles
 
             𝒸𝓁𝓊𝒸𝓀` + "```");
         }
