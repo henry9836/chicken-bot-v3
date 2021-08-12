@@ -634,10 +634,11 @@ function processMessage(msg){
             ${botConfig.prefix}role-list - List public roles
 
             𝒸𝓁𝓊𝒸𝓀` + "```");
+            return;
         }
 
         //Ping
-        if (msg.content.startsWith(`${botConfig.prefix}ping`) || msg.content.startsWith(`${botConfig.prefix}echo`)){
+        else if (msg.content.startsWith(`${botConfig.prefix}ping`) || msg.content.startsWith(`${botConfig.prefix}echo`)){
             return msg.channel.send('Pong!');
         }
 
