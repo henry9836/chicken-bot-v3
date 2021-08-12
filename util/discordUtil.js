@@ -463,7 +463,7 @@ function processMessage(msg){
             else if (msg.content.startsWith(`${botConfig.prefix}punish`)){
                 if (args[1]){
                     const punishedUser = msg.mentions.members.first();
-                    mongoUtil.punish(punishedUser);
+                    mongoUtil.punish(punishedUser, msg);
                 }
                 else{
                     return msg.reply("You must supply a role id");
@@ -474,7 +474,7 @@ function processMessage(msg){
             else if (msg.content.startsWith(`${botConfig.prefix}pardon`)){
                 if (args[1]){
                     const punishedUser = msg.mentions.members.first();
-                    mongoUtil.pardon(punishedUser);
+                    mongoUtil.pardon(punishedUser, msg);
                 }
                 else{
                     return msg.reply("You must supply a role id");
