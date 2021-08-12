@@ -9,7 +9,7 @@
     "whitelists" : [
     ],
     "e6Channel" : "",
-    "postInterval" : 5,
+    "postInterval" : 10,
     "maxPosts" : 3,
     "maxDownload" : 30,
     "sortType" : "",
@@ -21,7 +21,8 @@
   },
   "channels":{
     "quotes" : "",
-    "nsfwquotes" : ""
+    "nsfwquotes" : "",
+    "petitions" : ""
   },
   "roles" : {
     "adminRole" : "",

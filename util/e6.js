@@ -237,7 +237,6 @@ function postLoop(){
     }
     e6LoopActive = true;
     setInterval(function(){
-        console.log("loop")
         //If e621 posts are not disabled
         if (botConfig.e621.bonked === false){
             if (e6channel != undefined){

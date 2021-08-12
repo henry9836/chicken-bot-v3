@@ -16,6 +16,7 @@ USERMOD = {
 
 var quoteChannel = undefined;
 var nsfwQuoteChannel = undefined;
+var petitionChannel = undefined;
 
 function applyMessageEffectors(msg, user){
 
@@ -171,7 +172,11 @@ function processMessage(msg){
             nsfwQuoteChannel = msg.guild.channels.cache.get(botConfig.channels.nsfwquotes)
         }
     }
-    
+    if (petitionChannel == undefined){
+        if (botConfig.channels.petitions != ""){
+            petitionChannel = msg.guild.channels.cache.get(botConfig.channels.petitions)
+        }
+    }
     //Get args for the message
     const args = msg.content.slice(botConfig.prefix.length).trim().split(' ');
 
@@ -246,7 +251,7 @@ function processMessage(msg){
                             }
                             else {
                                 return msg.reply("Role ID doesn't exist"); 
-                            }role
+                            }
                         })
                         .catch(err => {
                             return msg.reply(err);
@@ -269,13 +274,12 @@ function processMessage(msg){
                         return msg.reply(`Assigned ${channel} as quote channel`);
                     }
                     else{
-                        msg.reply("Channel ID doesn't exist or hidden")
+                        return msg.reply("Channel ID doesn't exist or hidden")
                     }
                 }
                 else{
-                    msg.reply("Please specify a channel id");
+                    return msg.reply("Please specify a channel id");
                 }
-                return;
             }
 
             else if (msg.content.startsWith(`${botConfig.prefix}set-nsfw-quote-channel`)){
@@ -291,15 +295,107 @@ function processMessage(msg){
                             return msg.reply(`Assigned ${channel} as nsfw quote channel`);
                         }
                         else{
-                            msg.reply("Channel isn't marked nsfw!")
+                            return msg.reply("Channel isn't marked nsfw!")
                         }
                     }
                     else{
-                        msg.reply("Channel ID doesn't exist or hidden")
+                        return msg.reply("Channel ID doesn't exist or hidden")
                     }
                 }
                 else{
-                    msg.reply("Please specify a channel id");
+                    return msg.reply("Please specify a channel id");
+                }
+            }
+            else if (msg.content.startsWith(`${botConfig.prefix}set-petition-channel`)){
+                if (args.length > 1){
+                    //Validate role exists
+                    let channel = msg.guild.channels.cache.get(args[1])
+                    //console.log(channel);
+                    if (channel !== undefined){
+                        botConfig.channels.petitions = channel.id;
+                        saveConfig();
+                        petitionChannel = channel;
+                        return msg.reply(`Assigned ${channel} as petition channel`);
+                    }
+                    else{
+                        return msg.reply("Channel ID doesn't exist or hidden")
+                    }
+                }
+                else{
+                    return msg.reply("Please specify a channel id");
+                }
+            }
+
+            //Stop role from being assigned by everyone
+            else if (msg.content.startsWith(`${botConfig.prefix}remove-role-assignable`)){
+                if (args[1]){
+                    //For every role supplied
+                    for (let i = 1; i < args.length; i++) {
+                        //Validate role exists
+                        msg.guild.roles.fetch(args[i])
+                        .then(role => {
+                            if (role !== null){
+                                //Find the role and remove it
+                                for (let j = 0; j < botConfig.roles.publicRoles.length; j++) {
+                                    if (botConfig.roles.publicRoles[j] == role.id){
+                                        botConfig.roles.publicRoles.splice(j, 1);
+                                        break;
+                                    }
+                                }
+                                saveConfig();
+                                return msg.reply(`Removed ${role} role from public list`);
+                            }
+                            else {
+                                return msg.reply("Role ID doesn't exist"); 
+                            }
+                        })
+                        .catch(err => {
+                            return msg.reply(err);
+                        })
+                    }
+                }
+                else{
+                    return msg.reply("You must supply a role id");
+                }
+                return;
+            }
+
+            //Set role as assignable by everyone
+            else if (msg.content.startsWith(`${botConfig.prefix}set-role-assignable`)){
+                if (args[1]){
+                    //For every role supplied
+                    for (let i = 1; i < args.length; i++) {
+                        //Validate role exists
+                        msg.guild.roles.fetch(args[i])
+                        .then(role => {
+                            if (role !== null){
+                                //Check that this role isn't already in our list
+                                var found = false;
+                                for (let j = 0; j < botConfig.roles.publicRoles.length; j++) {
+                                    if (botConfig.roles.publicRoles[j] == role.id){
+                                        found = true;
+                                        break;
+                                    }
+                                }
+                                if (found){
+                                    return;
+                                }
+
+                                botConfig.roles.publicRoles.push([role.id, role.name]);
+                                saveConfig();
+                                return msg.reply(`Assigned ${role} role to public list`);
+                            }
+                            else {
+                                return msg.reply("Role ID doesn't exist"); 
+                            }
+                        })
+                        .catch(err => {
+                            return msg.reply(err);
+                        })
+                    }
+                }
+                else{
+                    return msg.reply("You must supply a role id");
                 }
                 return;
             }
@@ -321,11 +417,11 @@ function processMessage(msg){
                         return msg.reply(`Assigned ${channel} as e621 channel`);
                     }
                     else{
-                        msg.reply("Channel ID doesn't exist or hidden")
+                        return msg.reply("Channel ID doesn't exist or hidden")
                     }
                 }
                 else{
-                    msg.reply("Please specify a channel id");
+                    return msg.reply("Please specify a channel id");
                 }
                 return;
             }
@@ -523,6 +619,7 @@ function processMessage(msg){
             ${botConfig.prefix}help - Display help
             ${botConfig.prefix}ping - Makes the bot respond with Pong  
             ${botConfig.prefix}info - Displays server info
+            ${botConfig.prefix}petition - Create a petition
 
             𝒸𝓁𝓊𝒸𝓀` + "```");
         }
@@ -530,6 +627,29 @@ function processMessage(msg){
         //Ping
         if (msg.content.startsWith(`${botConfig.prefix}ping`) || msg.content.startsWith(`${botConfig.prefix}echo`)){
             return msg.channel.send('Pong!');
+        }
+
+        //Quote
+        else if (msg.content.startsWith(`${botConfig.prefix}petition`)){
+            if (args.length > 1){
+                if (petitionChannel != undefined){
+                    petitionChannel.send(msg.toString().replace(`${botConfig.prefix}${args[0]} `, `Petition By ${msg.author}: `))
+                    .then(function (message){
+                        message.react("👍");
+                        message.react("👎");
+                    })
+                    .catch(function (err){
+                        debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN)
+                    })
+                    return;
+                }
+                else{
+                    return msg.reply("quote channel not assigned")
+                }
+            }
+            else{
+                return msg.reply("You need to supply a message to petition")
+            }
         }
 
         //Quote
@@ -545,11 +665,11 @@ function processMessage(msg){
                     return quoteChannel.send(embed);
                 }
                 else{
-                    msg.reply("quote channel not assigned")
+                    return msg.reply("quote channel not assigned")
                 }
             }
             else{
-                msg.reply("You need to attach an image")
+                return msg.reply("You need to attach an image")
             }
         }
 
@@ -570,11 +690,11 @@ function processMessage(msg){
                     }
                 }
                 else{
-                    msg.reply("quote channel not assigned")
+                    return msg.reply("quote channel not assigned")
                 }
             }
             else{
-                msg.reply("You need to attach an image")
+                return msg.reply("You need to attach an image")
             }
         }
 
@@ -600,7 +720,50 @@ function processMessage(msg){
                 return msg.reply(embed);
             });
         }
-
+        //Petition
+        else if (msg.content.startsWith(`${botConfig.prefix}petition`)){
+            msg.reply("?");
+        }
+        //Add a public role
+        else if (msg.content.startsWith(`${botConfig.prefix}add-role`)){
+            if (args[1]){
+                var message = msg.toString().replace(`${botConfig.prefix}${args[0]} `, "")
+                for (let i = 0; i < botConfig.roles.publicRoles.length; i++) {
+                    if (botConfig.roles.publicRoles[i][1] == message){
+                        let role = msg.guild.roles.cache.get(botConfig.roles.publicRoles[i][0])
+                        msg.member.roles.add(role);
+                        msg.react("✅");
+                    }
+                }
+            }
+            else{
+                msg.reply("You need to supply a role name, use role-list to get a list of assignable roles")
+            }
+        }
+        //Remove a public role
+        else if (msg.content.startsWith(`${botConfig.prefix}remove-role`)){
+            if (args[1]){
+                var message = msg.toString().replace(`${botConfig.prefix}${args[0]} `, "")
+                for (let i = 0; i < botConfig.roles.publicRoles.length; i++) {
+                    if (botConfig.roles.publicRoles[i][1] == message){
+                        let role = msg.guild.roles.cache.get(botConfig.roles.publicRoles[i][0])
+                        msg.member.roles.remove(role);
+                        msg.react("✅");
+                    }
+                }
+            }
+            else{
+                msg.reply("You need to supply a role name, use role-list to get a list of assignable roles")
+            }
+        }
+        //Get Role List
+        else if (msg.content.startsWith(`${botConfig.prefix}role-list`)){
+            var list = "Assignable Roles: "
+            for (let i = 0; i < botConfig.roles.publicRoles.length; i++) {
+                list += " `" + botConfig.roles.publicRoles[i][1] + "` ,"
+            }
+            msg.reply(list);
+        }
         //Server info
         else if (msg.content.startsWith(`${botConfig.prefix}info`)){
             const embed = new MessageEmbed()

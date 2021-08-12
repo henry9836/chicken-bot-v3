@@ -71,7 +71,7 @@ function postE6Content(posts, channel, repostList){
                 const url = "https://e621.net/posts/" + posts[i].id;
                 const embed = new MessageEmbed()
                 .setTitle(`${posts[i].id}`)
-                .setAuthor(`${posts[i].uploader_id}`)
+                .setAuthor(`${posts[i].tags.artist}`)
                 .setURL(`${url}`)
                 .setImage(`${posts[i].file.url}`)
                 
