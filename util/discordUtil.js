@@ -501,6 +501,30 @@ function processMessage(msg){
                 }
                 return;
             }
+            //Assign Verify Role
+            else if (msg.content.startsWith(`${botConfig.prefix}assign-verified-role`)){
+                if (args[1]){
+                    //Validate role exists
+                    msg.guild.roles.fetch(args[1])
+                        .then(role => {
+                            if (role !== null){
+                                botConfig.roles.verifiedRole = role.id;
+                                saveConfig();
+                                return msg.reply(`Assigned ${role} as verified role`);
+                            }
+                            else {
+                                return msg.reply("Role ID doesn't exist"); 
+                            }role
+                        })
+                        .catch(err => {
+                            return msg.reply(err);
+                        })
+                }
+                else{
+                    return msg.reply("You must supply a role id");
+                }
+                return;
+            }
             //----
             //E6
             //----
@@ -579,30 +603,6 @@ function processMessage(msg){
                 }
                 else{
                     msg.reply("You must tag a user");
-                }
-                return;
-            }
-            //Assign Verify Role
-            else if (msg.content.startsWith(`${botConfig.prefix}assign-verified-role`)){
-                if (args[1]){
-                    //Validate role exists
-                    msg.guild.roles.fetch(args[1])
-                        .then(role => {
-                            if (role !== null){
-                                botConfig.roles.verifiedRole = role.id;
-                                saveConfig();
-                                return msg.reply(`Assigned ${role} as verified role`);
-                            }
-                            else {
-                                return msg.reply("Role ID doesn't exist"); 
-                            }role
-                        })
-                        .catch(err => {
-                            return msg.reply(err);
-                        })
-                }
-                else{
-                    return msg.reply("You must supply a role id");
                 }
                 return;
             }
@@ -686,25 +686,29 @@ function processMessage(msg){
 
             msg.author.send("```" + `
             [ Owner ]
-            ${botConfig.prefix}add-admin  - assigns the admin role to a user
+            ${botConfig.prefix}add-admin <member> - assigns the admin role to a user
             ${botConfig.prefix}assign-admin-role <id> - assigns the admin role
             ${botConfig.prefix}remove-admin <id> - removes the admin role from a user
+            ${botConfig.prefix}set-bot-log-channel <id> - sets the channel where the bot outputs a log to
             ` + "```");
             msg.author.send("```" + `
             [ Admin ]
             ${botConfig.prefix}add-mod <member> - assigns the mod role to a user
-            ${botConfig.prefix}add-role-assignable - adds a role to the assignable list
+            ${botConfig.prefix}add-role-assignable <id> - adds a role to the assignable list
             ${botConfig.prefix}assign-mod-role <id> - assigns the mod role
+            ${botConfig.prefix}assign-verified-role <id> - assigns the verified role
             ${botConfig.prefix}e6-reset - resets all lists to nothing, including blacklist
-            ${botConfig.prefix}e6-set-channel- Assigns e6 channel
+            ${botConfig.prefix}e6-set-channel <id> - Assigns e6 channel
             ${botConfig.prefix}remove-mod <member> - removes the mod role from a user
-            ${botConfig.prefix}set-quote-channel <id> - Assign quote channel
             ${botConfig.prefix}set-nsfw-quote-channel <id> - Assign nsfw quote channel
-            ${botConfig.prefix}remove-role-assignable - removes a role from the assignable list
+            ${botConfig.prefix}set-petition-channel <id> - Assigns the petition channel
+            ${botConfig.prefix}set-quote-channel <id> - Assign quote channel
+            ${botConfig.prefix}set-role-assignable <id> - Makes role assignable by anyone
+            ${botConfig.prefix}set-verified-channel <id> - Assigns the verified channel
+            ${botConfig.prefix}remove-role-assignable <id> - removes a role from the assignable list
             ` + "```");
             msg.author.send("```" + `
             [ Moderator ]
-            ${botConfig.prefix}assign-verified-role <id> - assigns the verified role
             ${botConfig.prefix}ban <id> - bans member
             ${botConfig.prefix}e6-add-tag <id/tag> <tag>... - adds e6 tag(s) to a list, if id is supplied will add to the list that matches the id
             ${botConfig.prefix}e6-blacklist-tag <tag>... - adds tag(s) to a global e6 blacklist list
@@ -723,12 +727,14 @@ function processMessage(msg){
             msg.author.send("```" + `
             [ Public ]
             ${botConfig.prefix}avatar <member> - Displays users profile picture
-            ${botConfig.prefix}add-role - Assigns a public role
+            ${botConfig.prefix}add-role <role> - Assigns a public role
             ${botConfig.prefix}help - Display help
             ${botConfig.prefix}info - Displays server info
-            ${botConfig.prefix}petition - Create a petition
+            ${botConfig.prefix}nsfw-quote <attachment> - Creates a nsfw quote in the nsfw-quotes channel
+            ${botConfig.prefix}petition <message> - Create a petition
             ${botConfig.prefix}ping - Makes the bot respond with Pong  
-            ${botConfig.prefix}remove-role - Removes a public role
+            ${botConfig.prefix}quote <attachment> - Creates a quote in the quotes channel
+            ${botConfig.prefix}remove-role <role> - Removes a public role
             ${botConfig.prefix}role-list - List public roles
 
             𝒸𝓁𝓊𝒸𝓀` + "```");

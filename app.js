@@ -22,6 +22,7 @@ main();
 //When the discord client is ready
 client.on('ready', () => {
     debugging.chickenScratch(`Logged in as ${client.user.tag}!`);
+    client.user.setActivity(`${botConfig.prefix}help - to see what I can do`); 
 });
   
 //When we recieve a message
