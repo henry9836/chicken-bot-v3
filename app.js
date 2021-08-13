@@ -27,6 +27,12 @@ client.on('ready', () => {
 //When we recieve a message
 client.on('message', msg => {
 
+    //Ignore our own messages
+    if (msg.author == client.user){
+        return;
+    }
+
+
     //E6 not initalised
     if (e6.e6 === undefined){
         e6.initE6(msg.guild)

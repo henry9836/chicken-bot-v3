@@ -11,12 +11,16 @@ USERMOD = {
     REMOVEADMIN : 2,
     REMOVEMOD : 3,
     BAN : 4,
-    KICK : 5
+    KICK : 5,
+    VERIFY: 6,
+    UNVERIFY: 7
 }
 
 var quoteChannel = undefined;
 var nsfwQuoteChannel = undefined;
 var petitionChannel = undefined;
+var verifiedChannel = undefined;
+var logChannel = undefined;
 
 function applyMessageEffectors(msg, user){
 
@@ -29,7 +33,7 @@ function applyMessageEffectors(msg, user){
 function saveConfig(){
     //Convert our botConfig to json
     var jsonData = JSON.stringify(botConfig);
-    debugging.chickenScratch(jsonData);
+    //debugging.chickenScratch(jsonData);
     fs.writeFileSync('./config.json', jsonData, 'utf8', (err) => {
         if (err){
             debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
@@ -72,15 +76,52 @@ function isMod(msg){
 }
 
 //Effects a discord user (banning, kicking, promoting, etc)
+//Auto verifying is done in mongoUtil under function messageTick
 function effectMember(member, msg, mod){
-    debugging.chickenScratch(member.user.tag);
     const user = member.user;
     if (member){
+        //Verify
+        if (mod === USERMOD.VERIFY){
+            if (botConfig.roles.verifiedRole){
+                if (logChannel != undefined){
+                    logChannel.send(`Verified ${user.tag}!`);
+                }
+                member.roles.add(botConfig.roles.verifiedRole);
+                if (verifiedChannel){
+                    var welcome = applyMessageEffectors(botConfig.welcomeToVerified, user);
+                    verifiedChannel.send(welcome)
+                }
+                if (logChannel != undefined && msg.toString().includes("pardon")){
+                    logChannel.send(`Pardoned ${user.tag}! Command issued by ${msg.author}` + "```" + `${msg.toString()}` + "```");
+                }
+                return;
+            }
+            else{
+                return msg.reply("Verified role un-assigned in config");
+            }
+        }
+        //Un-Verify
+        else if (mod === USERMOD.UNVERIFY){
+            if (botConfig.roles.verifiedRole){
+                member.roles.remove(botConfig.roles.verifiedRole);
+                if (logChannel != undefined){
+                    logChannel.send(`Punished ${user.tag}! Command issued by ${msg.author}` + "```" + `${msg.toString()}` + "```");
+                }
+                member.roles.remove(botConfig.roles.verifiedRole);
+                return;
+            }
+            else{
+                return msg.reply("Verified role un-assigned in config");
+            }
+        }
         //Bans
-        if (mod === USERMOD.BAN){
+        else if (mod === USERMOD.BAN){
             member
-                .ban("Testing")
+                .ban({reason: msg.toString()})
                 .then(() => {
+                    if (logChannel != undefined){
+                        logChannel.send(`Banned ${user.tag}, ban hammer wielded by ${msg.author}` + "```" + `${msg.toString()}` + "```");
+                    }
                     return msg.reply(`Successfully banned ${user.tag}`)
                 })
                 .catch(err => {
@@ -91,8 +132,11 @@ function effectMember(member, msg, mod){
         //Kick
         else if (mod === USERMOD.KICK){
             member
-                .kick("Testing")
+                .kick(msg.toString())
                 .then(() => {
+                    if (logChannel != undefined){
+                        logChannel.send(`Kicked ${user.tag}, booted by ${msg.author}` + "```" + `${msg.toString()}` + "```");
+                    }
                     return msg.reply(`Successfully kicked ${user.tag}`)
                 })
                 .catch(err => {
@@ -103,6 +147,9 @@ function effectMember(member, msg, mod){
         //Assign Admin
         else if (mod == USERMOD.MAKEADMIN){
             if (botConfig.roles.adminRole){
+                if (logChannel != undefined){
+                    logChannel.send(`Promoted ${user.tag} to admin, knighted by ${msg.author}` + "```" + `${msg.toString()}` + "```");
+                }
                 member.roles.add(botConfig.roles.adminRole);
                 var welcome = applyMessageEffectors(botConfig.welcometoAdmin, user);
                 return msg.channel.send(welcome);
@@ -114,6 +161,9 @@ function effectMember(member, msg, mod){
         //Assign Mod
         else if (mod == USERMOD.MAKEMOD){
             if (botConfig.roles.modRole){
+                if (logChannel != undefined){
+                    logChannel.send(`Promoted ${user.tag} to mod, knighted by ${msg.author}` + "```" + `${msg.toString()}` + "```");
+                }
                 member.roles.add(botConfig.roles.modRole);
                 var welcome = applyMessageEffectors(botConfig.welcometoMod, user);
                 return msg.channel.send(welcome);
@@ -125,6 +175,9 @@ function effectMember(member, msg, mod){
         //Remove Admin
         else if (mod == USERMOD.REMOVEADMIN){
             if (botConfig.roles.adminRole){
+                if (logChannel != undefined){
+                    logChannel.send(`Demoted ${user.tag} to mod, dethorned by ${msg.author}` + "```" + `${msg.toString()}` + "```");
+                }
                 member.roles.remove(botConfig.roles.adminRole);
                 return msg.reply(`Removed ${user.tag}'s Admin Role`);
             }
@@ -135,6 +188,9 @@ function effectMember(member, msg, mod){
         //Remove Mod
         else if (mod == USERMOD.REMOVEMOD){
             if (botConfig.roles.modRole){
+                if (logChannel != undefined){
+                    logChannel.send(`Removed ${user.tag}'s mod, thrown out by ${msg.author}` + "```" + `${msg.toString()}` + "```");
+                }
                 member.roles.remove(botConfig.roles.modRole);
                 return msg.reply(`Removed ${user.tag}'s Mod Role`);
             }
@@ -142,7 +198,6 @@ function effectMember(member, msg, mod){
                 return msg.reply("Mod role un-assigned in config");
             }
         }
-        //Assign Dev
         else{
             return msg.reply("ERROR CODE 500");
         }
@@ -159,7 +214,7 @@ function processMessage(msg){
     if (!msg.guild) return;
 
     //Tick Message Counter
-    mongoUtil.messageTick(msg.member);
+    mongoUtil.messageTick(msg.member, msg);
 
     //Attempt to setup quote channels if it doesn't exist
     if (quoteChannel == undefined){
@@ -177,6 +232,17 @@ function processMessage(msg){
             petitionChannel = msg.guild.channels.cache.get(botConfig.channels.petitions)
         }
     }
+    if (verifiedChannel == undefined){
+        if (botConfig.channels.verified != ""){
+            verifiedChannel = msg.guild.channels.cache.get(botConfig.channels.verified)
+        }
+    }
+    if (logChannel == undefined){
+        if (botConfig.channels.log != ""){
+            logChannel = msg.guild.channels.cache.get(botConfig.channels.log)
+        }
+    }
+
     //Get args for the message
     const args = msg.content.slice(botConfig.prefix.length).trim().split(' ');
 
@@ -223,7 +289,27 @@ function processMessage(msg){
                 return;
             }
             
-            
+            //Bot log channel
+            else if (msg.content.startsWith(`${botConfig.prefix}set-bot-log-channel`)){
+                if (args.length > 1){
+                    //Validate role exists
+                    let channel = msg.guild.channels.cache.get(args[1])
+                    
+                    if (channel !== undefined){
+                        botConfig.channels.log = channel.id;
+                        logChannel = channel;
+                        saveConfig();
+                        msg.reply(`Assigned ${channel} as log channel`);
+                    }
+                    else{
+                        msg.reply("Channel ID doesn't exist or hidden")
+                    }
+                }
+                else{
+                    msg.reply("Please specify a channel id");
+                }
+                return;
+            }
         }
 
         ///==================================
@@ -266,7 +352,6 @@ function processMessage(msg){
                 if (args.length > 1){
                     //Validate role exists
                     let channel = msg.guild.channels.cache.get(args[1])
-                    //console.log(channel);
                     if (channel !== undefined){
                         botConfig.channels.quotes = channel.id;
                         quoteChannel = channel;
@@ -281,12 +366,30 @@ function processMessage(msg){
                     return msg.reply("Please specify a channel id");
                 }
             }
-
+            //Verified channel
+            else if (msg.content.startsWith(`${botConfig.prefix}set-verified-channel`)){
+                if (args.length > 1){
+                    //Validate role exists
+                    let channel = msg.guild.channels.cache.get(args[1])
+                    if (channel !== undefined){
+                        botConfig.channels.verified = channel.id;
+                        verifiedChannel = channel;
+                        saveConfig();
+                        msg.reply(`Assigned ${channel} as verifed channel`);
+                    }
+                    else{
+                        msg.reply("Channel ID doesn't exist or hidden")
+                    }
+                }
+                else{
+                    msg.reply("Please specify a channel id");
+                }
+                return;
+            }
             else if (msg.content.startsWith(`${botConfig.prefix}set-nsfw-quote-channel`)){
                 if (args.length > 1){
                     //Validate role exists
                     let channel = msg.guild.channels.cache.get(args[1])
-                    //console.log(channel);
                     if (channel !== undefined){
                         if (channel.nsfw){
                             botConfig.channels.nsfwquotes = channel.id;
@@ -310,7 +413,6 @@ function processMessage(msg){
                 if (args.length > 1){
                     //Validate role exists
                     let channel = msg.guild.channels.cache.get(args[1])
-                    //console.log(channel);
                     if (channel !== undefined){
                         botConfig.channels.petitions = channel.id;
                         saveConfig();
@@ -410,7 +512,6 @@ function processMessage(msg){
                 if (args.length > 1){
                     //Validate role exists
                     let channel = msg.guild.channels.cache.get(args[1])
-                    //console.log(channel);
                     if (channel !== undefined){
                         botConfig.e621.e6Channel = channel.id;
                         saveConfig();
@@ -459,14 +560,14 @@ function processMessage(msg){
                 const punishedUser = msg.mentions.users.first();
                 return effectMember(msg.guild.member(punishedUser), msg, USERMOD.BAN);
             }
-            //Allow user to have verified role
+            //Disable user from having verified role
             else if (msg.content.startsWith(`${botConfig.prefix}punish`)){
                 if (args[1]){
                     const punishedUser = msg.mentions.members.first();
                     mongoUtil.punish(punishedUser, msg);
                 }
                 else{
-                    return msg.reply("You must supply a role id");
+                    msg.reply("You must tag a user");
                 }
                 return;
             }
@@ -477,12 +578,12 @@ function processMessage(msg){
                     mongoUtil.pardon(punishedUser, msg);
                 }
                 else{
-                    return msg.reply("You must supply a role id");
+                    msg.reply("You must tag a user");
                 }
                 return;
             }
             //Assign Verify Role
-            else if (msg.content.startsWith(`${botConfig.prefix}assign-verify-role`)){
+            else if (msg.content.startsWith(`${botConfig.prefix}assign-verified-role`)){
                 if (args[1]){
                     //Validate role exists
                     msg.guild.roles.fetch(args[1])
@@ -567,9 +668,6 @@ function processMessage(msg){
                 }
                 return;
             }
-            //-----
-            //e6
-            //-----
             else if (msg.content.startsWith((`${botConfig.prefix}lewd`))){
                 e6.give_lewd();
                 return;
@@ -606,7 +704,7 @@ function processMessage(msg){
             ` + "```");
             msg.author.send("```" + `
             [ Moderator ]
-            ${botConfig.prefix}assign-verify-role <id> - assigns the verified role
+            ${botConfig.prefix}assign-verified-role <id> - assigns the verified role
             ${botConfig.prefix}ban <id> - bans member
             ${botConfig.prefix}e6-add-tag <id/tag> <tag>... - adds e6 tag(s) to a list, if id is supplied will add to the list that matches the id
             ${botConfig.prefix}e6-blacklist-tag <tag>... - adds tag(s) to a global e6 blacklist list
@@ -642,7 +740,7 @@ function processMessage(msg){
             return msg.channel.send('Pong!');
         }
 
-        //Quote
+        //Petition
         else if (msg.content.startsWith(`${botConfig.prefix}petition`)){
             if (args.length > 1){
                 if (petitionChannel != undefined){
@@ -727,15 +825,11 @@ function processMessage(msg){
             const listOfAvatars = msg.mentions.users.map(user =>{
                 const embed = new MessageEmbed()
                     .setTitle(`${user.username}`)
-                    .setURL(`${msg.author.displayAvatarURL()}`)
+                    .setURL(`${user.displayAvatarURL()}`)
                     .setImage(`${user.displayAvatarURL({format: 'png', dynamic: true})}`);
 
                 return msg.reply(embed);
             });
-        }
-        //Petition
-        else if (msg.content.startsWith(`${botConfig.prefix}petition`)){
-            msg.reply("?");
         }
         //Add a public role
         else if (msg.content.startsWith(`${botConfig.prefix}add-role`)){
@@ -813,3 +907,5 @@ function welcomeMember(member){
 module.exports.processMessage = processMessage;
 module.exports.welcomeMember = welcomeMember;
 module.exports.saveConfig = saveConfig;
+module.exports.effectMember = effectMember;
+module.exports.USERMOD = USERMOD;

@@ -13,7 +13,8 @@
     "maxPosts" : 3,
     "maxDownload" : 30,
     "sortType" : "",
-    "bonked" : true
+    "bonked" : true,
+    "mustBeNewerThan" : "1980-01-01"
   },
   "verifyThreshold" : {
     "min" : 10, 
@@ -21,6 +22,8 @@
   },
   "channels":{
     "quotes" : "",
+    "verified": "",
+    "log": "",
     "nsfwquotes" : "",
     "petitions" : ""
   },
@@ -33,5 +36,6 @@
 	"welcomeMessage" : "Welcome to the server! <user>",
 	"welcometoMod" : "Congrats <user>! You are a mod now!",
 	"welcometoAdmin" : "Congrats <user>! You are an admin now!",
+  "welcomeToVerified" : "Congrats <user>! You are now verified!",
   "welcomeChannel" : "general"
 }

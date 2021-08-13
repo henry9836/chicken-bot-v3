@@ -204,7 +204,6 @@ function give_lewd(){
         if (e6channel != undefined){
             //If we are in a nsfw channel
             if (e6channel.nsfw){
-                //e6channel.send(":3");
 
                 //Create a list of posts to prevent resposting before the database aquires the knowledge 
                 alreadyPosted = []

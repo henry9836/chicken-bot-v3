@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const { exit } = require("process");
 
 const debugging = require("./debugging.js");
+const discordUtil = require("./discordUtil.js");
 const botConfig = require('.././config.json');
 
 const Schema = mongoose.Schema;
@@ -44,7 +45,14 @@ function postE6Content(posts, channel, repostList){
 
             //Iterate through all the e6 posts we retrieved
             for (let i = 0; i < posts.length; i++) {
+
+                //Check date, if it is too old do not post
+                if (Date.parse(posts[i].created_at) < Date.parse(botConfig.e621.mustBeNewerThan)){
+                    continue;
+                }
+
                 var seen = false;
+
                 //Check if we have posted this
                 for (let arPost = 0; arPost < archivedPosts.length; arPost++) {
                     //We have posted this before
@@ -55,10 +63,12 @@ function postE6Content(posts, channel, repostList){
                 }
 
                 //Check if we have posted this during this session
-                for (let post = 0; post < repostList.length; post++) {
-                    if (repostList[post] == posts[i].id){
-                        seen = true;
-                        break;
+                if (seen == false){
+                    for (let post = 0; post < repostList.length; post++) {
+                        if (repostList[post] == posts[i].id){
+                            seen = true;
+                            break;
+                        }
                     }
                 }
 
@@ -134,17 +144,17 @@ function punish(member, msg){
                 msg.reply("User does not exist in database!")
             }
             else{
-                user.punished = true;
                 if (user.verified == true){
-                    if (botConfig.roles.modRole){
-                        member.roles.remove(botConfig.roles.verifiedRole);
+                    if (botConfig.roles.verifiedRole){
+                        user.punished = true;
+                        discordUtil.effectMember(member, msg, discordUtil.USERMOD.UNVERIFY);
+                        user.save(dbAction);
                     }
                     else{
-                        msg.reply("Mod Role Not Assigned!");
-                        debugging.chickenScratch("Mod Role Not Assigned!", debugging.DEBUGLVLS.WARN);
+                        msg.reply("Verified Role Not Assigned!");
+                        debugging.chickenScratch("Verified Role Not Assigned!", debugging.DEBUGLVLS.WARN);
                     }
                 }
-                user.save(dbAction);
             }
         }
     });
@@ -165,12 +175,14 @@ function pardon(member, msg){
             else{
                 user.punished = false;
                 if (user.verified == true){
-                    if (botConfig.roles.modRole){
-                        member.roles.add(botConfig.roles.verifiedRole);
+                    if (botConfig.roles.verifiedRole){
+                        //Check if the user has the role
+                        discordUtil.effectMember(member, msg, discordUtil.USERMOD.VERIFY);
+                        //member.roles.add(botConfig.roles.verifiedRole);
                     }
                     else{
-                        msg.reply("Mod Role Not Assigned!");
-                        debugging.chickenScratch("Mod Role Not Assigned!", debugging.DEBUGLVLS.WARN);
+                        msg.reply("Verified Role Not Assigned!");
+                        debugging.chickenScratch("Verified Role Not Assigned!", debugging.DEBUGLVLS.WARN);
                     }
                 }
                 user.save(dbAction);
@@ -180,7 +192,7 @@ function pardon(member, msg){
 }
 
 //Automated Verify
-function messageTick(member){
+function messageTick(member, msg){
     //Find member in collection
     dbUser.findOne({"userID" : member.user.id}, function(err, user){
         if (err){
@@ -208,8 +220,12 @@ function messageTick(member){
                 if (user.punished == false){
                     //If the user has exceeded the threshold then assign verified role
                     if (user.threshold <= user.amountOfMsgs){
-                        if (botConfig.roles.modRole){
-                            member.roles.add(botConfig.roles.verifiedRole);
+                        if (botConfig.roles.verifiedRole){
+                            if (member.roles.cache.get(botConfig.roles.verifiedRole)){
+                                return;
+                            }
+
+                            discordUtil.effectMember(member, msg, discordUtil.USERMOD.VERIFY);
                         }
                         else{
                             debugging.chickenScratch("Verified Role Not Assigned!", debugging.DEBUGLVLS.WARN);
