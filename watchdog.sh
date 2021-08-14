@@ -6,4 +6,5 @@ while true; do
     echo $'\n----------------------------------'
     echo "[-] $TIME Application Crashed, Restarting..."
     echo $'----------------------------------\n'
+    sleep 1
 done
