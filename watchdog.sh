@@ -5,10 +5,9 @@ while true; do
     #Apply any updates
     echo "[+] Checking and Downloading Git Updates..."
     git stash
-    git checkout master
-    git branch new-branch-to-save-current-commits
     git fetch --all
-    git reset --hard origin/master
+    git reset --hard origin/main
+    git checkout main
     git stash pop
     echo "[+] Done."
 
