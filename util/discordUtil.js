@@ -693,6 +693,7 @@ function processMessage(msg){
             ${botConfig.prefix}assign-admin-role <id> - assigns the admin role
             ${botConfig.prefix}remove-admin <id> - removes the admin role from a user
             ${botConfig.prefix}set-bot-log-channel <id> - sets the channel where the bot outputs a log to
+            ${botConfig.prefix}update - updates the bot
             ` + "```");
             msg.author.send("```" + `
             [ Admin ]
