@@ -914,7 +914,6 @@ function processMessage(msg){
 
 //Export Functions
 module.exports.processMessage = processMessage;
-module.exports.welcomeMember = welcomeMember;
 module.exports.saveConfig = saveConfig;
 module.exports.effectMember = effectMember;
 module.exports.USERMOD = USERMOD;
