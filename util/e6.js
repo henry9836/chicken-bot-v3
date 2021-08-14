@@ -19,7 +19,7 @@ const TAGUPDATE = {
 
 //Start the module and login using our api key
 function initE6(guild){
-    if (e6 == undefined){
+    if (e6 == undefined && guild != undefined){
         debugging.chickenScratch("Initalizing e621 module...");
 
         if (botConfig.e621.api === undefined){
@@ -245,7 +245,8 @@ function postLoop(){
         else{
             debugging.chickenScratch("E6 posting is disabled, skipping...")
         }
-    }, ((botConfig.e621.postInterval * 1000)* 60));
+    }, ((botConfig.e621.postInterval * 1000)));
+    //}, ((botConfig.e621.postInterval * 1000)* 60));
 }
 
 //Export Functions

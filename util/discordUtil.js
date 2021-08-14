@@ -4,6 +4,7 @@ const mongoUtil = require("./mongoUtil.js");
 const botConfig = require('.././config.json');
 const e6 = require('./e6.js');
 const { MessageEmbed } = require("discord.js");
+const { exit } = require('process');
 
 USERMOD = {
     MAKEADMIN : 0,
@@ -261,9 +262,11 @@ function processMessage(msg){
             else if (msg.content.startsWith(`${botConfig.prefix}remove-admin`)){
                 return effectMember(msg.guild.member(msg.mentions.users.first()), msg, USERMOD.REMOVEADMIN);
             }
+            //Force a crash
+            else if (msg.content.startsWith(`${botConfig.prefix}crash`)){
+                exit(1);
+            }
 
-
-            //OWNER CONFIG
             //Assign Admin Role
             else if (msg.content.startsWith(`${botConfig.prefix}assign-admin-role`)){
                 if (args[1]){

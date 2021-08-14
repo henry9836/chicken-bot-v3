@@ -43,10 +43,11 @@ client.on('message', msg => {
     discordUtil.processMessage(msg);
 });
 
+//Removed as another bot handles this
 //When someone joins
-client.on('guildMemberAdd', member => {
-    discordUtil.welcomeMember(member);
-});
+// client.on('guildMemberAdd', member => {
+//     //discordUtil.welcomeMember(member);
+// });
 
 function main(){
     //Check node verison
