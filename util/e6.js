@@ -245,8 +245,7 @@ function postLoop(){
         else{
             debugging.chickenScratch("E6 posting is disabled, skipping...")
         }
-    }, ((botConfig.e621.postInterval * 1000)));
-    //}, ((botConfig.e621.postInterval * 1000)* 60));
+    }, ((botConfig.e621.postInterval * 1000)* 60));
 }
 
 //Export Functions
