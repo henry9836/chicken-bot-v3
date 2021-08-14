@@ -11,7 +11,7 @@ while true; do
     echo "[+] Done."
 
     #Start the bot
-    echo '[+] Starting Discord Bot...\n'
+    echo $'[+] Starting Discord Bot...\n'
     node ./app.js
 
     #Crashed record and restart
