@@ -263,7 +263,7 @@ function processMessage(msg){
                 return effectMember(msg.guild.member(msg.mentions.users.first()), msg, USERMOD.REMOVEADMIN);
             }
             //Force a crash
-            else if (msg.content.startsWith(`${botConfig.prefix}crash`)){
+            else if ((msg.content.startsWith(`${botConfig.prefix}crash`)) || (msg.content.startsWith(`${botConfig.prefix}update`))){
                 exit(1);
             }
 
