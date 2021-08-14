@@ -7,7 +7,7 @@ while true; do
     git stash
     git fetch --all
     git reset --hard origin/main
-    git checkout main
+    #git checkout main
     git stash pop
     echo "[+] Done."
 
