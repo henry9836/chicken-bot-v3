@@ -900,17 +900,17 @@ function processMessage(msg){
     }
 }
 
-function welcomeMember(member){
-    // Send the message to a designated channel on a server:
-    const channel = member.guild.channels.cache.find(ch => ch.name === `${botConfig.welcomeChannel}`);
-    // Do nothing if the channel wasn't found on this server
-    if (!channel) {
-        debugging.chickenScratch("Couldn't Find the welcome channel", debugging.DEBUGLVLS.WARN)
-    };
+// function welcomeMember(member){
+//     // Send the message to a designated channel on a server:
+//     const channel = member.guild.channels.cache.find(ch => ch.name === `${botConfig.welcomeChannel}`);
+//     // Do nothing if the channel wasn't found on this server
+//     if (!channel) {
+//         debugging.chickenScratch("Couldn't Find the welcome channel", debugging.DEBUGLVLS.WARN)
+//     };
 
-    var welcome = applyMessageEffectors(botConfig.welcomeMessage, member.user);
-    return channel.send(welcome);
-}
+//     var welcome = applyMessageEffectors(botConfig.welcomeMessage, member.user);
+//     return channel.send(welcome);
+// }
 
 //Export Functions
 module.exports.processMessage = processMessage;
