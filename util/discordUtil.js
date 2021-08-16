@@ -747,8 +747,8 @@ function processMessage(msg){
         }
 
         //Easter eggs
-        else if ((msg.content.startsWith(`${botConfig.prefix}cluck`)) || (msg.content.startsWith(`${botConfig.prefix}bok`)) || (msg.content.startsWith(`${botConfig.prefix}bawk`))) {
-            replies = ["cluck", "bok", "*tilts head in confusion*", "bawk", "*scratches the ground*", "*pecks you*"]
+        else if ((msg.content.startsWith(`${botConfig.prefix}cluck`)) || (msg.content.startsWith(`${botConfig.prefix}bok`)) || (msg.content.startsWith(`${botConfig.prefix}bawk`)) || (msg.content.startsWith(`${botConfig.prefix}squark`))) {
+            replies = ["cluck", "bok", "*tilts head in confusion*", "bawk", "*scratches the ground*", "*pecks you*", "*flaps wings*"]
             return msg.reply(replies[Math.floor(Math.random() * replies.length)]);
         }
 
