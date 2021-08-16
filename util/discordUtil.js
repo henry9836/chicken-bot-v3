@@ -753,7 +753,7 @@ function processMessage(msg){
         }
 
         else if (msg.content.startsWith(`${botConfig.prefix}love`)) {
-            replies = ["*bonk*", "*cuddles up next to you*", ":chicken_smile: *stares at you for several seconds, before flapping away*", "*gives you a small flower*", ":heart:", ":chicken_smile:"]
+            replies = ["*bonk*", "*cuddles up next to you*", "<:chicken_smile:236628343758389249> *stares at you for several seconds, before flapping away*", "*gives you a small flower*", ":heart:", "<:chicken_smile:236628343758389249>"]
             return msg.reply(replies[Math.floor(Math.random() * replies.length)]);
         }
 
@@ -928,7 +928,7 @@ function processMessage(msg){
         }
 
         if (bTrigger){
-            replies = ["Permission denied", "*You have no power here!* SQUACK!", ""]
+            replies = ["Permission denied", "*You have no power here!* SQUACK!", "*continues pecking the ground*"]
             return msg.reply(replies[Math.floor(Math.random() * replies.length)]);
         }
 
