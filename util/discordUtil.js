@@ -742,7 +742,29 @@ function processMessage(msg){
             ${botConfig.prefix}role-list - List public roles
 
             𝒸𝓁𝓊𝒸𝓀` + "```");
+            msg.reply("Sent a list of commands to your direct messages");
             return;
+        }
+
+        //Easter eggs
+        else if ((msg.content.startsWith(`${botConfig.prefix}cluck`)) || (msg.content.startsWith(`${botConfig.prefix}bok`)) || (msg.content.startsWith(`${botConfig.prefix}bawk`))) {
+            replies = ["cluck", "bok", "*tilts head in confusion*", "bawk", "*scratches the ground*", "*pecks you*"]
+            return msg.reply(replies[Math.floor(Math.random() * replies.length)]);
+        }
+
+        else if (msg.content.startsWith(`${botConfig.prefix}love`)) {
+            replies = ["*bonk*", "*cuddles up next to you*", ":chicken_smile: *stares at you for several seconds, before flapping away*", "*gives you a small flower*", ":heart:", ":chicken_smile:"]
+            return msg.reply(replies[Math.floor(Math.random() * replies.length)]);
+        }
+
+        else if ((msg.content.startsWith(`${botConfig.prefix}kill`)) || (msg.content.startsWith(`${botConfig.prefix}attack`))) {
+            //Kick the mentioned user
+            const punishedUser = msg.mentions.users.first();
+            return msg.reply(`*pecks and chases* ${punishedUser.tag}`);
+        }
+
+        else if ((msg.content.startsWith(`${botConfig.prefix}e6`)) || (msg.content.startsWith(`${botConfig.prefix}lewd`))) {
+            return msg.reply("*bonk*");
         }
 
         //Ping
@@ -894,9 +916,24 @@ function processMessage(msg){
                 )
             return  msg.channel.send(embed);
         }
-        else{
-            return msg.reply("I did not understand your command");
+
+        //No Perms to do command
+        blacklist = ["e6", "ban", "kick", "pardon", "punish", "prune", "set-", "remove-", "assign-", "update"]
+        bTrigger = false;
+        for (let b = 0; b < blacklist.length; b++) {
+            if (msg.content.startsWith(`${botConfig.prefix}${blacklist[b]}`)){
+                bTrigger = true;
+                break;
+            }
         }
+
+        if (bTrigger){
+            replies = ["Permission denied", "*You have no power here!* SQUACK!", ""]
+            return msg.reply(replies[Math.floor(Math.random() * replies.length)]);
+        }
+
+        //What did you send?
+        return msg.reply(`*Cluck?* I did not understand your command`);
 
     }
 }
