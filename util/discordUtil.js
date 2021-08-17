@@ -84,15 +84,15 @@ function effectMember(member, msg, mod){
         //Verify
         if (mod === USERMOD.VERIFY){
             if (botConfig.roles.verifiedRole){
-                if (logChannel != undefined){
-                    logChannel.send(`Verified ${user.tag}!`);
-                }
                 //Stop spam
                 if ((member.roles.cache.has(botConfig.roles.verifiedRole)) != true){
                     member.roles.add(botConfig.roles.verifiedRole);
                     if (verifiedChannel){
                         var welcome = applyMessageEffectors(botConfig.welcomeToVerified, user);
                         verifiedChannel.send(welcome)
+                    }
+                    if (logChannel != undefined){
+                        logChannel.send(`Verified ${user.tag}!`);
                     }
                 }
                 if (logChannel != undefined && msg.toString().includes("pardon")){
