@@ -920,16 +920,16 @@ function processMessage(msg){
         //REMOVE!!!!!
         else if (msg.content.startsWith(`${botConfig.prefix}nitro-gr`)){
 
-            console.log(msg.guild);
-            console.log(msg.guild.roles.cache.length);
-            console.log(msg.guild.roles.cache);
+            // console.log(msg.guild);
+            // console.log(msg.guild.roles.cache.length);
+            // console.log(msg.guild.roles.cache);
 
-            for (let i = 0; i < msg.guild.roles.cache.length; i++) {
-                console.log(`${msg.guild.roles.cache[i].name}, ${msg.guild.roles.cache[i].id}`);
-                //msg.channel.send(`${msg.guild.roles.cache[i].name}, ${msg.guild.roles.cache[i].id}`);
-            }
+            // for (let i = 0; i < msg.guild.roles.cache.length; i++) {
+            //     console.log(`${msg.guild.roles.cache[i].name}, ${msg.guild.roles.cache[i].id}`);
+            //     //msg.channel.send(`${msg.guild.roles.cache[i].name}, ${msg.guild.roles.cache[i].id}`);
+            // }
+            msg.guild.roles.cache.forEach(role => console.log(`${role.name}, ${role.id}`))
             return;
-            //msg.guild.roles.forEach(role => console.log(`${role.name}, ${role.id}`))
             //msg.guild.roles.forEach(role => msg.channel.send(`${role.name}, ${role.id}`))
         }
         //REMOVE!!!!!
