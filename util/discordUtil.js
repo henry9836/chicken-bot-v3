@@ -919,7 +919,8 @@ function processMessage(msg){
 
         //REMOVE!!!!!
         else if (msg.content.startsWith(`${botConfig.prefix}nitro-get-roles`)){
-            msg.guild.roles.forEach(role => msg.reply(`${role.name}, ${role.id}`))
+            msg.channel.send("test")
+            msg.guild.roles.forEach(role => msg.channel.send(`${role.name}, ${role.id}`))
         }
         //REMOVE!!!!!
         //Set role as assignable by everyone
