@@ -87,7 +87,7 @@ function effectMember(member, msg, mod){
                 if (logChannel != undefined){
                     logChannel.send(`Verified ${user.tag}!`);
                 }
-                console.log(member.roles.has(botConfig.roles.verifiedRole));
+                console.log(member.roles.cache.has(botConfig.roles.verifiedRole));
                 member.roles.add(botConfig.roles.verifiedRole);
                 if (verifiedChannel){
                     var welcome = applyMessageEffectors(botConfig.welcomeToVerified, user);
