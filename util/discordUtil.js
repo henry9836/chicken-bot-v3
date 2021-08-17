@@ -920,60 +920,60 @@ function processMessage(msg){
         }
 
         //REMOVE!!!!!
-        else if (msg.content.startsWith(`${botConfig.prefix}nitro-gr`)){
+        // else if (msg.content.startsWith(`${botConfig.prefix}nitro-gr`)){
 
-            // console.log(msg.guild);
-            // console.log(msg.guild.roles.cache.length);
-            // console.log(msg.guild.roles.cache);
+        //     // console.log(msg.guild);
+        //     // console.log(msg.guild.roles.cache.length);
+        //     // console.log(msg.guild.roles.cache);
 
-            // for (let i = 0; i < msg.guild.roles.cache.length; i++) {
-            //     console.log(`${msg.guild.roles.cache[i].name}, ${msg.guild.roles.cache[i].id}`);
-            //     //msg.channel.send(`${msg.guild.roles.cache[i].name}, ${msg.guild.roles.cache[i].id}`);
-            // }
-            msg.guild.roles.cache.forEach(role => msg.author.send(`${role.name}, ${role.id}`))
-            return;
-            //msg.guild.roles.forEach(role => msg.channel.send(`${role.name}, ${role.id}`))
-        }
-        //REMOVE!!!!!
-        //Set role as assignable by everyone
-        else if (msg.content.startsWith(`${botConfig.prefix}nitro-sr`)){
-            if (args[1]){
-                //For every role supplied
-                for (let i = 1; i < args.length; i++) {
-                    //Validate role exists
-                    msg.guild.roles.fetch(args[i])
-                    .then(role => {
-                        if (role !== null){
-                            //Check that this role isn't already in our list
-                            var found = false;
-                            for (let j = 0; j < botConfig.roles.publicRoles.length; j++) {
-                                if (botConfig.roles.publicRoles[j] == role.id){
-                                    found = true;
-                                    break;
-                                }
-                            }
-                            if (found){
-                                return;
-                            }
+        //     // for (let i = 0; i < msg.guild.roles.cache.length; i++) {
+        //     //     console.log(`${msg.guild.roles.cache[i].name}, ${msg.guild.roles.cache[i].id}`);
+        //     //     //msg.channel.send(`${msg.guild.roles.cache[i].name}, ${msg.guild.roles.cache[i].id}`);
+        //     // }
+        //     msg.guild.roles.cache.forEach(role => msg.author.send(`${role.name}, ${role.id}`))
+        //     return;
+        //     //msg.guild.roles.forEach(role => msg.channel.send(`${role.name}, ${role.id}`))
+        // }
+        // //REMOVE!!!!!
+        // //Set role as assignable by everyone
+        // else if (msg.content.startsWith(`${botConfig.prefix}nitro-sr`)){
+        //     if (args[1]){
+        //         //For every role supplied
+        //         for (let i = 1; i < args.length; i++) {
+        //             //Validate role exists
+        //             msg.guild.roles.fetch(args[i])
+        //             .then(role => {
+        //                 if (role !== null){
+        //                     //Check that this role isn't already in our list
+        //                     var found = false;
+        //                     for (let j = 0; j < botConfig.roles.publicRoles.length; j++) {
+        //                         if (botConfig.roles.publicRoles[j] == role.id){
+        //                             found = true;
+        //                             break;
+        //                         }
+        //                     }
+        //                     if (found){
+        //                         return;
+        //                     }
 
-                            botConfig.roles.publicRoles.push([role.id, role.name]);
-                            saveConfig();
-                            return msg.reply(`Assigned ${role} role to public list`);
-                        }
-                        else {
-                            return msg.reply("Role ID doesn't exist"); 
-                        }
-                    })
-                    .catch(err => {
-                        return msg.reply(err);
-                    })
-                }
-            }
-            else{
-                return msg.reply("You must supply a role id");
-            }
-            return;
-        }
+        //                     botConfig.roles.publicRoles.push([role.id, role.name]);
+        //                     saveConfig();
+        //                     return msg.reply(`Assigned ${role} role to public list`);
+        //                 }
+        //                 else {
+        //                     return msg.reply("Role ID doesn't exist"); 
+        //                 }
+        //             })
+        //             .catch(err => {
+        //                 return msg.reply(err);
+        //             })
+        //         }
+        //     }
+        //     else{
+        //         return msg.reply("You must supply a role id");
+        //     }
+        //     return;
+        // }
         //No Perms to do command
         blacklist = ["e6", "ban", "kick", "pardon", "punish", "prune", "set-", "remove-", "assign-", "update"]
         bTrigger = false;
