@@ -903,7 +903,7 @@ function processMessage(msg){
             for (let i = 0; i < botConfig.roles.publicRoles.length; i++) {
                 list += " `" + botConfig.roles.publicRoles[i][1] + "` ,"
             }
-            msg.reply(list);
+            return msg.reply(list);
         }
         //Server info
         else if (msg.content.startsWith(`${botConfig.prefix}info`)){
