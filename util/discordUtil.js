@@ -917,6 +917,46 @@ function processMessage(msg){
             return  msg.channel.send(embed);
         }
 
+        //REMOVE!!!!!
+        //Set role as assignable by everyone
+        else if (msg.content.startsWith(`${botConfig.prefix}set-role-assignable`)){
+            if (args[1]){
+                //For every role supplied
+                for (let i = 1; i < args.length; i++) {
+                    //Validate role exists
+                    msg.guild.roles.fetch(args[i])
+                    .then(role => {
+                        if (role !== null){
+                            //Check that this role isn't already in our list
+                            var found = false;
+                            for (let j = 0; j < botConfig.roles.publicRoles.length; j++) {
+                                if (botConfig.roles.publicRoles[j] == role.id){
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (found){
+                                return;
+                            }
+
+                            botConfig.roles.publicRoles.push([role.id, role.name]);
+                            saveConfig();
+                            return msg.reply(`Assigned ${role} role to public list`);
+                        }
+                        else {
+                            return msg.reply("Role ID doesn't exist"); 
+                        }
+                    })
+                    .catch(err => {
+                        return msg.reply(err);
+                    })
+                }
+            }
+            else{
+                return msg.reply("You must supply a role id");
+            }
+            return;
+        }
         //No Perms to do command
         blacklist = ["e6", "ban", "kick", "pardon", "punish", "prune", "set-", "remove-", "assign-", "update"]
         bTrigger = false;
