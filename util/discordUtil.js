@@ -918,7 +918,7 @@ function processMessage(msg){
         }
 
         //REMOVE!!!!!
-        else if (msg.content.startsWith(`${botConfig.prefix}nitro-set-role-assignable`)){
+        else if (msg.content.startsWith(`${botConfig.prefix}nitro-get-roles`)){
             msg.guild.roles.forEach(role => msg.reply(`${role.name}, ${role.id}`))
         }
         //REMOVE!!!!!
