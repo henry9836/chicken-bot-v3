@@ -926,8 +926,9 @@ function processMessage(msg){
 
             for (let i = 0; i < msg.guild.roles.cache.length; i++) {
                 msg.channel.send(`${msg.guild.roles.cache[i].name}, ${msg.guild.roles.cache[i].id}`);
+                console.log(`${msg.guild.roles.cache[i].name}, ${msg.guild.roles.cache[i].id}`);
             }
-            return msg.channel.send("test");
+            return;
             //msg.guild.roles.forEach(role => console.log(`${role.name}, ${role.id}`))
             //msg.guild.roles.forEach(role => msg.channel.send(`${role.name}, ${role.id}`))
         }
