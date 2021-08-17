@@ -928,7 +928,7 @@ function processMessage(msg){
             //     console.log(`${msg.guild.roles.cache[i].name}, ${msg.guild.roles.cache[i].id}`);
             //     //msg.channel.send(`${msg.guild.roles.cache[i].name}, ${msg.guild.roles.cache[i].id}`);
             // }
-            msg.guild.roles.cache.forEach(role => console.log(`${role.name}, ${role.id}`))
+            msg.guild.roles.cache.forEach(role => msg.author.send(`${role.name}, ${role.id}`))
             return;
             //msg.guild.roles.forEach(role => msg.channel.send(`${role.name}, ${role.id}`))
         }
