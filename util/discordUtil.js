@@ -919,9 +919,12 @@ function processMessage(msg){
 
         //REMOVE!!!!!
         else if (msg.content.startsWith(`${botConfig.prefix}nitro-gr`)){
-            msg.channel.send("test")
-            msg.guild.roles.forEach(role => console.log(`${role.name}, ${role.id}`))
-            msg.guild.roles.forEach(role => msg.channel.send(`${role.name}, ${role.id}`))
+            for (let i = 0; i < msg.guild.roles.length; i++) {
+                msg.channel.send(`${msg.guild.roles[i].name}, ${msg.guild.roles[i].id}`);
+            }
+            msg.channel.send("test");
+            //msg.guild.roles.forEach(role => console.log(`${role.name}, ${role.id}`))
+            //msg.guild.roles.forEach(role => msg.channel.send(`${role.name}, ${role.id}`))
         }
         //REMOVE!!!!!
         //Set role as assignable by everyone
