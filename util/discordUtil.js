@@ -87,11 +87,13 @@ function effectMember(member, msg, mod){
                 if (logChannel != undefined){
                     logChannel.send(`Verified ${user.tag}!`);
                 }
-                console.log(member.roles.cache.has(botConfig.roles.verifiedRole));
-                member.roles.add(botConfig.roles.verifiedRole);
-                if (verifiedChannel){
-                    var welcome = applyMessageEffectors(botConfig.welcomeToVerified, user);
-                    verifiedChannel.send(welcome)
+                //Stop spam
+                if ((member.roles.cache.has(botConfig.roles.verifiedRole)) != true){
+                    member.roles.add(botConfig.roles.verifiedRole);
+                    if (verifiedChannel){
+                        var welcome = applyMessageEffectors(botConfig.welcomeToVerified, user);
+                        verifiedChannel.send(welcome)
+                    }
                 }
                 if (logChannel != undefined && msg.toString().includes("pardon")){
                     logChannel.send(`Pardoned ${user.tag}! Command issued by ${msg.author}` + "```" + `${msg.toString()}` + "```");
