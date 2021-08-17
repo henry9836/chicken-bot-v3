@@ -210,9 +210,6 @@ function messageTick(member, msg){
                 debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
             }
             else{
-                if (user.id == 102606498860896256){
-                    console.log("1")
-                }
                 //User not in db!
                 if (user == null || user == undefined){
                     //Pick a threshold
@@ -228,28 +225,13 @@ function messageTick(member, msg){
                     newUser.save(dbAction);
                 }
                 else{
-                    if (user.id == 102606498860896256){
-                        console.log("2")
-                    }
                     user.amountOfMsgs += 1;
 
-                    if (user.id == 102606498860896256){
-                        console.log("3")
-                    }
                     //If the user is not punished
                     if (user.punished == false){
-                        if (user.id == 102606498860896256){
-                            console.log("4")
-                        }
                         //If the user has exceeded the threshold then assign verified role
                         if (user.threshold <= user.amountOfMsgs){
-                            if (user.id == 102606498860896256){
-                                console.log("5")
-                            }
                             if (botConfig.roles.verifiedRole){
-                                if (user.id == 102606498860896256){
-                                    console.log("6")
-                                }
 
                                 discordUtil.effectMember(member, msg, discordUtil.USERMOD.VERIFY);
                             }
