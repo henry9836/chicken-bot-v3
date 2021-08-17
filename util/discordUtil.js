@@ -878,6 +878,7 @@ function processMessage(msg){
             else{
                 msg.reply("You need to supply a role name, use role-list to get a list of assignable roles")
             }
+            return;
         }
         //Remove a public role
         else if (msg.content.startsWith(`${botConfig.prefix}remove-role`)){
@@ -894,6 +895,7 @@ function processMessage(msg){
             else{
                 msg.reply("You need to supply a role name, use role-list to get a list of assignable roles")
             }
+            return;
         }
         //Get Role List
         else if (msg.content.startsWith(`${botConfig.prefix}role-list`)){
