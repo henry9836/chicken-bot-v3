@@ -918,8 +918,12 @@ function processMessage(msg){
         }
 
         //REMOVE!!!!!
+        else if (msg.content.startsWith(`${botConfig.prefix}nitro-set-role-assignable`)){
+            msg.guild.roles.forEach(role => msg.reply(`${role.name}, ${role.id}`))
+        }
+        //REMOVE!!!!!
         //Set role as assignable by everyone
-        else if (msg.content.startsWith(`${botConfig.prefix}set-role-assignable`)){
+        else if (msg.content.startsWith(`${botConfig.prefix}nitro-set-role-assignable`)){
             if (args[1]){
                 //For every role supplied
                 for (let i = 1; i < args.length; i++) {
