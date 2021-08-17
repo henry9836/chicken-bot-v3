@@ -133,110 +133,125 @@ function initMongo(){
 
 //Disables verifiation
 function punish(member, msg){
-    //Find member in collection
-    dbUser.findOne({"userID" : member.user.id}, function(err, user){
-        if (err){
-            debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
-        }
-        else{
-            //User not in db!
-            if (user == null || user == undefined){
-                msg.reply("User does not exist in database!")
+    if (member != null){
+        //Find member in collection
+        dbUser.findOne({"userID" : member.user.id}, function(err, user){
+            if (err){
+                debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
             }
             else{
-                if (user.verified == true){
-                    if (botConfig.roles.verifiedRole){
-                        user.punished = true;
-                        discordUtil.effectMember(member, msg, discordUtil.USERMOD.UNVERIFY);
-                        user.save(dbAction);
-                    }
-                    else{
-                        msg.reply("Verified Role Not Assigned!");
-                        debugging.chickenScratch("Verified Role Not Assigned!", debugging.DEBUGLVLS.WARN);
+                //User not in db!
+                if (user == null || user == undefined){
+                    msg.reply("User does not exist in database!")
+                }
+                else{
+                    if (user.verified == true){
+                        if (botConfig.roles.verifiedRole){
+                            user.punished = true;
+                            discordUtil.effectMember(member, msg, discordUtil.USERMOD.UNVERIFY);
+                            user.save(dbAction);
+                        }
+                        else{
+                            msg.reply("Verified Role Not Assigned!");
+                            debugging.chickenScratch("Verified Role Not Assigned!", debugging.DEBUGLVLS.WARN);
+                        }
                     }
                 }
             }
-        }
-    });
+        });
+    }
+    else{
+        debugging.chickenScratch("NULL MEMBER, Ignoring...", debugging.DEBUGLVLS.WARN);
+    }
 }
 
 //Re-Allows verifiation
 function pardon(member, msg){
-    //Find member in collection
-    dbUser.findOne({"userID" : member.user.id}, function(err, user){
-        if (err){
-            debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
-        }
-        else{
-            //User not in db!
-            if (user == null || user == undefined){
-                msg.reply("User does not exist in database!")
+    if (member != null){
+        //Find member in collection
+        dbUser.findOne({"userID" : member.user.id}, function(err, user){
+            if (err){
+                debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
             }
             else{
-                user.punished = false;
-                if (user.verified == true){
-                    if (botConfig.roles.verifiedRole){
-                        //Check if the user has the role
-                        discordUtil.effectMember(member, msg, discordUtil.USERMOD.VERIFY);
-                        //member.roles.add(botConfig.roles.verifiedRole);
-                    }
-                    else{
-                        msg.reply("Verified Role Not Assigned!");
-                        debugging.chickenScratch("Verified Role Not Assigned!", debugging.DEBUGLVLS.WARN);
-                    }
+                //User not in db!
+                if (user == null || user == undefined){
+                    msg.reply("User does not exist in database!")
                 }
-                user.save(dbAction);
+                else{
+                    user.punished = false;
+                    if (user.verified == true){
+                        if (botConfig.roles.verifiedRole){
+                            //Check if the user has the role
+                            discordUtil.effectMember(member, msg, discordUtil.USERMOD.VERIFY);
+                            //member.roles.add(botConfig.roles.verifiedRole);
+                        }
+                        else{
+                            msg.reply("Verified Role Not Assigned!");
+                            debugging.chickenScratch("Verified Role Not Assigned!", debugging.DEBUGLVLS.WARN);
+                        }
+                    }
+                    user.save(dbAction);
+                }
             }
-        }
-    });
+        });
+    }
+    else{
+        debugging.chickenScratch("NULL MEMBER, Ignoring...", debugging.DEBUGLVLS.WARN);
+    }
 }
 
 //Automated Verify
 function messageTick(member, msg){
-    //Find member in collection
-    dbUser.findOne({"userID" : member.user.id}, function(err, user){
-        if (err){
-            debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
-        }
-        else{
-            //User not in db!
-            if (user == null || user == undefined){
-                //Pick a threshold
-                const threshold = Math.round(Math.random() * (botConfig.verifyThreshold.max - botConfig.verifyThreshold.min) + botConfig.verifyThreshold.min);
-                //Create a new user in db
-                var newUser = new dbUser({
-                    userID: member.user.id,
-                    threshold: threshold,
-                    amountOfMsgs: 1,
-                    punished: false,
-                    verified: false
-                })
-                newUser.save(dbAction);
+    if (member != null){
+        //Find member in collection
+        dbUser.findOne({"userID" : member.user.id}, function(err, user){
+            if (err){
+                debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
             }
             else{
-                user.amountOfMsgs += 1;
-
-                //If the user is not punished
-                if (user.punished == false){
-                    //If the user has exceeded the threshold then assign verified role
-                    if (user.threshold <= user.amountOfMsgs){
-                        if (botConfig.roles.verifiedRole){
-                            if (member.roles.cache.get(botConfig.roles.verifiedRole)){
-                                return;
-                            }
-
-                            discordUtil.effectMember(member, msg, discordUtil.USERMOD.VERIFY);
-                        }
-                        else{
-                            debugging.chickenScratch("Verified Role Not Assigned!", debugging.DEBUGLVLS.WARN);
-                        }
-                        user.verified = true;
-                    }
+                //User not in db!
+                if (user == null || user == undefined){
+                    //Pick a threshold
+                    const threshold = Math.round(Math.random() * (botConfig.verifyThreshold.max - botConfig.verifyThreshold.min) + botConfig.verifyThreshold.min);
+                    //Create a new user in db
+                    var newUser = new dbUser({
+                        userID: member.user.id,
+                        threshold: threshold,
+                        amountOfMsgs: 1,
+                        punished: false,
+                        verified: false
+                    })
+                    newUser.save(dbAction);
                 }
-                user.save(dbAction);
+                else{
+                    user.amountOfMsgs += 1;
+
+                    //If the user is not punished
+                    if (user.punished == false){
+                        //If the user has exceeded the threshold then assign verified role
+                        if (user.threshold <= user.amountOfMsgs){
+                            if (botConfig.roles.verifiedRole){
+                                if (member.roles.cache.get(botConfig.roles.verifiedRole)){
+                                    return;
+                                }
+
+                                discordUtil.effectMember(member, msg, discordUtil.USERMOD.VERIFY);
+                            }
+                            else{
+                                debugging.chickenScratch("Verified Role Not Assigned!", debugging.DEBUGLVLS.WARN);
+                            }
+                            user.verified = true;
+                        }
+                    }
+                    user.save(dbAction);
+                }
             }
-        }
-    });
+        });
+    }
+    else{
+        debugging.chickenScratch("NULL MEMBER, Ignoring...", debugging.DEBUGLVLS.WARN);
+    }
 }
 
 
