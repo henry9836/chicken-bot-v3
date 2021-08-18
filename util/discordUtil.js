@@ -865,6 +865,7 @@ function processMessage(msg){
 
                 return msg.reply(embed);
             });
+            return;
         }
         //Add a public role
         else if (msg.content.startsWith(`${botConfig.prefix}add-role`)){
