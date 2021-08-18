@@ -214,6 +214,7 @@ function messageTick(member, msg){
             else{
                 console.log("3");
                 //User not in db!
+                console.log(user)
                 if (user == null || user == undefined){
                     
                     console.log("4");
