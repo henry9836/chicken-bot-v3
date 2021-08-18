@@ -206,13 +206,11 @@ function messageTick(member, msg){
     if (member != null){
         //Find member in collection
         dbUser.findOne({"userID" : member.user.id}, function(err, user){
-            console.log("2");
             if (err){
                 debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
             }
             else{
                 //User not in db!
-                console.log(user)
                 if (user == null || user == undefined){
                     //Pick a threshold
                     const threshold = Math.round(Math.random() * (botConfig.verifyThreshold.max - botConfig.verifyThreshold.min) + botConfig.verifyThreshold.min);
