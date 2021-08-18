@@ -79,25 +79,34 @@ function isMod(msg){
 //Effects a discord user (banning, kicking, promoting, etc)
 //Auto verifying is done in mongoUtil under function messageTick
 function effectMember(member, msg, mod){
+    console.log("20");
     const user = member.user;
     if (member){
+        console.log("21");
         //Verify
         if (mod === USERMOD.VERIFY){
+            console.log("22");
             if (botConfig.roles.verifiedRole){
+                console.log("23");
                 //Stop spam
                 if ((member.roles.cache.has(botConfig.roles.verifiedRole)) != true){
+                    console.log("24");
                     member.roles.add(botConfig.roles.verifiedRole);
+                    console.log("25");
                     if (verifiedChannel){
                         var welcome = applyMessageEffectors(botConfig.welcomeToVerified, user);
                         verifiedChannel.send(welcome)
                     }
+                    console.log("26");
                     if (logChannel != undefined){
                         logChannel.send(`Verified ${user.tag}!`);
                     }
+                    console.log("27");
                 }
                 if (logChannel != undefined && msg.toString().includes("pardon")){
                     logChannel.send(`Pardoned ${user.tag}! Command issued by ${msg.author}` + "```" + `${msg.toString()}` + "```");
                 }
+                console.log("28");
                 return;
             }
             else{
