@@ -205,23 +205,18 @@ function pardon(member, msg){
 function messageTick(member, msg){
     if (member != null){
         //Find member in collection
-        console.log("1");
         dbUser.findOne({"userID" : member.user.id}, function(err, user){
             console.log("2");
             if (err){
                 debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
             }
             else{
-                console.log("3");
                 //User not in db!
                 console.log(user)
                 if (user == null || user == undefined){
-                    
-                    console.log("4");
                     //Pick a threshold
                     const threshold = Math.round(Math.random() * (botConfig.verifyThreshold.max - botConfig.verifyThreshold.min) + botConfig.verifyThreshold.min);
                     
-                    console.log("5");
                     //Create a new user in db
                     var newUser = new dbUser({
                         userID: member.user.id,
@@ -230,23 +225,16 @@ function messageTick(member, msg){
                         punished: false,
                         verified: false
                     })
-                    console.log("6");
                     newUser.save(dbAction);
-                    console.log("7");
                 }
                 else{
-                    console.log("8");
                     user.amountOfMsgs += 1;
 
-                    console.log("9");
                     //If the user is not punished
                     if (user.punished == false){
-                        console.log("10");
                         //If the user has exceeded the threshold then assign verified role
                         if (user.threshold <= user.amountOfMsgs){
-                            console.log("11");
                             if (botConfig.roles.verifiedRole){
-                                console.log("12");
                                 discordUtil.effectMember(member, msg, discordUtil.USERMOD.VERIFY);
                             }
                             else{
@@ -255,7 +243,6 @@ function messageTick(member, msg){
                             user.verified = true;
                         }
                     }
-                    console.log("99");
                     user.save(dbAction);
                 }
             }
