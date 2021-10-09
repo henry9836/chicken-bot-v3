@@ -606,6 +606,7 @@ function processMessage(msg){
             else if (msg.content.startsWith(`${botConfig.prefix}punish`)){
                 if (args[1]){
                     const punishedUser = msg.mentions.members.first();
+                    debugging.chickenScratch(`Punishing: ${punishedUser.id}`);
                     mongoUtil.punish(punishedUser, msg);
                 }
                 else{
@@ -617,7 +618,7 @@ function processMessage(msg){
             else if (msg.content.startsWith(`${botConfig.prefix}pardon`)){
                 if (args[1]){
                     const punishedUser = msg.mentions.members.first();
-                    console.log(punishedUser.id);
+                    debugging.chickenScratch(`Pardoning: ${punishedUser.id}`);
                     mongoUtil.pardon(punishedUser, msg);
                 }
                 else{
