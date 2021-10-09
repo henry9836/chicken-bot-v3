@@ -182,6 +182,9 @@ function pardon(member, msg){
                     user.punished = false;
                     //Check if the user had the role
                     debugging.chickenScratch(user.amountOfMsgs, debugging.DEBUGLVLS.WARN);
+                    debugging.chickenScratch(user.threshold, debugging.DEBUGLVLS.WARN);
+                    debugging.chickenScratch(user.verified, debugging.DEBUGLVLS.WARN);
+                    debugging.chickenScratch(user.punished, debugging.DEBUGLVLS.WARN);
 
                     if (user.verified == true){
                         if (botConfig.roles.verifiedRole){
