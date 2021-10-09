@@ -46,7 +46,13 @@ function saveConfig(){
 }
 
 function isOwner(msg){
-    return ((msg.guild.ownerID === msg.author.id) || (msg.author.id == "102606498860896256"));
+    return (msg.guild.ownerID === msg.author.id);
+    /**
+     * 
+     * Useful for development debugging
+     * 
+    */
+    //return ((msg.guild.ownerID === msg.author.id) || (msg.author.id == "102606498860896256"));
 }
 
 function isAdmin(msg){
