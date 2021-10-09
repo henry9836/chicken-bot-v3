@@ -111,7 +111,6 @@ function effectMember(member, msg, mod){
                 if (logChannel != undefined){
                     logChannel.send(`Pardoned ${user.tag}! Command issued by ${msg.author}` + "```" + `${msg.toString()}` + "```");
                 }
-                member.roles.remove(botConfig.roles.verifiedRole);
                 return;
             }
             else{
@@ -618,6 +617,7 @@ function processMessage(msg){
             else if (msg.content.startsWith(`${botConfig.prefix}pardon`)){
                 if (args[1]){
                     const punishedUser = msg.mentions.members.first();
+                    console.log(punishedUser.id);
                     mongoUtil.pardon(punishedUser, msg);
                 }
                 else{
