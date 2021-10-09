@@ -95,9 +95,23 @@ function effectMember(member, msg, mod){
                         logChannel.send(`Verified ${user.tag}!`);
                     }
                 }
-                if (logChannel != undefined && msg.toString().includes("pardon")){
+                // if (logChannel != undefined && msg.toString().includes("pardon")){
+                //     logChannel.send(`Pardoned ${user.tag}! Command issued by ${msg.author}` + "```" + `${msg.toString()}` + "```");
+                // }
+                return;
+            }
+            else{
+                return msg.reply("Verified role un-assigned in config");
+            }
+        }
+        //Pardon
+        if (mod == USERMOD.PARDON){
+            if (botConfig.roles.verifiedRole){
+                member.roles.add(botConfig.roles.verifiedRole);
+                if (logChannel != undefined){
                     logChannel.send(`Pardoned ${user.tag}! Command issued by ${msg.author}` + "```" + `${msg.toString()}` + "```");
                 }
+                member.roles.remove(botConfig.roles.verifiedRole);
                 return;
             }
             else{
@@ -111,7 +125,6 @@ function effectMember(member, msg, mod){
                 if (logChannel != undefined){
                     logChannel.send(`Punished ${user.tag}! Command issued by ${msg.author}` + "```" + `${msg.toString()}` + "```");
                 }
-                member.roles.remove(botConfig.roles.verifiedRole);
                 return;
             }
             else{
@@ -909,6 +922,7 @@ function processMessage(msg){
             }
             return msg.reply(list);
         }
+
         //Server info
         else if (msg.content.startsWith(`${botConfig.prefix}info`)){
             const embed = new MessageEmbed()
@@ -925,17 +939,11 @@ function processMessage(msg){
 
         //No Perms to do command
         blacklist = ["e6", "ban", "kick", "pardon", "punish", "prune", "set-", "remove-", "assign-", "update"]
-        bTrigger = false;
         for (let b = 0; b < blacklist.length; b++) {
             if (msg.content.startsWith(`${botConfig.prefix}${blacklist[b]}`)){
-                bTrigger = true;
-                break;
+                replies = ["Permission denied", "*You have no power here!* SQUACK!", "*continues pecking the ground*"]
+                return msg.reply(replies[Math.floor(Math.random() * replies.length)]);
             }
-        }
-
-        if (bTrigger){
-            replies = ["Permission denied", "*You have no power here!* SQUACK!", "*continues pecking the ground*"]
-            return msg.reply(replies[Math.floor(Math.random() * replies.length)]);
         }
 
         //What did you send?

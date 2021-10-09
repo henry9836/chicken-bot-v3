@@ -180,11 +180,11 @@ function pardon(member, msg){
                 }
                 else{
                     user.punished = false;
+                    //Check if the user had the role
                     if (user.verified == true){
                         if (botConfig.roles.verifiedRole){
-                            //Check if the user has the role
-                            discordUtil.effectMember(member, msg, discordUtil.USERMOD.VERIFY);
-                            //member.roles.add(botConfig.roles.verifiedRole);
+                            //Re-apply role
+                            discordUtil.effectMember(member, msg, discordUtil.USERMOD.PARDON);
                         }
                         else{
                             msg.reply("Verified Role Not Assigned!");
