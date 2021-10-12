@@ -776,15 +776,32 @@ function processMessage(msg){
         }
 
         else if (msg.content.startsWith(`${botConfig.prefix}love`)) {
-            replies = ["*bonk*", "*cuddles up next to you*", "<:chicken_smile:236628343758389249> *stares at you for several seconds, before flapping away*", "*gives you a small flower*", ":heart:", "<:chicken_smile:236628343758389249>"]
+            replies = [
+            "*bonk*",
+            "*cuddles up next to you*", 
+            "<:chicken_smile:236628343758389249> *stares at you for several seconds, before flapping away*",
+            "*gives you a small flower*", 
+            ":heart:", 
+            "<:chicken_smile:236628343758389249>"
+            ]
             return msg.reply(replies[Math.floor(Math.random() * replies.length)]);
         }
 
         else if ((msg.content.startsWith(`${botConfig.prefix}kill`)) || (msg.content.startsWith(`${botConfig.prefix}attack`))) {
-            //Kick the mentioned user
+            //Attack the mentioned user
             const punishedUser = msg.mentions.users.first();
-            return msg.reply(`*pecks and chases* ${punishedUser.tag}`);
+            return msg.channel.send(`*pecks and chases* ${punishedUser.tag}`);
         }
+
+        else if ((msg.content.startsWith(`${botConfig.prefix}pet`)) || (msg.content.startsWith(`${botConfig.prefix}feed`))) {
+            replies = [
+            "<:chicken_smile:236628343758389249>",
+            "*cuddles up into you*",
+            "*swawks, coughing up a half digested piece of corn. Looking up at you expectingly*"
+            ]
+             return msg.reply(replies[Math.floor(Math.random() * replies.length)]);
+        }
+        
 
         else if ((msg.content.startsWith(`${botConfig.prefix}e6`)) || (msg.content.startsWith(`${botConfig.prefix}lewd`))) {
             return msg.reply("*bonk*");
