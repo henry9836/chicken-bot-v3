@@ -273,20 +273,20 @@ function processMessage(msg){
         ///==================================
         if (isOwner(msg)){
             //Add an admin
-            if (args[1] === `add-admin`) {
+            if (args[0] === `add-admin`) {
                 return effectMember(msg.guild.member(msg.mentions.users.first()), msg, USERMOD.MAKEADMIN);
             }
             //Remove an admin
-            else if (args[1] === `remove-admin`){
+            else if (args[0] === `remove-admin`){
                 return effectMember(msg.guild.member(msg.mentions.users.first()), msg, USERMOD.REMOVEADMIN);
             }
             //Force a crash
-            else if (args[1] === `crash`){
+            else if (args[0] === `crash`){
                 exit(1);
             }
 
             //Assign Admin Role
-            else if (args[1] === `assign-admin-role`){
+            else if (args[0] === `assign-admin-role`){
                 if (args[1]){
                     //Validate role exists
                     msg.guild.roles.fetch(args[1])
@@ -311,7 +311,7 @@ function processMessage(msg){
             }
             
             //Bot log channel
-            else if (args[1] === `set-bot-log-channel`){
+            else if (args[0] === `set-bot-log-channel`){
                 if (args.length > 1){
                     //Validate role exists
                     let channel = msg.guild.channels.cache.get(args[1])
@@ -339,20 +339,20 @@ function processMessage(msg){
         if (isAdmin(msg)) {
 
             //Update the bot
-            if (args[1] === `update`) {
+            if (args[0] === `update`) {
                 exit(1);
             }
 
             //Assign Mod Role
-            else if (args[1] === `add-mod`){
+            else if (args[0] === `add-mod`){
                 return effectMember(msg.guild.member(msg.mentions.users.first()), msg, USERMOD.MAKEMOD);
             }
             //Remove a mod
-            else if (args[1] === `remove-mod`){
+            else if (args[0] === `remove-mod`){
                 return effectMember(msg.guild.member(msg.mentions.users.first()), msg, USERMOD.REMOVEMOD);
             }
             //Assign Mod Role
-            else if (args[1] === `assign-mod-role`){
+            else if (args[0] === `assign-mod-role`){
                 if (args[1]){
                     //Validate role exists
                     msg.guild.roles.fetch(args[1])
@@ -375,7 +375,7 @@ function processMessage(msg){
                 }
                 return;
             }
-            else if (args[1] === `set-quote-channel`){
+            else if (args[0] === `set-quote-channel`){
                 if (args.length > 1){
                     //Validate role exists
                     let channel = msg.guild.channels.cache.get(args[1])
@@ -394,7 +394,7 @@ function processMessage(msg){
                 }
             }
             //Verified channel
-            else if (args[1] === `set-verified-channel`){
+            else if (args[0] === `set-verified-channel`){
                 if (args.length > 1){
                     //Validate role exists
                     let channel = msg.guild.channels.cache.get(args[1])
@@ -413,7 +413,7 @@ function processMessage(msg){
                 }
                 return;
             }
-            else if (args[1] === `set-nsfw-quote-channel`){
+            else if (args[0] === `set-nsfw-quote-channel`){
                 if (args.length > 1){
                     //Validate role exists
                     let channel = msg.guild.channels.cache.get(args[1])
@@ -436,7 +436,7 @@ function processMessage(msg){
                     return msg.reply("Please specify a channel id");
                 }
             }
-            else if (args[1] === `set-petition-channel`){
+            else if (args[0] === `set-petition-channel`){
                 if (args.length > 1){
                     //Validate role exists
                     let channel = msg.guild.channels.cache.get(args[1])
@@ -456,7 +456,7 @@ function processMessage(msg){
             }
 
             //Stop role from being assigned by everyone
-            else if (args[1] === `remove-role-assignable`){
+            else if (args[0] === `remove-role-assignable`){
                 if (args[1]){
                     //For every role supplied
                     for (let i = 1; i < args.length; i++) {
@@ -490,7 +490,7 @@ function processMessage(msg){
             }
 
             //Set role as assignable by everyone
-            else if (args[1] === `set-role-assignable`){
+            else if (args[0] === `set-role-assignable`){
                 if (args[1]){
                     //For every role supplied
                     for (let i = 1; i < args.length; i++) {
@@ -529,7 +529,7 @@ function processMessage(msg){
                 return;
             }
             //Assign Verify Role
-            else if (args[1] === `assign-verified-role`){
+            else if (args[0] === `assign-verified-role`){
                 if (args[1]){
                     //Validate role exists
                     msg.guild.roles.fetch(args[1])
@@ -555,11 +555,11 @@ function processMessage(msg){
             //----
             //E6
             //----
-            else if (args[1] === `e6-reset`){
+            else if (args[0] === `e6-reset`){
                 e6.clearTags();
                 return msg.reply("Done.");
             }
-            else if (args[1] === `e6-set-channel`){
+            else if (args[0] === `e6-set-channel`){
                 if (args.length > 1){
                     //Validate role exists
                     let channel = msg.guild.channels.cache.get(args[1])
@@ -595,7 +595,7 @@ function processMessage(msg){
             console.log("------------------------------------")
 
             //PRUNE
-            if (args[1] === `prune`){
+            if (args[0] === `prune`){
                 let deleteNum = parseInt(args[1]);
 
                 if (isNaN(deleteNum)) {
@@ -612,18 +612,18 @@ function processMessage(msg){
                 }
             }
             //KICK
-            else if (args[1] === `kick`){
+            else if (args[0] === `kick`){
                 //Kick the mentioned user
                 const punishedUser = msg.mentions.users.first();
                 return effectMember(msg.guild.member(punishedUser), msg, USERMOD.KICK);
             }
             //BAN
-            else if (args[1] === `ban`){
+            else if (args[0] === `ban`){
                 const punishedUser = msg.mentions.users.first();
                 return effectMember(msg.guild.member(punishedUser), msg, USERMOD.BAN);
             }
             //Disable user from having verified role
-            else if (args[1] === `punish`){
+            else if (args[0] === `punish`){
                 if (args[1]){
                     const punishedUser = msg.mentions.members.first();
                     debugging.chickenScratch(`Punishing: ${punishedUser.id}`);
@@ -635,7 +635,7 @@ function processMessage(msg){
                 return;
             }
             //Allow user to have verified role
-            else if (args[1] === `pardon`){
+            else if (args[0] === `pardon`){
                 if (args[1]){
                     const punishedUser = msg.mentions.members.first();
                     debugging.chickenScratch(`Pardoning: ${punishedUser.id}`);
@@ -652,18 +652,18 @@ function processMessage(msg){
             //E6
             //----
             
-            else if (args[1] === `e6-info`){
+            else if (args[0] === `e6-info`){
                 return e6.getTags(msg);
             }
-            else if ((args[1] === `e6-disable`) || (args[1] === `e6-bonk`)){
+            else if ((args[0] === `e6-disable`) || (args[0] === `e6-bonk`)){
                 botConfig.e621.bonked = true;
                 saveConfig();
             }
-            else if (args[1] === `e6-enable`){
+            else if (args[0] === `e6-enable`){
                 botConfig.e621.bonked = false;
                 saveConfig();
             }
-            else if (args[1] === `e6-blacklist-tag`){
+            else if (args[0] === `e6-blacklist-tag`){
                 if (args.length > 1){
                     e6.updateTags(e6.TAGUPDATE.ADD_BLACK, args, msg);
                 }
@@ -672,7 +672,7 @@ function processMessage(msg){
                 }
                 return;
             }
-            else if (args[1] === `e6-add-tag`){
+            else if (args[0] === `e6-add-tag`){
                 if (args.length > 1){
                     e6.updateTags(e6.TAGUPDATE.ADD_WHITE, args, msg);
                 }
@@ -681,7 +681,7 @@ function processMessage(msg){
                 }
                 return;
             }
-            else if (args[1] === `e6-sort`){
+            else if (args[0] === `e6-sort`){
                 if (args.length > 1){
                     e6.updateSort(args[1], msg);
                 }
@@ -690,7 +690,7 @@ function processMessage(msg){
                 }
                 return;
             }
-            else if (args[1] === `e6-remove-list`){
+            else if (args[0] === `e6-remove-list`){
                 if (args.length > 1){
                     e6.updateTags(e6.TAGUPDATE.REMOVE_LIST, args, msg);
                 }
@@ -699,7 +699,7 @@ function processMessage(msg){
                 }
                 return;
             }
-            else if ((args[1] === `e6-remove`) || (args[1] === `e6-remove-tag`)){
+            else if ((args[0] === `e6-remove`) || (args[0] === `e6-remove-tag`)){
                 if (args.length > 1){
                     e6.updateTags(e6.TAGUPDATE.REMOVE, args, msg);
                 }
@@ -708,7 +708,7 @@ function processMessage(msg){
                 }
                 return;
             }
-            else if (args[1] === `lewd`){
+            else if (args[0] === `lewd`){
                 e6.give_lewd();
                 return;
             }
@@ -719,7 +719,7 @@ function processMessage(msg){
         ///==================================
 
         //Help
-        if (args[1] === `help`){
+        if (args[0] === `help`){
             msg.author.send(`
             [ 🐔 ] 𝗖𝗵𝗶𝗰𝗸𝗲𝗻𝗕𝗼𝘁 - 𝘃𝟯.𝟬
             𝘉𝘶𝘪𝘭𝘵 𝘣𝘺 𝘕𝘪𝘵𝘳𝘰\n`);
@@ -784,12 +784,12 @@ function processMessage(msg){
         }
 
         //Easter eggs
-        else if ((args[1] === `cluck`) || (args[1] === `bok`) || (args[1] === `bawk`) || (args[1] === `squark`)) {
+        else if ((args[0] === `cluck`) || (args[0] === `bok`) || (args[0] === `bawk`) || (args[0] === `squark`)) {
             replies = ["cluck", "bok", "*tilts head in confusion*", "bawk", "*scratches the ground*", "*pecks you*", "*flaps wings*"]
             return msg.reply(replies[Math.floor(Math.random() * replies.length)]);
         }
 
-        else if (args[1] === `love`) {
+        else if (args[0] === `love`) {
             replies = [
             "*bonk*",
             "*cuddles up next to you*", 
@@ -801,13 +801,13 @@ function processMessage(msg){
             return msg.reply(replies[Math.floor(Math.random() * replies.length)]);
         }
 
-        else if ((args[1] === `kill`) || (args[1] === `attack`)) {
+        else if ((args[0] === `kill`) || (args[0] === `attack`)) {
             //Attack the mentioned user
             const punishedUser = msg.mentions.users.first();
             return msg.channel.send(`*pecks and chases* ${punishedUser.tag}`);
         }
 
-        else if ((args[1] === `pet`) || (args[1] === `feed`)) {
+        else if ((args[0] === `pet`) || (args[0] === `feed`)) {
             replies = [
             "<:chicken_smile:236628343758389249>",
             "*cuddles up into you*",
@@ -817,17 +817,17 @@ function processMessage(msg){
         }
         
 
-        else if ((args[1] === `e6`) || (args[1] === `lewd`)) {
+        else if ((args[0] === `e6`) || (args[0] === `lewd`)) {
             return msg.reply("*bonk*");
         }
 
         //Ping
-        else if ((args[1] === `ping`) || (args[1] === `echo`)){
+        else if ((args[0] === `ping`) || (args[0] === `echo`)){
             return msg.channel.send('Pong!');
         }
 
         //Petition
-        else if (args[1] === `petition`){
+        else if (args[0] === `petition`){
             if (args.length > 1){
                 if (petitionChannel != undefined){
                     petitionChannel.send(msg.toString().replace(`${botConfig.prefix}${args[0]} `, `Petition By ${msg.author}: `))
@@ -850,7 +850,7 @@ function processMessage(msg){
         }
 
         //Quote
-        else if (args[1] === `quote`){
+        else if (args[0] === `quote`){
             if (msg.attachments.array().length > 0){
                 if (quoteChannel != undefined){
 
@@ -871,7 +871,7 @@ function processMessage(msg){
         }
 
         //NSFW-Quote
-        else if (args[1] === `nsfw-quote`){
+        else if (args[0] === `nsfw-quote`){
             if (msg.attachments.array().length > 0){
                 if (nsfwQuoteChannel != undefined){
                     if (nsfwQuoteChannel.nsfw){
@@ -896,7 +896,7 @@ function processMessage(msg){
         }
 
         //Avatar grabber
-        else if (args[1] === `avatar`){
+        else if (args[0] === `avatar`){
             //No users supplied just grab author info
             if (!msg.mentions.users.size){
                 //Create an embed message
@@ -919,7 +919,7 @@ function processMessage(msg){
             return;
         }
         //Add a public role
-        else if (args[1] === `add-role`){
+        else if (args[0] === `add-role`){
             if (args[1]){
                 var message = msg.toString().replace(`${botConfig.prefix}${args[0]} `, "")
                 for (let i = 0; i < botConfig.roles.publicRoles.length; i++) {
@@ -936,7 +936,7 @@ function processMessage(msg){
             return;
         }
         //Remove a public role
-        else if (args[1] === `remove-role`){
+        else if (args[0] === `remove-role`){
             if (args[1]){
                 var message = msg.toString().replace(`${botConfig.prefix}${args[0]} `, "")
                 for (let i = 0; i < botConfig.roles.publicRoles.length; i++) {
@@ -953,7 +953,7 @@ function processMessage(msg){
             return;
         }
         //Get Role List
-        else if (args[1] === `role-list`){
+        else if (args[0] === `role-list`){
             var list = "Assignable Roles: "
             for (let i = 0; i < botConfig.roles.publicRoles.length; i++) {
                 list += " `" + botConfig.roles.publicRoles[i][1] + "` ,"
@@ -962,7 +962,7 @@ function processMessage(msg){
         }
 
         //Server info
-        else if (args[1] === `info`){
+        else if (args[0] === `info`){
             const embed = new MessageEmbed()
                 .setTitle(`${msg.guild.name}`)
                 .setImage(`${msg.guild.iconURL()}`)
@@ -978,7 +978,7 @@ function processMessage(msg){
         //No Perms to do command
         blacklist = ["e6", "ban", "kick", "pardon", "punish", "prune", "set-", "remove-", "assign-", "update"]
         for (let b = 0; b < blacklist.length; b++) {
-            if (msg.content.startsWith(`${botConfig.prefix}${blacklist[b]}`)){
+            if (args[0] === `${blacklist[b]}`){
                 replies = ["Permission denied", "*You have no power here!* SQUACK!", "*continues pecking the ground*"]
                 return msg.reply(replies[Math.floor(Math.random() * replies.length)]);
             }
