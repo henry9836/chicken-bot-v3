@@ -585,8 +585,8 @@ function processMessage(msg){
         console.log("------------------------------------")
         console.log(msg);
         console.log(isMod(msg));
-        console.log(msg.member.roles.has(botConfig.roles.modRole))
-        console.log(msg.member.roles.has("624720438618095650"))
+        console.log(msg.member.roles.cache.has(botConfig.roles.modRole))
+        console.log(msg.member.roles.cache.has("624720438618095650"))
         console.log("------------------------------------")
         //msg.member.roles.cache.has(botConfig.roles.modRole)){
         if (isMod(msg)){
