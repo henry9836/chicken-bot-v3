@@ -582,6 +582,13 @@ function processMessage(msg){
         ///==================================
         //MODERATOR LEVEL
         ///==================================
+        console.log("------------------------------------")
+        console.log(msg);
+        console.log(isMod(msg));
+        console.log(msg.member.roles.has(botConfig.roles.modRole))
+        console.log(msg.member.roles.has("624720438618095650"))
+        console.log("------------------------------------")
+        //msg.member.roles.cache.has(botConfig.roles.modRole)){
         if (isMod(msg)){
             //PRUNE
             if (args[1] === `prune`){
