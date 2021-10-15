@@ -587,9 +587,13 @@ function processMessage(msg){
         console.log(isMod(msg));
         console.log(msg.member.roles.cache.has(botConfig.roles.modRole))
         console.log(msg.member.roles.cache.has("624720438618095650"))
-        console.log("------------------------------------")
         //msg.member.roles.cache.has(botConfig.roles.modRole)){
-        if (isMod(msg)){
+        if (isMod(msg)) {
+
+            console.log("ENTER MOD PERMS")
+            console.log(args[1])
+            console.log("------------------------------------")
+
             //PRUNE
             if (args[1] === `prune`){
                 let deleteNum = parseInt(args[1]);
