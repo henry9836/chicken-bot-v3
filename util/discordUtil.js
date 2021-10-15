@@ -101,9 +101,6 @@ function effectMember(member, msg, mod){
                         logChannel.send(`Verified ${user.tag}!`);
                     }
                 }
-                // if (logChannel != undefined && msg.toString().includes("pardon")){
-                //     logChannel.send(`Pardoned ${user.tag}! Command issued by ${msg.author}` + "```" + `${msg.toString()}` + "```");
-                // }
                 return;
             }
             else{
@@ -115,7 +112,7 @@ function effectMember(member, msg, mod){
             if (botConfig.roles.verifiedRole){
                 member.roles.add(botConfig.roles.verifiedRole);
                 if (logChannel != undefined){
-                    logChannel.send(`Pardoned ${user.tag}! Command issued by ${msg.author}` + "```" + `${msg.toString()}` + "```");
+                    logChannel.send(`Pardoned ${user.tag}! Command issued by ${msg.author.tag}` + "```" + `${msg.toString()}` + "```");
                 }
                 return;
             }
@@ -128,7 +125,7 @@ function effectMember(member, msg, mod){
             if (botConfig.roles.verifiedRole){
                 member.roles.remove(botConfig.roles.verifiedRole);
                 if (logChannel != undefined){
-                    logChannel.send(`Punished ${user.tag}! Command issued by ${msg.author}` + "```" + `${msg.toString()}` + "```");
+                    logChannel.send(`Punished ${user.tag}! Command issued by ${msg.author.tag}` + "```" + `${msg.toString()}` + "```");
                 }
                 return;
             }
