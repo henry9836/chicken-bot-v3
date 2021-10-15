@@ -582,18 +582,7 @@ function processMessage(msg){
         ///==================================
         //MODERATOR LEVEL
         ///==================================
-        console.log("------------------------------------")
-        console.log(msg);
-        console.log(isMod(msg));
-        console.log(msg.member.roles.cache.has(botConfig.roles.modRole))
-        console.log(msg.member.roles.cache.has("624720438618095650"))
-        //msg.member.roles.cache.has(botConfig.roles.modRole)){
         if (isMod(msg)) {
-
-            console.log("ENTER MOD PERMS")
-            console.log(args)
-            console.log("------------------------------------")
-
             //PRUNE
             if (args[0] === `prune`){
                 let deleteNum = parseInt(args[1]);
