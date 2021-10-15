@@ -591,7 +591,7 @@ function processMessage(msg){
         if (isMod(msg)) {
 
             console.log("ENTER MOD PERMS")
-            console.log(args[1])
+            console.log(args)
             console.log("------------------------------------")
 
             //PRUNE
