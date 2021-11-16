@@ -238,13 +238,19 @@ function messageTick(member, msg){
                         //If the user has exceeded the threshold then assign verified role
                         if (user.threshold <= user.amountOfMsgs){
 
+                            //Set Target
+                            var targetDate = new Date();
+
                             //Get Today's Date
                             var today = new Date();
-                            //Reset Time
-                            today.setHours(0,0,0,0);
+
+                            //Get the Difference In Time (milliseconds)
+                            var dateDifference = today - member.joinedAt();
+                            //Convert From Milliseconds To Days
+                            dateDifference = dateDifference / (1000 * 60 * 60 * 24);
 
                             //If the user has been on this guild for more than 24 hours
-                            if (member.joinedAt() > today){
+                            if (dateDifference > 1.0){
                                 //If the verified role exists
                                 if (botConfig.roles.verifiedRole){
                                     //Verify The User
