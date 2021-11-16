@@ -238,9 +238,6 @@ function messageTick(member, msg){
                         //If the user has exceeded the threshold then assign verified role
                         if (user.threshold <= user.amountOfMsgs){
 
-                            //Set Target
-                            var targetDate = new Date();
-
                             //Get Today's Date
                             var today = new Date();
 
