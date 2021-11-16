@@ -237,13 +237,24 @@ function messageTick(member, msg){
                     if (user.punished == false){
                         //If the user has exceeded the threshold then assign verified role
                         if (user.threshold <= user.amountOfMsgs){
-                            if (botConfig.roles.verifiedRole){
-                                discordUtil.effectMember(member, msg, discordUtil.USERMOD.VERIFY);
+
+                            //Get Today's Date
+                            var today = new Date();
+                            //Reset Time
+                            today.setHours(0,0,0,0);
+
+                            //If the user has been on this guild for more than 24 hours
+                            if (member.joinedAt() > today){
+                                //If the verified role exists
+                                if (botConfig.roles.verifiedRole){
+                                    //Verify The User
+                                    discordUtil.effectMember(member, msg, discordUtil.USERMOD.VERIFY);
+                                }
+                                else{
+                                    debugging.chickenScratch("Verified Role Not Assigned!", debugging.DEBUGLVLS.WARN);
+                                }
+                                user.verified = true;
                             }
-                            else{
-                                debugging.chickenScratch("Verified Role Not Assigned!", debugging.DEBUGLVLS.WARN);
-                            }
-                            user.verified = true;
                         }
                     }
                     user.save(dbAction);
