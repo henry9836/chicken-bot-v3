@@ -242,7 +242,7 @@ function messageTick(member, msg){
                             var today = new Date();
 
                             //Get the Difference In Time (milliseconds)
-                            var dateDifference = today - msg.member.joinedAt();
+                            var dateDifference = today - msg.member.joinedAt;
                             //Convert From Milliseconds To Days
                             dateDifference = dateDifference / (1000 * 60 * 60 * 24);
 
