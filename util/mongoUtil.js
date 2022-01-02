@@ -211,6 +211,7 @@ function messageTick(member, msg){
     if (member != null){
         //Find member in collection
         dbUser.findOne({"userID" : member.user.id}, function(err, user){
+            //Error
             if (err){
                 debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
             }
@@ -230,6 +231,7 @@ function messageTick(member, msg){
                     })
                     newUser.save(dbAction);
                 }
+                //If user is in db
                 else{
                     user.amountOfMsgs += 1;
 
@@ -237,7 +239,7 @@ function messageTick(member, msg){
                     if (user.punished == false){
                         //If the user has exceeded the threshold then assign verified role
                         if (user.threshold <= user.amountOfMsgs){
-
+                            
                             //Get Today's Date
                             var today = new Date();
 

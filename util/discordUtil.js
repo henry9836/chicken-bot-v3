@@ -89,6 +89,18 @@ function effectMember(member, msg, mod){
     if (member){
         //Verify
         if (mod === USERMOD.VERIFY){
+            //Determine if the user has a pre-emptive block
+            if (botConfig.roles.didNotReadInfoRole)
+            {
+                //If the user is not allowed to be verified don't continue
+                if (member.roles.cache.has(botConfig.roles.didNotReadInfoRole))
+                    return;
+            }
+            else{
+                msg.reply("Error, didNotReadInfo role not set!")
+            }
+
+            //If we have the verify role
             if (botConfig.roles.verifiedRole){
                 //Stop spam
                 if ((member.roles.cache.has(botConfig.roles.verifiedRole)) != true){
@@ -552,6 +564,30 @@ function processMessage(msg){
                 }
                 return;
             }
+            //Assign Did not read info
+            else if (args[0] === `assign-didnotread-role`){
+                if (args[1]){
+                    //Validate role exists
+                    msg.guild.roles.fetch(args[1])
+                        .then(role => {
+                            if (role !== null){
+                                botConfig.roles.didNotReadInfoRole = role.id;
+                                saveConfig();
+                                return msg.reply(`Assigned ${role} as didNotReadInfo role`);
+                            }
+                            else {
+                                return msg.reply("Role ID doesn't exist"); 
+                            }role
+                        })
+                        .catch(err => {
+                            return msg.reply(err);
+                        })
+                }
+                else{
+                    return msg.reply("You must supply a role id");
+                }
+                return;
+            }
             //----
             //E6
             //----
@@ -725,15 +761,16 @@ function processMessage(msg){
             [ Admin ]
             ${botConfig.prefix}add-mod <member> - assigns the mod role to a user
             ${botConfig.prefix}add-role-assignable <id> - adds a role to the assignable list
+            ${botConfig.prefix}set-role-assignable <id> - Makes role assignable by anyone
             ${botConfig.prefix}assign-mod-role <id> - assigns the mod role
             ${botConfig.prefix}assign-verified-role <id> - assigns the verified role
+            ${botConfig.prefix}assign-didnotread-role <id> - assigns the did not read info role, prevents a user from being verified
             ${botConfig.prefix}e6-reset - resets all lists to nothing, including blacklist
             ${botConfig.prefix}e6-set-channel <id> - Assigns e6 channel
             ${botConfig.prefix}remove-mod <member> - removes the mod role from a user
             ${botConfig.prefix}set-nsfw-quote-channel <id> - Assign nsfw quote channel
             ${botConfig.prefix}set-petition-channel <id> - Assigns the petition channel
             ${botConfig.prefix}set-quote-channel <id> - Assign quote channel
-            ${botConfig.prefix}set-role-assignable <id> - Makes role assignable by anyone
             ${botConfig.prefix}set-verified-channel <id> - Assigns the verified channel
             ${botConfig.prefix}remove-role-assignable <id> - removes a role from the assignable list
             ` + "```");
