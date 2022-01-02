@@ -11,6 +11,7 @@ const debugging = require("./util/debugging.js");
 const discordUtil = require("./util/discordUtil.js");
 const mongoUtil = require("./util/mongoUtil.js");
 const e6 = require("./util/e6.js");
+const events = require("./util/eventsHandler.js");
 
 const client = new Discord.Client();
 
@@ -24,7 +25,7 @@ client.on('ready', () => {
     debugging.chickenScratch(`Logged in as ${client.user.tag}!`);
     client.user.setActivity(`${botConfig.prefix}help - to see what I can do`); 
 });
-  
+
 //When we recieve a message
 client.on('message', msg => {
 
@@ -32,7 +33,6 @@ client.on('message', msg => {
     if (msg.author == client.user){
         return;
     }
-
 
     //E6 not initalised
     if (e6.e6 === undefined){
@@ -42,12 +42,6 @@ client.on('message', msg => {
     //Process Message
     discordUtil.processMessage(msg);
 });
-
-//Removed as another bot handles this
-//When someone joins
-// client.on('guildMemberAdd', member => {
-//     //discordUtil.welcomeMember(member);
-// });
 
 function main(){
     //Check node verison
@@ -61,6 +55,9 @@ function main(){
 
     //Connect to Database
     mongoUtil.initMongo();
+
+    //Initalise Events
+    events.initEvents();
 
     //Connect To Discord API
     debugging.chickenScratch("Authenticating With Discord...")
