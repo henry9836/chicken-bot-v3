@@ -1,5 +1,6 @@
 const fs = require('fs');
-const readLine = require('readLine');
+
+const debugging = require("./debugging.js");
 
 const eventObject ={
     Date: Date.now(),
@@ -9,13 +10,13 @@ const eventObject ={
 var eventObjects = [];
 
 function initEvents(){
-    var lineReader = readLine.createInterface({
-        input: fs.createReadStream('events')
-    });
-
-    lineReader.on('line', function(line){
-        console.log("a line was found :)")
-    });
+    try {
+        const data = fs.readFileSync('./events', 'utf8');
+        console.log(data);
+    } catch (err) {
+        debugging.chickenScratch(err, DEBUGLVLS.WARN);
+        console.error(err)
+    }
 }
 
 module.exports.initEvents = initEvents;
