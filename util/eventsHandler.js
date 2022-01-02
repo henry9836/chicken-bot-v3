@@ -14,7 +14,7 @@ function initEvents(){
         const data = fs.readFileSync('./events', 'utf8');
         console.log(data);
     } catch (err) {
-        debugging.chickenScratch(err, DEBUGLVLS.WARN);
+        debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
         console.error(err)
     }
 }
