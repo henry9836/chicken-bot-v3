@@ -11,7 +11,7 @@ var eventObjects = [];
 
 function initEvents(){
     try {
-        const data = fs.readFileSync('./events', 'utf8');
+        const data = fs.readFileSync('./util/events', 'utf8');
         console.log(data);
     } catch (err) {
         debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
