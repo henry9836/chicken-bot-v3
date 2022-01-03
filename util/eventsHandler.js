@@ -128,6 +128,7 @@ function eventLoop(){
 
         //Prevent Overflows
         if (timeTillEvent > 2147483647){
+            debugging.chickenScratch("Overflow Caught! {" + timeTillEvent + "} ", debugging.DEBUGLVLS.WARN);
             timeTillEvent = 3600000;
             nextEvent = undefined;
         }
