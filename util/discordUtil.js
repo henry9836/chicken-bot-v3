@@ -32,9 +32,8 @@ function applyMessageEffectors(msg, user){
 }
 
 function announceEvent(announcement){
-    var thing = client.channels.cache.get('363475127779983370');
     debugging.chickenScratch("Announcing: " + announcement);
-    thing.send(announcement);
+    eventsChannel.send(announcement);
 }
 
 //Updates the config file via discord command
@@ -282,10 +281,7 @@ function processMessage(msg){
     }
     if (eventsChannel == undefined){
         if (botConfig.channels.events != ""){
-            console.log("eventsChannel == " + eventsChannel);
-            console.log(botConfig.channels.events);
-            eventsChannel = msg.guild.channels.cache.get(botConfig.channels.events)
-            console.log("eventsChannel == " + eventsChannel);
+            eventsChannel = msg.guild.channels.cache.get(botConfig.channels.eventsChannel)
         }
     }
 
