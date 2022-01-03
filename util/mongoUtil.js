@@ -61,13 +61,12 @@ function getBestPosts(amount, msg, e6, worst){
                 e6.getPosts("id:"+postsFiltered[i].postID)
                 .then((e6Post) => {
                     for (let index = 0; index < e6Post.length; index++) {
-                        console.log(postsFiltered[index])
                         //CRAFT EMBED Message
                         //e621 npm package doesn't give us a post url, so make one
                         const url = "https://e621.net/posts/" + e6Post[index].id;
                         const embed = new MessageEmbed()
                         .setTitle(`${e6Post[index].id}`)
-                        //.setDescription('Rating: ' + postsFiltered[index].rating)
+                        .setDescription('Rating: ' + postsFiltered[index].rating)
                         .setAuthor(`${e6Post[index].tags.artist}`)
                         .setURL(`${url}`)
                         .setImage(`${e6Post[index].file.url}`)
