@@ -37,7 +37,8 @@ function dbAction(err, done){
 function getBestPosts(amount){
 
     var postsFiltered = [];
-    dbE6Post.find().sort({rating:-1}, function(err, posts){
+    //dbE6Post.find().sort({rating:-1}, function(err, posts){
+    dbE6Post.find().sort({rating:-1}).limit(amount).toArray(function(err, posts){
         if (err){
             debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
             channel.send("An Error Occured")
