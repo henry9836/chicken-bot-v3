@@ -34,10 +34,14 @@ function dbAction(err, done){
 }
 
 //Get top rated posts by the server
-function getBestPosts(amount, msg, e6){
+function getBestPosts(amount, msg, e6, worst){
 
+    var sortNum = -1;
+    if (worst){
+        sortNum = 1;
+    }
     var postsFiltered = [];
-    dbE6Post.find().sort({rating:-1}).limit(amount).exec(function(err, posts){
+    dbE6Post.find().sort({rating:sortNum}).limit(amount).exec(function(err, posts){
         if (err){
             debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
             channel.send("An Error Occured")
@@ -62,6 +66,7 @@ function getBestPosts(amount, msg, e6){
                         const url = "https://e621.net/posts/" + e6Post[index].id;
                         const embed = new MessageEmbed()
                         .setTitle(`${e6Post[index].id}`)
+                        .setDescription('Rating: ' + postsFiltered[i].rating)
                         .setAuthor(`${e6Post[index].tags.artist}`)
                         .setURL(`${url}`)
                         .setImage(`${e6Post[index].file.url}`)

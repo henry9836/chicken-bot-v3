@@ -908,7 +908,15 @@ function processMessage(msg){
         //Get best rated e6 posts
         else if(args[0] === `e6-best`){
             if (msg.channel.nsfw){
-                e6.gib_best(msg, args);
+                e6.gib_best(msg, args, false);
+            }
+            msg.delete();
+            return;
+        }
+        //Get worst rated e6 posts
+        else if(args[0] === `e6-worst`){
+            if (msg.channel.nsfw){
+                e6.gib_best(msg, args, true);
             }
             msg.delete();
             return;
