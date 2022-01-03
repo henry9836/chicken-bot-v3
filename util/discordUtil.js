@@ -889,11 +889,11 @@ function processMessage(msg){
         }
         //Get best rated e6 posts
         else if(args[0] === `e6-best`){
-            console.log(msg.channel);
             if (msg.channel.nsfw){
                 e6.gib_best(msg, args);
             }
             msg.delete();
+            return;
         }
         //Petition
         else if (args[0] === `petition`){

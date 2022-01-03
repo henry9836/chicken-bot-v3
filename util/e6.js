@@ -208,6 +208,7 @@ function gib_best(msg, args){
     }
 
     var posts = mongoUtil.getBestPosts(num);
+    console.log(posts);
 
     msg.author.send("hi");
 }
