@@ -881,7 +881,7 @@ function processMessage(msg){
         else if ((args[0] === `ping`) || (args[0] === `echo`)){
             var wheel = Math.floor(Math.random() * 100);
             if ((50 <= wheel) && (wheel <= 55)){
-                return msg.reply('<:toothless_ping:927413461300969502>');
+                return msg.reply("<:toothless_ping:587068355987505155>");
             }
             else{
                 return msg.channel.send('Pong!');
