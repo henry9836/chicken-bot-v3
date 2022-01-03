@@ -4,7 +4,7 @@ const debugging = require("./debugging.js");
 const discord = require("./discordUtil.js");
 
 var eventLoopActive = false;
-let filteredYear = 1999;
+let filteredYear = 1971;
 
 function eventObject(date, data) {
     this.Date = date;
