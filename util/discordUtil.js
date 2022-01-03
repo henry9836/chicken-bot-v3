@@ -1054,8 +1054,10 @@ function processMessage(msg){
             .then(message => {
                 setTimeout(function(){ 
                     message.delete();
+                    msg.delete();
                 }, Math.floor(Math.random() * 7500));
             })
+            return;
         }
 
         //No Perms to do command
