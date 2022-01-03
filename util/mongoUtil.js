@@ -123,7 +123,7 @@ function initMongo(){
         useCreateIndex: true
     })
     .then(() => {
-        debugging.chickenScratch("Connected To Database!");
+        debugging.chickenScratch("Connected To MongoDB Successfully");
     })
     .catch((err) => {
         debugging.chickenScratch(err, debugging.DEBUGLVLS.FATAL);

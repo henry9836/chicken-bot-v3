@@ -46,7 +46,7 @@ client.on('message', msg => {
 function main(){
     //Check node verison
     if (semver.gte(process.version, '12.0.0')) {
-        debugging.chickenScratch(process.version);
+        debugging.chickenScratch("Running Node Version: " + process.version);
     }
     else{
         //Bad Node Verison Certain discord.js calls are not supported :(
