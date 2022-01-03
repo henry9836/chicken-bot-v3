@@ -32,8 +32,9 @@ function applyMessageEffectors(msg, user){
 }
 
 function announceEvent(announcement){
+    var thing = client.channels.cache.get('363475127779983370');
     debugging.chickenScratch("Announcing: " + announcement);
-    eventsChannel.send(announcement);
+    thing.send(announcement);
 }
 
 //Updates the config file via discord command
