@@ -890,7 +890,7 @@ function processMessage(msg){
         //Get best rated e6 posts
         else if(args[0] === `e6-best`){
             console.log(msg.channel);
-            if (msg.channel.nsfw){
+            if (msg.channel){
                 e6.gib_best();
             }
         }
