@@ -302,3 +302,4 @@ module.exports.messageTick = messageTick;
 module.exports.pardon = pardon;
 module.exports.punish = punish;
 module.exports.postE6Content = postE6Content;
+module.exports.getBestPosts = getBestPosts;

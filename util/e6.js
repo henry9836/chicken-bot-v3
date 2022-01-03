@@ -275,4 +275,5 @@ module.exports.clearTags = clearTags;
 module.exports.getTags = getTags;
 module.exports.updateSort = updateSort;
 module.exports.postLoop = postLoop;
+module.exports.gib_best = gib_best;
 module.exports.TAGUPDATE = TAGUPDATE;
