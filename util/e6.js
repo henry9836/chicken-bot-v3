@@ -198,6 +198,14 @@ function updateTags(updateType, args, msg){
 
 }
 
+//Direct message the best posts
+function gib_best(msg){
+    //Make sure the request was from a nsfw channel
+    if (msg.channel.nsfw){
+        
+    }
+}
+
 //:3
 function give_lewd(){
     if (e6 != undefined){

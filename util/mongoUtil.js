@@ -17,7 +17,8 @@ const userSchema = ({
     verified: Boolean
 });
 const e6Schema = ({
-    postID: Number
+    postID: Number,
+    rating: Number
 });
 
 const dbUser = mongoose.model('userModel', userSchema);
@@ -30,6 +31,30 @@ function dbAction(err, done){
     else{
         //debugging.chickenScratch("Added to DB!");
     }
+}
+
+//Get top rated posts by the server
+function getBestPosts(amount){
+
+    var posts = [];
+    dbE6Post.find().sort({rating:-1}, function(err, posts){
+        if (err){
+            debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
+            channel.send("An Error Occured")
+        }
+        else{
+            var i = 0;
+            array.forEach(post => {
+                posts.push(post);
+                amount++;
+                if ((amount <= i) && (i >= 100)){
+                    break;
+                }
+            });
+        }
+    });
+
+    return posts;
 }
 
 //Grab all our latest e6 posts and verify we haven't posted this
@@ -91,7 +116,8 @@ function postE6Content(posts, channel, repostList){
 
                 //Mark this as a post we have posted on our db and make it TTL
                 var newPost = new dbE6Post({
-                    postID: posts[i].id
+                    postID: posts[i].id,
+                    rating: 0
                 })
 
                 //Apply changes to db
