@@ -207,10 +207,7 @@ function gib_best(msg, args){
         }
     }
 
-    var posts = mongoUtil.getBestPosts(num);
-    console.log(posts);
-
-    msg.author.send("hi");
+    mongoUtil.getBestPosts(num, msg);
 }
 
 //:3
@@ -272,4 +269,4 @@ module.exports.getTags = getTags;
 module.exports.updateSort = updateSort;
 module.exports.postLoop = postLoop;
 module.exports.gib_best = gib_best;
-module.exports.TAGUPDATE = TAGUPDATE;
+module.exports.TAGUPDATE = TAGUPDATE;e6

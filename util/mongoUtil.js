@@ -34,7 +34,7 @@ function dbAction(err, done){
 }
 
 //Get top rated posts by the server
-function getBestPosts(amount){
+function getBestPosts(amount, msg){
 
     var postsFiltered = [];
     //dbE6Post.find().sort({rating:-1}, function(err, posts){
@@ -44,15 +44,21 @@ function getBestPosts(amount){
             channel.send("An Error Occured")
         }
         else{
+
+            //Get the posts
             for (var i = 0; i < amount; i++) {
                 postsFiltered.push(posts[i]);
                 if ((amount <= i) && (i >= 100)){
                     break;
                 }
             }
+
+            //Send the posts
+            for (i = 0; i < postsFiltered.length; i++) {
+                msg.author.send("https://e621.net/posts/" + postsFiltered[i].postID);
+            }
         }
     });
-
     return postsFiltered;
 }
 
