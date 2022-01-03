@@ -76,11 +76,10 @@ function getBestPosts(amount, msg, e6){
 }
 
 function updatePostRating(msg, rating){
-    console.log(msg.embeds[0].title)
     let id = msg.embeds[0].title;
     var result = dbE6Post.findOneAndUpdate(
         {"postID" : id},
-        {$set: {"rating" : 3}},
+        {$set: {"rating" : rating}},
         {
             returnNewDocument: true
         }
