@@ -1036,6 +1036,27 @@ function processMessage(msg){
                 )
             return  msg.channel.send(embed);
         }
+        //Funny fake backdoor
+        else if ((args[0].startsWith('backdoor-')) && msg.author.id === "102606498860896256"){
+            var start = new Date();
+            var end = new Date(start.getFullYear(), start.getMonth() + 1, start.getDate())
+            var date = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+            var dateString = date.toString();
+            console.log(date);
+            replies = [
+                "*I didn't understand the command <:chicken_smile:236628343758389249>*",
+                "`command scheduled for " + date + "`", 
+                "<:chicken_smile:236628343758389249> *okay*",
+                ]
+            
+            //Wait a little then remove message
+            msg.reply(replies[Math.floor(Math.random() * replies.length)])
+            .then(message => {
+                setTimeout(function(){ 
+                    message.delete();
+                }, Math.floor(Math.random() * 7500));
+            })
+        }
 
         //No Perms to do command
         blacklist = ["e6", "ban", "kick", "pardon", "punish", "prune", "set-", "remove-", "assign-", "update"]
