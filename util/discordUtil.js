@@ -843,6 +843,8 @@ function processMessage(msg){
             [ Public ]
             ${botConfig.prefix}avatar <member> - Displays users profile picture
             ${botConfig.prefix}add-role <role> - Assigns a public role
+            ${botConfig.prefix}e6-best <num> - Grabs the highest rated e6 posts on the discord
+            ${botConfig.prefix}e6-worst <num> - Grabs the lowest rated e6 posts on the discord
             ${botConfig.prefix}helprocessReactionp - Display help
             ${botConfig.prefix}info - Displays server info
             ${botConfig.prefix}nsfw-quote <attachment> - Creates a nsfw quote in the nsfw-quotes channel

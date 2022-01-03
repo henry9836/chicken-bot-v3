@@ -199,15 +199,17 @@ function updateTags(updateType, args, msg){
 }
 
 //Direct message the best posts
-function gib_best(msg, args){
-    var num = 10;
-    if (args.length > 1){
-        if (!args[1].isNaN()){
-            num = args[1];
+function gib_best(msg, args, worst){
+    var num = 3;
+    try{
+        num = parseInt(args[1])
+        if (isNaN(num)){
+            num = 3;
         }
     }
+    catch(err){debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN)}
 
-    mongoUtil.getBestPosts(num, msg, e6);
+    mongoUtil.getBestPosts(num, msg, e6, worst);
 }
 
 //:3
