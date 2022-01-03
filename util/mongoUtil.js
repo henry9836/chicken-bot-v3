@@ -37,7 +37,6 @@ function dbAction(err, done){
 function getBestPosts(amount, msg, e6){
 
     var postsFiltered = [];
-    //dbE6Post.find().sort({rating:-1}, function(err, posts){
     dbE6Post.find().sort({rating:-1}).limit(amount).exec(function(err, posts){
         if (err){
             debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
@@ -79,10 +78,10 @@ function getBestPosts(amount, msg, e6){
 function updatePostRating(msg, rating){
     console.log(msg.embeds[0].title)
     let id = msg.embeds[0].title;
-    var result = dbE6Post.findOneAndUpdate({
-        "postID" : id,
-        "rating" : 3,
-    });
+    var result = dbE6Post.findOneAndUpdate(
+        {"postID" : id},
+        {$set: {"rating" : 3}},
+    );
 }
 
 //Grab all our latest e6 posts and verify we haven't posted this
