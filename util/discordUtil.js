@@ -32,8 +32,8 @@ function applyMessageEffectors(msg, user){
 }
 
 function announceEvent(announcement){
-    console.log("TRIGGER " + nextEvent.Data);
-    eventsChannel.send(nextEvent.Data);
+    debugging.chickenScratch("Announcing: " + announcement);
+    eventsChannel.send(announcement);
 }
 
 //Updates the config file via discord command
