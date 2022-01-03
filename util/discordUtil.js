@@ -887,7 +887,9 @@ function processMessage(msg){
                 return msg.channel.send('Pong!');
             }
         }
+        //Get best rated e6 posts
         else if(args[0] === `e6-best`){
+            console.log(msg);
             if (msg.channel.nsfw){
                 e6.gib_best();
             }
