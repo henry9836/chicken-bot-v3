@@ -81,7 +81,14 @@ function updatePostRating(msg, rating){
     var result = dbE6Post.findOneAndUpdate(
         {"postID" : id},
         {$set: {"rating" : 3}},
-    );
+        {
+            returnNewDocument: true
+        }
+        , function( err, res){
+            if (err){
+                debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN)
+            }
+        });
 }
 
 //Grab all our latest e6 posts and verify we haven't posted this
