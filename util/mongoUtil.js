@@ -130,7 +130,11 @@ function postE6Content(posts, channel, repostList){
                 .setImage(`${posts[i].file.url}`)
                 
                 //Send in channel
-                channel.send(embed);
+                channel.send(embed)
+                .then(function (message){
+                    message.react("👍");
+                    message.react("👎");
+                })
                 postCount++;
 
                 //Mark this as a post we have posted on our db and make it TTL
