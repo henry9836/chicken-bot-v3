@@ -891,7 +891,7 @@ function processMessage(msg){
         else if(args[0] === `e6-best`){
             console.log(msg.channel);
             if (msg.channel.nsfw){
-                e6.gib_best();
+                e6.gib_best(msg, args);
             }
             msg.delete();
         }
