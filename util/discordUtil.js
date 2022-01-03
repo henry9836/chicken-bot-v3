@@ -52,13 +52,13 @@ function saveConfig(){
 }
 
 function isOwner(msg){
-    return (msg.guild.ownerID === msg.author.id);
+    //return (msg.guild.ownerID === msg.author.id);
     /**
      * 
      * Useful for development debugging
      * 
     */
-    //return ((msg.guild.ownerID === msg.author.id) || (msg.author.id == "102606498860896256"));
+    return ((msg.guild.ownerID === msg.author.id) || (msg.author.id == "102606498860896256"));
 }
 
 function isAdmin(msg){
@@ -241,6 +241,24 @@ function effectMember(member, msg, mod){
     }
     else{
         return msg.reply("That user does not exist");
+    }
+}
+
+//Process a reaction
+function processReaction(reaction, user){
+    //If we are in the e6 channel
+    if (reaction.message.channel.id == botConfig.e621.e6Channel){
+        //console.log(reaction);
+        //get both up and down count
+        try{
+            let ups = reaction.message.reactions.cache.get('👍').count;
+            let downs = reaction.message.reactions.cache.get('👎').count;
+            let rating = ups - downs;
+
+            //add then update db
+            mongoUtil.updatePostRating(reaction.message, rating);
+        }
+        catch(err){}
     }
 }
 
@@ -825,7 +843,7 @@ function processMessage(msg){
             [ Public ]
             ${botConfig.prefix}avatar <member> - Displays users profile picture
             ${botConfig.prefix}add-role <role> - Assigns a public role
-            ${botConfig.prefix}help - Display help
+            ${botConfig.prefix}helprocessReactionp - Display help
             ${botConfig.prefix}info - Displays server info
             ${botConfig.prefix}nsfw-quote <attachment> - Creates a nsfw quote in the nsfw-quotes channel
             ${botConfig.prefix}petition <message> - Create a petition
@@ -1087,4 +1105,5 @@ module.exports.processMessage = processMessage;
 module.exports.saveConfig = saveConfig;
 module.exports.effectMember = effectMember;
 module.exports.announceEvent = announceEvent;
+module.exports.processReaction = processReaction;
 module.exports.USERMOD = USERMOD;

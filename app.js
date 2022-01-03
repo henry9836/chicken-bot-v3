@@ -3,7 +3,7 @@ console.log("[+] Loading Modules...")
 
 // const fs = require('fs');
 const botConfig = require('./config.json');
-const Discord = require('discord.js');
+const { Client, Intents } = require('discord.js');
 const { exit } = require("process");
 const semver = require('semver');
 
@@ -13,7 +13,9 @@ const mongoUtil = require("./util/mongoUtil.js");
 const e6 = require("./util/e6.js");
 const events = require("./util/eventsHandler.js");
 
-const client = new Discord.Client();
+const client = new Client({
+    intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS],
+	partials: ['MESSAGE', 'CHANNEL', 'REACTION'],});
 
 var e6Started = false;
 
@@ -41,6 +43,38 @@ client.on('message', msg => {
 
     //Process Message
     discordUtil.processMessage(msg);
+});
+
+client.on('messageReactionAdd', async (reaction, user) => {
+	// When a reaction is received, check if the structure is partial
+	if (reaction.partial) {
+		// If the message this reaction belongs to was removed, the fetching might result in an API error which should be handled
+		try {
+			await reaction.fetch();
+		} catch (error) {
+			debugging.chickenScratch('Something went wrong when fetching the message:', debugging.DEBUGLVLS.WARN);
+			// Return as `reaction.message.author` may be undefined/null
+			return;
+		}
+	}
+
+    discordUtil.processReaction(reaction, user);
+});
+
+client.on('messageReactionRemove', async (reaction, user) => {
+	// When a reaction is received, check if the structure is partial
+	if (reaction.partial) {
+		// If the message this reaction belongs to was removed, the fetching might result in an API error which should be handled
+		try {
+			await reaction.fetch();
+		} catch (error) {
+			debugging.chickenScratch('Something went wrong when fetching the message:', debugging.DEBUGLVLS.WARN);
+			// Return as `reaction.message.author` may be undefined/null
+			return;
+		}
+	}
+
+    discordUtil.processReaction(reaction, user);
 });
 
 function main(){

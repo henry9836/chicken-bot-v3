@@ -76,6 +76,15 @@ function getBestPosts(amount, msg, e6){
     return postsFiltered;
 }
 
+function updatePostRating(msg, rating){
+    console.log(msg.embeds[0].title)
+    let id = msg.embeds[0].title;
+    var result = dbE6Post.findOneAndUpdate({
+        "postID" : id,
+        "rating" : 3,
+    });
+}
+
 //Grab all our latest e6 posts and verify we haven't posted this
 function postE6Content(posts, channel, repostList){
     dbE6Post.find({}, function (err, archivedPosts){
@@ -328,3 +337,4 @@ module.exports.pardon = pardon;
 module.exports.punish = punish;
 module.exports.postE6Content = postE6Content;
 module.exports.getBestPosts = getBestPosts;
+module.exports.updatePostRating = updatePostRating;
