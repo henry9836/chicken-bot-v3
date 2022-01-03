@@ -56,7 +56,6 @@ function getBestPosts(amount, msg, e6, worst){
             //Get the posts
             for (var i = 0; i < amount; i++) {
                 postsFiltered.push(posts[i]);
-                console.log(i)
                 if (amount <= i){
                     break;
                 }
