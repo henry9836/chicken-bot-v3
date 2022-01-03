@@ -129,6 +129,9 @@ function eventLoop(){
         //Prevent Overflows
         if (timeTillEvent > 2147483647){
             debugging.chickenScratch("Overflow Caught! {" + timeTillEvent + "} ", debugging.DEBUGLVLS.WARN);
+            debugging.chickenScratch(" [ Upcoming Event ]\n" + nextEvent.Date + "\n" + nextEvent.Data);
+            debugging.chickenScratch("Current time: " + new Date().toString());
+            debugging.chickenScratch("Next will trigger in: " + msToTime(timeTillEvent));
             timeTillEvent = 3600000;
             nextEvent = undefined;
         }
