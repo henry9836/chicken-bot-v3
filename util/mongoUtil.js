@@ -34,7 +34,7 @@ function dbAction(err, done){
 }
 
 //Get top rated posts by the server
-function getBestPosts(amount, msg){
+function getBestPosts(amount, msg, e6){
 
     var postsFiltered = [];
     //dbE6Post.find().sort({rating:-1}, function(err, posts){
@@ -55,7 +55,21 @@ function getBestPosts(amount, msg){
 
             //Send the posts
             for (i = 0; i < postsFiltered.length; i++) {
-                msg.author.send("https://e621.net/posts/" + postsFiltered[i].postID);
+                e6.getPosts("id:"+postsFiltered[i].postID)
+                .then((e6Post) => {
+                    for (let index = 0; index < e6Post.length; index++) {
+                        //CRAFT EMBED Message
+                        //e621 npm package doesn't give us a post url, so make one
+                        const url = "https://e621.net/posts/" + e6Post[index].id;
+                        const embed = new MessageEmbed()
+                        .setTitle(`${e6Post[index].id}`)
+                        .setAuthor(`${e6Post[index].tags.artist}`)
+                        .setURL(`${url}`)
+                        .setImage(`${e6Post[index].file.url}`)
+    
+                        msg.author.send(embed);
+                    }
+                })
             }
         }
     });

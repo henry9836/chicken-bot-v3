@@ -207,7 +207,7 @@ function gib_best(msg, args){
         }
     }
 
-    mongoUtil.getBestPosts(num, msg);
+    mongoUtil.getBestPosts(num, msg, e6);
 }
 
 //:3
