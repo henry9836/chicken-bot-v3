@@ -282,7 +282,10 @@ function processMessage(msg){
     }
     if (eventsChannel == undefined){
         if (botConfig.channels.events != ""){
+            console.log("eventsChannel == " + eventsChannel);
+            console.log(botConfig.channels.events);
             eventsChannel = msg.guild.channels.cache.get(botConfig.channels.events)
+            console.log("eventsChannel == " + eventsChannel);
         }
     }
 
