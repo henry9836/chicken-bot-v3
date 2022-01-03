@@ -36,25 +36,23 @@ function dbAction(err, done){
 //Get top rated posts by the server
 function getBestPosts(amount){
 
-    var posts = [];
+    var postsFiltered = [];
     dbE6Post.find().sort({rating:-1}, function(err, posts){
         if (err){
             debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
             channel.send("An Error Occured")
         }
         else{
-            var i = 0;
-            array.forEach(post => {
-                posts.push(post);
-                amount++;
+            for (var i = 0; i < amount; i++) {
+                postsFiltered.push(posts[i]);
                 if ((amount <= i) && (i >= 100)){
                     break;
                 }
-            });
+            }
         }
     });
 
-    return posts;
+    return postsFiltered;
 }
 
 //Grab all our latest e6 posts and verify we haven't posted this
