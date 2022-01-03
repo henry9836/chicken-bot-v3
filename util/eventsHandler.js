@@ -101,8 +101,7 @@ function eventLoop(){
     var loop = function() {
         //Trigger event
         if (nextEvent !== undefined){
-            
-            console.log("TRIGGER " + nextEvent.Data);
+            discord.announceEvent(nextEvent.Data);
         }
 
         let currentTime = new Date().getTime();

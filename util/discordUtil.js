@@ -22,12 +22,18 @@ var nsfwQuoteChannel = undefined;
 var petitionChannel = undefined;
 var verifiedChannel = undefined;
 var logChannel = undefined;
+var eventsChannel = undefined;
 
 function applyMessageEffectors(msg, user){
 
     msg = msg.replace("<user>", `<@${user.id}>`);
 
     return msg;
+}
+
+function announceEvent(announcement){
+    console.log("TRIGGER " + nextEvent.Data);
+    eventsChannel.send(nextEvent.Data);
 }
 
 //Updates the config file via discord command
@@ -273,6 +279,11 @@ function processMessage(msg){
             logChannel = msg.guild.channels.cache.get(botConfig.channels.log)
         }
     }
+    if (eventsChannel == undefined){
+        if (botConfig.channels.events != ""){
+            eventsChannel = msg.guild.channels.cache.get(botConfig.channels.events)
+        }
+    }
 
     //Get args for the message
     const args = msg.content.slice(botConfig.prefix.length).trim().split(' ');
@@ -424,6 +435,24 @@ function processMessage(msg){
                     msg.reply("Please specify a channel id");
                 }
                 return;
+            }
+            else if (args[0] === `set-events-channel`){
+                if (args.length > 1){
+                    //Validate role exists
+                    let channel = msg.guild.channels.cache.get(args[1])
+                    if (channel !== undefined){
+                        botConfig.channels.eventsChannel = channel.id;
+                        saveConfig();
+                        eventsChannel = channel;
+                        return msg.reply(`Assigned ${channel} as event channel`);
+                    }
+                    else{
+                        return msg.reply("Channel ID doesn't exist or hidden")
+                    }
+                }
+                else{
+                    return msg.reply("Please specify a channel id");
+                }
             }
             else if (args[0] === `set-nsfw-quote-channel`){
                 if (args.length > 1){
@@ -772,6 +801,7 @@ function processMessage(msg){
             ${botConfig.prefix}set-petition-channel <id> - Assigns the petition channel
             ${botConfig.prefix}set-quote-channel <id> - Assign quote channel
             ${botConfig.prefix}set-verified-channel <id> - Assigns the verified channel
+            ${botConfig.prefix}set-events-channel <id> - Assign events channel
             ${botConfig.prefix}remove-role-assignable <id> - removes a role from the assignable list
             ` + "```");
             msg.author.send("```" + `
@@ -1020,4 +1050,5 @@ function processMessage(msg){
 module.exports.processMessage = processMessage;
 module.exports.saveConfig = saveConfig;
 module.exports.effectMember = effectMember;
+module.exports.announceEvent = announceEvent;
 module.exports.USERMOD = USERMOD;
