@@ -851,7 +851,7 @@ function processMessage(msg){
             "*cuddles up next to you*", 
             "<:chicken_smile:236628343758389249> *stares at you for several seconds, before flapping away*",
             "*gives you a small flower*", 
-            ":heart:", 
+            ":heart:",
             "<:chicken_smile:236628343758389249>"
             ]
             return msg.reply(replies[Math.floor(Math.random() * replies.length)]);
@@ -879,7 +879,13 @@ function processMessage(msg){
 
         //Ping
         else if ((args[0] === `ping`) || (args[0] === `echo`)){
-            return msg.channel.send('Pong!');
+            var wheel = Math.floor(Math.random() * 100);
+            if ((50 <= wheel) && (wheel <= 55)){
+                return msg.channel.reply('<:toothless_ping:927413461300969502>');
+            }
+            else{
+                return msg.channel.send('Pong!');
+            }
         }
 
         //Petition
