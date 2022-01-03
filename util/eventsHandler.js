@@ -89,15 +89,16 @@ function msToTime(ms) {
   }
 
 function eventLoop(){
-    console.log("EVENT CALLED");
     if (eventLoopActive){
         return;
     }
     eventLoopActive = true;
+    debugging.chickenScratch("Event System Active");
 
     //Find the next event
     var timeTillEvent =  0;
     var nextEvent = undefined;
+
     var loop = function() {
         //Trigger event
         if (nextEvent !== undefined){
