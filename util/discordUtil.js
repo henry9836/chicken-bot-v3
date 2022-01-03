@@ -471,7 +471,7 @@ function processMessage(msg){
                     }
                     else{
                         return msg.reply("Channel ID doesn't exist or hidden")
-                    }
+                    }gib_best
                 }
                 else{
                     return msg.reply("Please specify a channel id");
@@ -887,7 +887,11 @@ function processMessage(msg){
                 return msg.channel.send('Pong!');
             }
         }
-
+        else if(args[0] === `e6-best`){
+            if (msg.channel.nsfw){
+                e6.gib_best();
+            }
+        }
         //Petition
         else if (args[0] === `petition`){
             if (args.length > 1){

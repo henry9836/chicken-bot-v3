@@ -199,10 +199,21 @@ function updateTags(updateType, args, msg){
 }
 
 //Direct message the best posts
-function gib_best(msg){
+function gib_best(msg, args){
     //Make sure the request was from a nsfw channel
     if (msg.channel.nsfw){
-        
+
+        var num = 10;
+        if (args.length > 1){
+            if (!args[1].isNaN()){
+                num = args[1];
+            }
+        }
+
+        var posts = mongoUtil.getBestPosts(num);
+
+        msg.author.send("hi");
+
     }
 }
 
