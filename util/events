@@ -1,4 +1,4 @@
-#REPEATS WILL BE SKIPPED AND DATES MUST BE 1971 OR LATER
+#REPEATS WILL BE SKIPPED
 #YYYY-MM-DDTHH:MM,Message
 #2022-05-19T18:34,This is an example
 2016-07-21T15:00,Server Anniversary!
@@ -6,3 +6,13 @@
 2014-05-16T15:00,Today HTTYD2 was release!
 1999-12-25T00:01,Happy Snoggletog Everyone!
 2019-01-03T15:00,Today HTTYD3 was released!
+2011-11-15T15:00,Today Gift of the Night Fury was released!
+2000-01-01T15:00,Happy New Years Vikings!,Today "Hiccup: The Viking who was Seasick," "How to Be A Pirate," "How to Break a Dragon's Heart," and "How to Steal a Dragon's Sword" were all published!
+2003-02-01T15:00,Today "How to Train Your Dragon" and "How to Train Your Viking, by Toothless" were published!
+2005-05-10T15:00,Today "How to Speak Dragonese" was published!
+2006-11-02T15:00,Today "How to Cheat a Dragon's Curse" was published!
+2007-09-20T15:00,Today "How to Twist a Dragon's Tale" was published!
+2008-08-26T15:00,Today "How to Ride a Dragon's Storm" was published!
+2012-10-02T15:00,Today "How to Seize a Dragon's Jewel" was published!
+2013-12-24T15:00,Today "How to Betray a Dragon's Hero" was published!
+2015-09-08T15:00,Today "How to Fight a Dragon's Fury" was published!
