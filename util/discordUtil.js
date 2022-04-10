@@ -306,6 +306,10 @@ function processMessage(msg){
     //Get args for the message
     const args = msg.content.slice(botConfig.prefix.length).trim().split(' ');
 
+
+    //Ignore Messages that have too many PREFIXs (!!!!!!!break-bot)
+    if (args[0].includes(botConfig.prefix)) return;
+
     //Commands
     if (msg.content.startsWith(botConfig.prefix)){
 
