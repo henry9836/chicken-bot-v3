@@ -263,7 +263,7 @@ function processReaction(reaction, user){
 }
 
 //Process Incoming Messages
-function processMessage(msg){
+function processMessage(msg, client){
 
     // Ignore messages that aren't from a guild
     if (!msg.guild) return;
@@ -884,7 +884,17 @@ function processMessage(msg){
         else if ((args[0] === `kill`) || (args[0] === `attack`)) {
             //Attack the mentioned user
             const punishedUser = msg.mentions.users.first();
-            return msg.channel.send(`*pecks and chases* ${punishedUser.tag}`);
+
+            //Do not attack ourselves
+            if (punishedUser.id == client.user.id){
+                return msg.channel.send(`*Trust nobody, not even yourself*`);
+            }
+            //Do not attack our creator
+            else if (punishedUser.id == "102606498860896256"){
+                return msg.channel.send(`**BRAWK!** *pecks and chases* ${msg.author.username}`);
+            }
+            //Attack mentioned user
+            return msg.channel.send(`*pecks and chases* ${punishedUser.username}`);
         }
 
         else if ((args[0] === `pet`) || (args[0] === `feed`)) {

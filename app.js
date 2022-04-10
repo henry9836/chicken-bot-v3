@@ -42,7 +42,7 @@ client.on('message', msg => {
     }
 
     //Process Message
-    discordUtil.processMessage(msg);
+    discordUtil.processMessage(msg, client);
 });
 
 client.on('messageReactionAdd', async (reaction, user) => {
