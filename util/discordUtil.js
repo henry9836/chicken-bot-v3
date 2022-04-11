@@ -309,7 +309,10 @@ function processMessage(msg, client){
 
     //Ignore Messages that have too many PREFIXs (!!!!!!!break-bot)
     if (args[0].includes(botConfig.prefix)) return;
-
+    
+    //Ignore Messages that are empty
+    if (args[0].length == 0) return;
+    
     //Commands
     if (msg.content.startsWith(botConfig.prefix)){
 
