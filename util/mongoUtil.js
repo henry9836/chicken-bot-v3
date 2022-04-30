@@ -41,30 +41,29 @@ function getBestPosts(amount, msg, e6, worst){
         sortNum = 1;
     }
 
-    if (amount > 15){
-        amount = 15;
+    if (amount > 50){
+        amount = 50;
     }
 
-    var postsFiltered = [];
-    dbE6Post.find().sort({rating:sortNum}).limit(amount).exec(function(err, posts){
+    dbE6Post.find().sort({rating:sortNum}).limit(500).exec(async function(err, posts){
         if (err){
             debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
             channel.send("An Error Occured")
         }
         else{
-
-            //Get the posts
-            for (var i = 0; i < amount; i++) {
-                postsFiltered.push(posts[i]);
-                if (amount <= i){
-                    break;
-                }
-            }
+            var topPosts = posts.slice(0, amount);
+            var randomPosts = posts.filter(post => {
+                return post.rating == topPosts[amount - 1].rating;
+            });
+            posts = topPosts.filter(post => 
+                post != topPosts[amount - 1].rating)
+                .concat(randomPosts.sort(() => Math.random() - 0.5))
+                .slice(0, amount)
 
             //Send the posts
-            for (i = 0; i < postsFiltered.length; i++) {
-                try{
-                    e6.getPosts("id:"+postsFiltered[i].postID)
+            for (i = 0; i < posts.length; i++) {
+                try {
+                    await e6.getPosts("id:"+posts[i].postID)
                     .then((e6Post, rating) => {
                         for (let index = 0; index < e6Post.length; index++) {
                             //CRAFT EMBED Message
@@ -83,10 +82,12 @@ function getBestPosts(amount, msg, e6, worst){
                 catch (err){
                     debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
                 }
+                await new Promise(resolve => {
+                    setTimeout(resolve, 500);
+                })
             }
         }
     });
-    return postsFiltered;
 }
 
 function updatePostRating(msg, rating){

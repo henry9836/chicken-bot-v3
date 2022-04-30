@@ -186,29 +186,7 @@ function processMessage(msg, client, args){
         msg.channel.send(embed);
         return true;
     }
-    //Funny fake backdoor
-    else if ((args[0].startsWith('backdoor-')) && msg.author.id === "102606498860896256"){
-        var start = new Date();
-        var end = new Date(start.getFullYear(), start.getMonth() + 1, start.getDate())
-        var date = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-        var dateString = date.toString();
-        console.log(date);
-        replies = [
-            "*I didn't understand the command <:chicken_smile:236628343758389249>*",
-            "`command scheduled for " + date + "`", 
-            "<:chicken_smile:236628343758389249> *okay*",
-            ]
-        
-        //Wait a little then remove message
-        msg.reply(replies[Math.floor(Math.random() * replies.length)])
-        .then(message => {
-            setTimeout(function(){ 
-                message.delete();
-                msg.delete();
-            }, Math.floor(Math.random() * 7500));
-        })
-        return true;
-    }
+   
 
     else if (args[0] === `help`){
         return discordModule.getHelp(msg);
@@ -234,7 +212,7 @@ function getHelpBlock(msg){
     ${botConfig.prefix}add-role <role> - Assigns a public role
     ${botConfig.prefix}e6-best <num> - Grabs the highest rated e6 posts on the discord
     ${botConfig.prefix}e6-worst <num> - Grabs the lowest rated e6 posts on the discord
-    ${botConfig.prefix}helprocessReactionp - Display help
+    ${botConfig.prefix}help - Display help
     ${botConfig.prefix}info - Displays server info
     ${botConfig.prefix}nsfw-quote <attachment> - Creates a nsfw quote in the nsfw-quotes channel
     ${botConfig.prefix}petition <message> - Create a petition
