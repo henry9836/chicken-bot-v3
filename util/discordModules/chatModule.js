@@ -75,17 +75,22 @@ function processMessage(msg, client, args){
     else if (args[0] === `nsfw-quote`){
         if (msg.attachments.array().length > 0){
             if (discordModule.nsfwQuoteChannel != undefined){
-                if (discordModule.nsfwQuoteChannel.nsfw){
-                    const embed = new MessageEmbed()
-                    .setTitle(msg.author.username)
-                    .setImage(msg.attachments.array()[0].url)
-                    .setTimestamp(Date.now())
+                if (msg.channel.nsfw){
+                    if (discordModule.nsfwQuoteChannel.nsfw){
+                        const embed = new MessageEmbed()
+                        .setTitle(msg.author.username)
+                        .setImage(msg.attachments.array()[0].url)
+                        .setTimestamp(Date.now())
 
-                    discordModule.nsfwQuoteChannel.send(embed);
-                    return true;
+                        discordModule.nsfwQuoteChannel.send(embed);
+                        return true;
+                    }
+                    else {
+                        msg.reply("Assigned NSFW Quote channel not a nsfw channel!")
+                    }
                 }
-                else {
-                    msg.reply("Assigned NSFW Quote channel not a nsfw channel!")
+                else{
+                    msg.delete();
                 }
             }
             else{

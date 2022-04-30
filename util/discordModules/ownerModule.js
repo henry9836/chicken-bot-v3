@@ -56,7 +56,7 @@ function processMessage(msg, client, args){
             
             if (channel !== undefined){
                 botConfig.channels.log = channel.id;
-                logChannel = channel;
+                discordModule.logChannel = channel;
                 discordModule.saveConfig();
                 msg.reply(`Assigned ${channel} as log channel`);
             }

@@ -57,7 +57,7 @@ function processMessage(msg, client, args){
             let channel = msg.guild.channels.cache.get(args[1])
             if (channel !== undefined){
                 botConfig.channels.quotes = channel.id;
-                quoteChannel = channel;
+                discordModule.quoteChannel = channel;
                 discordModule.saveConfig();
                 msg.reply(`Assigned ${channel} as quote channel`);
             }
@@ -122,7 +122,7 @@ function processMessage(msg, client, args){
                 if (channel.nsfw){
                     botConfig.channels.nsfwquotes = channel.id;
                     discordModule.saveConfig();
-                    nsfwQuoteChannel = channel;
+                    discordModule.nsfwQuoteChannel = channel;
                     msg.reply(`Assigned ${channel} as nsfw quote channel`);
                 }
                 else{
@@ -147,7 +147,7 @@ function processMessage(msg, client, args){
             if (channel !== undefined){
                 botConfig.channels.petitions = channel.id;
                 discordModule.saveConfig();
-                petitionChannel = channel;
+                discordModule.petitionChannel = channel;
                 msg.reply(`Assigned ${channel} as petition channel`);
             }
             else{
