@@ -1,5 +1,5 @@
 #!/bin/bash
-
+pushd /home/asurobot/chicken-bot/
 while true; do
 
     #Apply any updates
@@ -12,7 +12,7 @@ while true; do
 
     #Start the bot
     echo $'[+] Starting Discord Bot...\n'
-    node ./app.js
+    ../.bin/node ./app.js
 
     #Crashed record and restart
     TIME=$( date '+%F_%H:%M:%S' )
@@ -21,3 +21,4 @@ while true; do
     echo $'----------------------------------\n'
     sleep 1
 done
+popd
