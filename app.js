@@ -8,7 +8,7 @@ const { exit } = require("process");
 const semver = require('semver');
 
 const debugging = require("./util/debugging.js");
-const discordUtil = require("./util/discordUtil.js");
+const discordModule = require("./util/discordModule.js");
 const mongoUtil = require("./util/mongoUtil.js");
 const e6 = require("./util/e6.js");
 const events = require("./util/eventsHandler.js");
@@ -42,7 +42,7 @@ client.on('message', msg => {
     }
 
     //Process Message
-    discordUtil.processMessage(msg, client);
+    discordModule.processMessage(msg, client);
 });
 
 client.on('messageReactionAdd', async (reaction, user) => {
@@ -58,7 +58,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
 		}
 	}
 
-    discordUtil.processReaction(reaction, user);
+    discordModule.processReaction(reaction, user);
 });
 
 client.on('messageReactionRemove', async (reaction, user) => {
@@ -74,7 +74,7 @@ client.on('messageReactionRemove', async (reaction, user) => {
 		}
 	}
 
-    discordUtil.processReaction(reaction, user);
+    discordModule.processReaction(reaction, user);
 });
 
 function main(){
