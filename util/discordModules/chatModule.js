@@ -4,6 +4,8 @@ const mongoUtil = require("../mongoUtil.js");
 const botConfig = require('../.././config.json');
 const e6 = require('../e6.js');
 
+const { MessageEmbed } = require("discord.js");
+
 function processMessage(msg, client, args){
     //Get best rated e6 posts
     if(args[0] === `e6-best`){
