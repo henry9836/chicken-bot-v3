@@ -161,7 +161,12 @@ function effectMember(member, msg, mod){
                 if (logChannel != undefined){
                     logChannel.send(`Promoted ${user.tag} to admin, knighted by ${msg.author}` + "```" + `${msg.toString()}` + "```");
                 }
-                member.roles.add(botConfig.roles.adminRole);
+                try {
+                    member.roles.add(botConfig.roles.adminRole)
+                }
+                catch(err){
+                    return msg.reply("Cannot promote to admin, check perms");
+                }
                 var welcome = applyMessageEffectors(botConfig.welcometoAdmin, user);
                 return msg.channel.send(welcome);
             }
@@ -175,7 +180,12 @@ function effectMember(member, msg, mod){
                 if (logChannel != undefined){
                     logChannel.send(`Promoted ${user.tag} to mod, knighted by ${msg.author}` + "```" + `${msg.toString()}` + "```");
                 }
-                member.roles.add(botConfig.roles.modRole);
+                try {
+                    member.roles.add(botConfig.roles.modRole);
+                }
+                catch(err){
+                    return msg.reply("Cannot promote to mod, check perms");
+                }
                 var welcome = applyMessageEffectors(botConfig.welcometoMod, user);
                 return msg.channel.send(welcome);
             }
