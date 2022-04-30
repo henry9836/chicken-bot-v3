@@ -241,7 +241,7 @@ function isInputSanitary(msg, args){
     if (!msg.guild) return false;
 
     //Get args for the message
-    args = msg.content.slice(botConfig.prefix.length).trim().split(' ');
+    args.push(...msg.content.slice(botConfig.prefix.length).trim().split(' '));
 
     //Ignore Messages that have too many PREFIXs (!!!!!!!break-bot)
     if (args[0].includes(botConfig.prefix)) return false;
@@ -320,7 +320,7 @@ function processMessage(msg, client){
     reassignChannelsJank(msg);
 
     if (msg.content.startsWith(botConfig.prefix)){
-        args = []
+        args = [];
         if (isInputSanitary(msg, args)){
 
             //Tick Message Counter For User
