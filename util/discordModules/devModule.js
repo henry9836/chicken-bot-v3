@@ -11,7 +11,9 @@ function processMessage(msg, client, args){
         exit(0);
     }
     else if (args[0] === `talk`) {
-        msg.channel.send(msg.content);
+        var text = msg.content
+        text = text.replace("!talk ", "");
+        msg.channel.send(text);
         msg.delete();
         return true;
     }
