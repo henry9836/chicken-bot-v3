@@ -236,12 +236,12 @@ function processReaction(reaction, user){
     }
 }
 
-function isInputSanitary(msg){
+function isInputSanitary(msg, args){
     // Ignore messages that aren't from a guild
     if (!msg.guild) return false;
 
     //Get args for the message
-    const args = msg.content.slice(botConfig.prefix.length).trim().split(' ');
+    args = msg.content.slice(botConfig.prefix.length).trim().split(' ');
 
     //Ignore Messages that have too many PREFIXs (!!!!!!!break-bot)
     if (args[0].includes(botConfig.prefix)) return false;
@@ -320,7 +320,8 @@ function processMessage(msg, client){
     reassignChannelsJank(msg);
 
     if (msg.content.startsWith(botConfig.prefix)){
-        if (isInputSanitary(msg)){
+        args = []
+        if (isInputSanitary(msg, args)){
 
             //Tick Message Counter For User
             mongoUtil.messageTick(msg.member, msg);
