@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 const debugging = require("./debugging.js");
-const discord = require("./discordUtil.js");
+const discord = require("./discordModule.js");
 
 var eventLoopActive = false;
 let filteredYear = 1971;

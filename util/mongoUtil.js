@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const { exit } = require("process");
 
 const debugging = require("./debugging.js");
-const discordUtil = require("./discordUtil.js");
+const discordModule = require("./discordModule.js");
 const botConfig = require('.././config.json');
 
 const Schema = mongoose.Schema;
@@ -225,7 +225,7 @@ function punish(member, msg){
                     if (user.verified == true){
                         if (botConfig.roles.verifiedRole){
                             user.punished = true;
-                            discordUtil.effectMember(member, msg, discordUtil.USERMOD.UNVERIFY);
+                            discordModule.effectMember(member, msg, discordModule.USERMOD.UNVERIFY);
                             user.save(dbAction);
                         }
                         else{
@@ -266,7 +266,7 @@ function pardon(member, msg){
                     if (user.verified == true){
                         if (botConfig.roles.verifiedRole){
                             //Re-apply role
-                            discordUtil.effectMember(member, msg, discordUtil.USERMOD.PARDON);
+                            discordModule.effectMember(member, msg, discordModule.USERMOD.PARDON);
                         }
                         else{
                             msg.reply("Verified Role Not Assigned!");
@@ -330,7 +330,7 @@ function messageTick(member, msg){
                                 //If the verified role exists
                                 if (botConfig.roles.verifiedRole){
                                     //Verify The User
-                                    discordUtil.effectMember(member, msg, discordUtil.USERMOD.VERIFY);
+                                    discordModule.effectMember(member, msg, discordModule.USERMOD.VERIFY);
                                 }
                                 else{
                                     debugging.chickenScratch("Verified Role Not Assigned!", debugging.DEBUGLVLS.WARN);

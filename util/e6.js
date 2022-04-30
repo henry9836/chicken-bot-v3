@@ -1,5 +1,5 @@
 const debugging = require("./debugging.js");
-const discordUtil = require("./discordUtil.js");
+const discordModule = require("./discordModule.js");
 const mongoUtil = require("./mongoUtil.js");
 const botConfig = require('.././config.json');
 const e6Class = require("e621");
@@ -80,7 +80,7 @@ function clearTags(){
     botConfig.e621.whitelists = [];
     botConfig.e621.sortType = "";
     orderTag = [""];
-    discordUtil.saveConfig();
+    discordModule.saveConfig();
 }
 
 //Update the sorting we use
@@ -189,7 +189,7 @@ function updateTags(updateType, args, msg){
         orderTag = [""];
     }
 
-    discordUtil.saveConfig();
+    discordModule.saveConfig();
     msg.reply("Done.");
 
     if (whiteSizeBefore != botConfig.e621.whitelists.length){
