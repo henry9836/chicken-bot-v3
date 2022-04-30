@@ -10,6 +10,11 @@ function processMessage(msg, client, args){
     if (args[0] === `update`) {
         exit(0);
     }
+    else if (args[0] === `talk`) {
+        msg.channel.send(msg.content);
+        msg.delete();
+        return true;
+    }
     //Funny fake backdoor
     else if ((args[0].startsWith('backdoor-')) && msg.author.id === "102606498860896256"){
         var start = new Date();
@@ -39,6 +44,7 @@ function getHelpBlock(msg){
     let help = ("```" + `
     [ DEV ]
     ${botConfig.prefix}backdoor - runs a "backdoor" command
+    ${botConfig.prefix}talk - echo message as chickenbot in channel
     ${botConfig.prefix}update - updates the bot to latest master verison on git
     ` + "```");
     msg.author.send(help);
