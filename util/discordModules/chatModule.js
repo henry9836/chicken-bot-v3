@@ -221,7 +221,7 @@ function processMessage(msg, client, args){
 }
 
 function getHelpBlock(msg){
-    let help = ("```" + `
+    return ("```" + `
     [ Public ]
     ${botConfig.prefix}avatar <member> - Displays users profile picture
     ${botConfig.prefix}add-role <role> - Assigns a public role
@@ -236,7 +236,6 @@ function getHelpBlock(msg){
     ${botConfig.prefix}remove-role <role> - Removes a public role
     ${botConfig.prefix}role-list - List public roles
     ` + "```");
-    msg.author.send(help);
 }
 
 //Exports
