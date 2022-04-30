@@ -359,6 +359,55 @@ function processMessage(msg, client){
     }
 }
 
+//Export Vars
+Object.defineProperty(module.exports, 'quoteChannel', {
+    get() {
+      return quoteChannel
+    },
+    set(value){
+        quoteChannel = value;
+    }
+  })
+Object.defineProperty(module.exports, 'nsfwQuoteChannel', {
+    get() {
+      return nsfwQuoteChannel
+    },
+    set(value){
+        nsfwQuoteChannel = value;
+    }
+  })
+  Object.defineProperty(module.exports, 'petitionChannel', {
+    get() {
+      return petitionChannel
+    },
+    set(value){
+        petitionChannel = value;
+    }
+  })
+  Object.defineProperty(module.exports, 'verifiedChannel', {
+    get() {
+      return verifiedChannel
+    },
+    set(value){
+        verifiedChannel = value;
+    }
+  })
+  Object.defineProperty(module.exports, 'logChannel', {
+    get() {
+      return logChannel
+    },
+    set(value){
+        logChannel = value;
+    }
+  })
+  Object.defineProperty(module.exports, 'eventsChannel', {
+    get() {
+      return eventsChannel
+    },
+    set(value){
+        eventsChannel = value;
+    }
+  })
 //Export Functions
 module.exports.processMessage = processMessage;
 module.exports.saveConfig = saveConfig;
@@ -367,10 +416,4 @@ module.exports.announceEvent = announceEvent;
 module.exports.processReaction = processReaction;
 module.exports.getHelp = getHelp;
 module.exports.USERMOD = USERMOD;
-module.exports.quoteChannel = quoteChannel;
-module.exports.nsfwQuoteChannel = nsfwQuoteChannel;
-module.exports.petitionChannel = petitionChannel;
-module.exports.verifiedChannel = verifiedChannel;
-module.exports.logChannel = logChannel;
-module.exports.eventsChannel = eventsChannel;
 module.exports.applyMessageEffectors = applyMessageEffectors;

@@ -26,8 +26,8 @@ function processMessage(msg, client, args){
     //Petition
     else if (args[0] === `petition`){
         if (args.length > 1){
-            if (petitionChannel != undefined){
-                petitionChannel.send(msg.toString().replace(`${botConfig.prefix}${args[0]} `, `Petition By ${msg.author}: `))
+            if (discordModule.petitionChannel != undefined){
+                discordModule.petitionChannel.send(msg.toString().replace(`${botConfig.prefix}${args[0]} `, `Petition By ${msg.author}: `))
                 .then(function (message){
                     message.react("👍");
                     message.react("👎");
@@ -51,14 +51,14 @@ function processMessage(msg, client, args){
     //Quote
     else if (args[0] === `quote`){
         if (msg.attachments.array().length > 0){
-            if (quoteChannel != undefined){
+            if (discordModule.quoteChannel != undefined){
 
                 const embed = new MessageEmbed()
                 .setTitle(msg.author.username)
                 .setImage(msg.attachments.array()[0].url)
                 .setTimestamp(Date.now())
 
-                quoteChannel.send(embed);
+                discordModule.quoteChannel.send(embed);
                 return true;
             }
             else{
@@ -74,14 +74,14 @@ function processMessage(msg, client, args){
     //NSFW-Quote
     else if (args[0] === `nsfw-quote`){
         if (msg.attachments.array().length > 0){
-            if (nsfwQuoteChannel != undefined){
-                if (nsfwQuoteChannel.nsfw){
+            if (discordModule.nsfwQuoteChannel != undefined){
+                if (discordModule.nsfwQuoteChannel.nsfw){
                     const embed = new MessageEmbed()
                     .setTitle(msg.author.username)
                     .setImage(msg.attachments.array()[0].url)
                     .setTimestamp(Date.now())
 
-                    nsfwQuoteChannel.send(embed);
+                    discordModule.nsfwQuoteChannel.send(embed);
                     return true;
                 }
                 else {

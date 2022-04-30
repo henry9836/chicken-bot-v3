@@ -78,7 +78,7 @@ function processMessage(msg, client, args){
             let channel = msg.guild.channels.cache.get(args[1])
             if (channel !== undefined){
                 botConfig.channels.verified = channel.id;
-                verifiedChannel = channel;
+                discordModule.verifiedChannel = channel;
                 discordModule.saveConfig();
                 msg.reply(`Assigned ${channel} as verifed channel`);
             }
