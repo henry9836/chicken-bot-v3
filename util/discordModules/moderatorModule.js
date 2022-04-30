@@ -144,8 +144,8 @@ function processMessage(msg, client, args){
     return false;
 }
 
-function getHelpBlock(){
-    return ("```" + `
+function getHelpBlock(msg){
+    let help = ("```" + `
     [ Moderator ]
     ${botConfig.prefix}ban <id> - bans member
     ${botConfig.prefix}e6-add-tag <id/tag> <tag>... - adds e6 tag(s) to a list, if id is supplied will add to the list that matches the id
@@ -162,6 +162,7 @@ function getHelpBlock(){
     ${botConfig.prefix}punish <member> - removes verified from user
     ${botConfig.prefix}prune <amount> - removes last amount of messages (max is 100)
     ` + "```");
+    msg.author.send(help);
 }
 
 //Exports

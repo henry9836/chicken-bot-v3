@@ -316,8 +316,8 @@ function processMessage(msg, client, args){
     return false;
 }
 
-function getHelpBlock(){
-    return ("```" + `
+function getHelpBlock(msg){
+    let help = ("```" + `
     [ Admin ]
     ${botConfig.prefix}add-mod <member> - assigns the mod role to a user
     ${botConfig.prefix}add-role-assignable <id> - adds a role to the assignable list
@@ -335,6 +335,7 @@ function getHelpBlock(){
     ${botConfig.prefix}set-events-channel <id> - Assign events channel
     ${botConfig.prefix}remove-role-assignable <id> - removes a role from the assignable list
     ` + "```");
+    msg.author.send(help);
 }
 
 //Exports

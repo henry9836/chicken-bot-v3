@@ -73,8 +73,8 @@ function processMessage(msg, client, args){
     return false;
 }
 
-function getHelpBlock(){
-    return ("```" + `
+function getHelpBlock(msg){
+    let help = ("```" + `
     [ Owner ]
     ${botConfig.prefix}add-admin <member> - assigns the admin role to a user
     ${botConfig.prefix}assign-admin-role <id> - assigns the admin role
@@ -82,6 +82,7 @@ function getHelpBlock(){
     ${botConfig.prefix}set-bot-log-channel <id> - sets the channel where the bot outputs a log to
     ${botConfig.prefix}update - updates the bot
     ` + "```");
+    msg.author.send(help);
 }
 
 //Exports

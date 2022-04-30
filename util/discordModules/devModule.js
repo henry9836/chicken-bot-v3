@@ -12,11 +12,12 @@ function processMessage(msg, client, args){
     }
 }
 
-function getHelpBlock(){
-    return ("```" + `
+function getHelpBlock(msg){
+    let help = ("```" + `
     [ DEV ]
     ${botConfig.prefix}update - updates the bot to latest master verison on git
     ` + "```");
+    msg.author.send(help);
 }
 
 //Exports

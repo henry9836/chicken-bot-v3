@@ -255,24 +255,24 @@ function isInputSanitary(msg, args){
 function getHelp(msg){
     help = `[ 🐔 ] 𝗖𝗵𝗶𝗰𝗸𝗲𝗻𝗕𝗼𝘁 - 𝘃𝟯.𝟬
     𝘉𝘶𝘪𝘭𝘵 𝘣𝘺 𝘕𝘪𝘵𝘳𝘰\n`;
+    msg.author.send(help);
 
     if (authenticationModule.isDev(msg)){
-        help += devModule.getHelpBlock();
+        help += devModule.getHelpBlock(msg);
     }
     if (authenticationModule.isOwner(msg)){
-        help += ownerModule.getHelpBlock();
+        help += ownerModule.getHelpBlock(msg);
     }
     if (authenticationModule.isAdmin(msg)){
-        help += adminModule.getHelpBlock();
+        help += adminModule.getHelpBlock(msg);
     }
     if (authenticationModule.isMod(msg)){
-        help += moderatorModule.getHelpBlock();
+        help += moderatorModule.getHelpBlock(msg);
     }
-    help += chatModule.getHelpBlock();
+    help = chatModule.getHelpBlock();
 
     help += `
     𝒸𝓁𝓊𝒸𝓀`;
-
     msg.author.send(help);
 
     msg.reply("Sent a list of commands to your direct messages");
