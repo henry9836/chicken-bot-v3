@@ -24,7 +24,7 @@ function initEvents(){
         //Convert lines to events and dates and add them to our events list
         events.forEach(line => {
             try{
-                var linedata = line.split(',');
+                var linedata = line.split('%');
                 let datestamp = new Date(Date.parse(linedata[0]));
                 let data = (linedata[1]);
                 let thing = new eventObject(datestamp, data);

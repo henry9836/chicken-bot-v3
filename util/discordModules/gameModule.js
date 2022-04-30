@@ -5,7 +5,6 @@ const botConfig = require('../.././config.json');
 const e6 = require('../e6.js');
 
 function processMessage(msg, client, args){
-
     return false;
 }
 
