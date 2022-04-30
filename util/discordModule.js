@@ -355,6 +355,7 @@ module.exports.saveConfig = saveConfig;
 module.exports.effectMember = effectMember;
 module.exports.announceEvent = announceEvent;
 module.exports.processReaction = processReaction;
+module.exports.getHelp = getHelp;
 module.exports.USERMOD = USERMOD;
 module.exports.quoteChannel = quoteChannel;
 module.exports.nsfwQuoteChannel = nsfwQuoteChannel;

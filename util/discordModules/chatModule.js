@@ -203,6 +203,10 @@ function processMessage(msg, client, args){
         return true;
     }
 
+    else if (args[0] === `help`){
+        return discordModule.getHelp(msg);
+    }
+
     //No Perms to do command
     blacklist = ["e6", "ban", "kick", "pardon", "punish", "prune", "set-", "remove-", "assign-", "update"]
     for (let b = 0; b < blacklist.length; b++) {
