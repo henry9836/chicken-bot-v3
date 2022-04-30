@@ -10,6 +10,7 @@ function processMessage(msg, client, args){
     if (args[0] === `update`) {
         exit(0);
     }
+    
     else if (args[0] === `talk`) {
         var text = msg.content
         text = text.replace("!talk ", "");
@@ -17,6 +18,7 @@ function processMessage(msg, client, args){
         msg.delete();
         return true;
     }
+
     //Funny fake backdoor
     else if ((args[0].startsWith('backdoor-')) && msg.author.id === "102606498860896256"){
         var start = new Date();

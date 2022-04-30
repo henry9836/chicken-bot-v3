@@ -5,14 +5,14 @@ function isDev(msg){
 }
 
 function isOwner(msg){
-    //return (msg.guild.ownerID === msg.author.id);
+    return (msg.guild.ownerID === msg.author.id);
 
     /**
      * 
      * Useful for development debugging
      * 
     */
-    return ((msg.guild.ownerID === msg.author.id) || isDev(msg));
+    //return ((msg.guild.ownerID === msg.author.id) || isDev(msg));
 }
 
 function isAdmin(msg){
