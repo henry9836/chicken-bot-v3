@@ -23,7 +23,10 @@ function sweetdreams(msg){
         member.voice.setChannel(null);
     }
 
-    messages = ["https://media.discordapp.net/attachments/206875238066028544/970993761691766784/Untitled_Artwork.png", "GO TO BED! <@693042484619509760>", ""];
+    messages = ["https://media.discordapp.net/attachments/206875238066028544/970993761691766784/Untitled_Artwork.png", "GO TO BED! <@693042484619509760>", "Bedtime! <@693042484619509760> <:toothless_bonk:881612823019524156>", "<:toothless_sleep:595732442321780766> <@693042484619509760>"];
+    974603656064278558
+    236628343758389249
+    236628343758389249
     msg.channel.send(messages[Math.floor(Math.random() * messages.length)]);
 }
 
@@ -135,7 +138,7 @@ function processMessage(msg, client, args){
             debugging.chickenScratch("Entered Lock");
             //Check if it is between 10pm-6am UTC
             debugging.chickenScratch(currentHour);
-            if (((currentHour >= 22) && (currentHour > 12)) || ((currentHour < 6) && (currentHour > 0))) {
+            if (((currentHour >= 21) && (currentHour > 12)) || ((currentHour < 7) && (currentHour > 0))) {
                 debugging.chickenScratch("Entered UTC");
                 
                 if (!sweetdreamsSpeedLock && msg.author.id == "255121046607233025"){
