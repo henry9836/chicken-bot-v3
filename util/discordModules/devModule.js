@@ -9,15 +9,6 @@ const { exit } = require('process');
 var sweetdreamsSpeedLock = false;
 var sweetdreamsLock = false;
 
-function sweetdreams(msg){
-    let member = msg.guild.members.cache.get('618283130901626890');
-
-    //member.voice.disconnect();
-    member.voice.setChannel(null);
-
-    msg.channel.send("Sleep :3");
-}
-
 function processMessage(msg, client, args){
     if (args[0] === `update`) {
         exit(0);
@@ -28,60 +19,6 @@ function processMessage(msg, client, args){
         text = text.replace("!talk ", "");
         msg.channel.send(text);
         msg.delete();
-        return true;
-    }
-
-    else if (args[0] == "sweetdreams"){
-        //Get Current Time
-        let currentHour = new Date().getUTCHours();
-
-        // //Check if furious is online
-        // let member = client.guild.members.cache.find(user => user.id === '693042484619509760')
-        // if (member.presence.status == "online"){
-        //     debugging.chickenScratch("Furious is online");
-        // }
-        // else{
-        //     debugging.chickenScratch("Furious is offline");
-        // }
-
-        //Check cooldown is bigger than 2 hours or 1 for paying
-        debugging.chickenScratch("Entered Sweetdreams");
-        if (!sweetdreamsLock || (!sweetdreamsSpeedLock && msg.author.id == "255121046607233025")){
-            debugging.chickenScratch("Entered Lock");
-            //Check if it is between 10pm-6am UTC
-            debugging.chickenScratch(currentHour);
-            if (((currentHour >= 22) && (currentHour > 12)) || ((currentHour < 10) && (currentHour > 0))) {
-                debugging.chickenScratch("Entered UTC");
-                
-                if (!sweetdreamsSpeedLock && msg.author.id == "255121046607233025"){
-
-                    //Send Message
-                    sweetdreams(msg);
-
-                    //Locks
-                    sweetdreamsSpeedLock = true;
-
-                    //Reset Speed Lock
-                    setTimeout(() => {
-                        sweetdreamsSpeedLock = false;
-                    }, 60*60*1000);
-                }
-                else if (msg.author.id != "255121046607233025"){
-
-                    //Send Message
-                    sweetdreams(msg);
-
-                    //Locks
-                    sweetdreamsLock = true;
-
-                    //Reset Lock
-                    setTimeout(() => {
-                        sweetdreamsLock = false;
-                    }, 2*60*60*1000);
-                }
-            }
-        }
-
         return true;
     }
 
