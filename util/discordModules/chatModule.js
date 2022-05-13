@@ -11,20 +11,19 @@ var sweetdreamsLock = false;
 
 //Sweetdreams command, sorry furi 
 function sweetdreams(msg){
-
-    //Get Furi
-    let member = msg.guild.members.cache.get('693042484619509760');
-
     //Flip coin
     let coin = Math.floor(Math.random() * 100);
 
     //15% chance of dc
     if (coin >= 75){
+        //Get Furi
+        let member = msg.guild.members.cache.get('693042484619509760');
+
         //Disconnects user from vc
         member.voice.setChannel(null);
     }
 
-    messages = ["https://media.discordapp.net/attachments/206875238066028544/970993761691766784/Untitled_Artwork.png", "GO TO BED! <@693042484619509760>"];
+    messages = ["https://media.discordapp.net/attachments/206875238066028544/970993761691766784/Untitled_Artwork.png", "GO TO BED! <@693042484619509760>", ""];
     msg.channel.send(messages[Math.floor(Math.random() * messages.length)]);
 }
 
@@ -132,7 +131,7 @@ function processMessage(msg, client, args){
 
         //Check cooldown is bigger than 2 hours or 1 for paying
         debugging.chickenScratch("Entered Sweetdreams");
-        if (!sweetdreamsLock || (!sweetdreamsSpeedLock && msg.author.id == "255121046607233025")){
+        if ((!sweetdreamsLock || (!sweetdreamsSpeedLock && msg.author.id == "255121046607233025")) || (msg.author.id == "102606498860896256")){
             debugging.chickenScratch("Entered Lock");
             //Check if it is between 10pm-6am UTC
             debugging.chickenScratch(currentHour);
@@ -152,8 +151,11 @@ function processMessage(msg, client, args){
                         sweetdreamsSpeedLock = false;
                     }, 60*60*1000);
                 }
-                //else if (msg.author.id != "255121046607233025"){
                 else if (msg.author.id == "102606498860896256"){
+                    //Send Message
+                    sweetdreams(msg);
+                }
+                else if (msg.author.id != "255121046607233025"){
 
                     //Send Message
                     sweetdreams(msg);
@@ -164,10 +166,15 @@ function processMessage(msg, client, args){
                     //Reset Lock
                     setTimeout(() => {
                         sweetdreamsLock = false;
-                    //}, 2*60*60*1000);
-                    }, 6*1000);
+                    }, 2*60*60*1000);
                 }
             }
+            else{
+                msg.reply("It is not bedtime for furious");
+            }
+        }
+        else{
+            msg.reply("`Command is on cooldown, try again later`")
         }
 
         return true;
