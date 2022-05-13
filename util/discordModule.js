@@ -329,6 +329,9 @@ function processMessage(msg, client){
     //Jank
     reassignChannelsJank(msg);
 
+    //Tick Message Counter For User
+    mongoUtil.messageTick(msg.member, msg);
+    
     if (msg.content.startsWith(botConfig.prefix)){
         args = [];
         if (isInputSanitary(msg, args)){
@@ -338,8 +341,6 @@ function processMessage(msg, client){
                 return;
             }
 
-            //Tick Message Counter For User
-            mongoUtil.messageTick(msg.member, msg);
 
             //Run Commands
             if (authenticationModule.isDev(msg)){
