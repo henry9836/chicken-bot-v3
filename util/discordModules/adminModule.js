@@ -235,8 +235,8 @@ function processMessage(msg, client, args){
         return true;
     }
 
-    //Assign Verify Role
-    else if (args[0] === `assign-verified-role`){
+    //Assign Ignore Role
+    else if (args[0] === `assign-ignore-role`){
         if (args[1]){
             //Validate role exists
             msg.guild.roles.fetch(args[1])
@@ -261,7 +261,7 @@ function processMessage(msg, client, args){
     }
 
     //Assign Verify Role
-    else if (args[0] === `assign-ignore-role`){
+    else if (args[0] === `assign-verified-role`){
         if (args[1]){
             //Validate role exists
             msg.guild.roles.fetch(args[1])
