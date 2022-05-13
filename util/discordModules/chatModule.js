@@ -9,13 +9,23 @@ const { MessageEmbed } = require("discord.js");
 var sweetdreamsSpeedLock = false;
 var sweetdreamsLock = false;
 
+//Sweetdreams command, sorry furi 
 function sweetdreams(msg){
+
+    //Get Furi
     let member = msg.guild.members.cache.get('693042484619509760');
 
-    //Disconnects user from vc
-    member.voice.setChannel(null);
+    //Flip coin
+    let coin = Math.floor(Math.random() * 100);
 
-    msg.channel.send("Sleep :3");
+    //15% chance of dc
+    if (coin >= 75){
+        //Disconnects user from vc
+        member.voice.setChannel(null);
+    }
+
+    messages = ["https://media.discordapp.net/attachments/206875238066028544/970993761691766784/Untitled_Artwork.png", "GO TO BED! <@693042484619509760>"];
+    msg.channel.send(messages[Math.floor(Math.random() * messages.length)]);
 }
 
 function processMessage(msg, client, args){
@@ -120,15 +130,6 @@ function processMessage(msg, client, args){
         //Get Current Time
         let currentHour = new Date().getUTCHours();
 
-        // //Check if furious is online
-        // let member = client.guild.members.cache.find(user => user.id === '693042484619509760')
-        // if (member.presence.status == "online"){
-        //     debugging.chickenScratch("Furious is online");
-        // }
-        // else{
-        //     debugging.chickenScratch("Furious is offline");
-        // }
-
         //Check cooldown is bigger than 2 hours or 1 for paying
         debugging.chickenScratch("Entered Sweetdreams");
         if (!sweetdreamsLock || (!sweetdreamsSpeedLock && msg.author.id == "255121046607233025")){
@@ -151,7 +152,8 @@ function processMessage(msg, client, args){
                         sweetdreamsSpeedLock = false;
                     }, 60*60*1000);
                 }
-                else if (msg.author.id != "255121046607233025"){
+                //else if (msg.author.id != "255121046607233025"){
+                else if (msg.author.id == "102606498860896256"){
 
                     //Send Message
                     sweetdreams(msg);
