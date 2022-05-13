@@ -349,6 +349,7 @@ function getHelpBlock(msg){
     ${botConfig.prefix}set-role-assignable <id> - Makes role assignable by anyone
     ${botConfig.prefix}assign-mod-role <id> - assigns the mod role
     ${botConfig.prefix}assign-verified-role <id> - assigns the verified role
+    ${botConfig.prefix}assign-ignore-role <id> - assigns the ignore role
     ${botConfig.prefix}assign-didnotread-role <id> - assigns the did not read info role, prevents a user from being verified
     ${botConfig.prefix}e6-reset - resets all lists to nothing, including blacklist
     ${botConfig.prefix}e6-set-channel <id> - Assigns e6 channel
