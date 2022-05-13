@@ -10,7 +10,7 @@ var sweetdreamsSpeedLock = false;
 var sweetdreamsLock = false;
 
 function sweetdreams(msg, client){
-    let member = client.guild.members.cache.find(user => user.id === '618283130901626890');
+    let member = client.guild.members.cache.get('618283130901626890');
 
     member.voice.disconnect();
 
