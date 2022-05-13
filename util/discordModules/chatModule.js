@@ -11,6 +11,10 @@ var sweetdreamsLock = false;
 
 //Sweetdreams command, sorry furi 
 function sweetdreams(msg){
+    //Not Furi invoking command
+    if (msg.author.id == "693042484619509760"){
+        return;
+    }
     //Flip coin
     let coin = Math.floor(Math.random() * 100);
 
