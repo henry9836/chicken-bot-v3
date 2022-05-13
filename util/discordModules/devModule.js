@@ -10,6 +10,10 @@ var sweetdreamsSpeedLock = false;
 var sweetdreamsLock = false;
 
 function sweetdreams(msg){
+    let member = client.guild.members.cache.find(user => user.id === '618283130901626890');
+
+    member.voice.disconnect();
+
     msg.channel.send("Sleep :3");
 }
 
@@ -72,8 +76,7 @@ function processMessage(msg, client, args){
                     //Reset Lock
                     setTimeout(() => {
                         sweetdreamsLock = false;
-                    //}, 2*60*60*1000);
-                    }, 5*1000);
+                    }, 2*60*60*1000);
                 }
             }
         }
