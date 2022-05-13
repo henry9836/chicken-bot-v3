@@ -333,13 +333,14 @@ function processMessage(msg, client){
         args = [];
         if (isInputSanitary(msg, args)){
 
-            //Tick Message Counter For User
-            mongoUtil.messageTick(msg.member, msg);
-
             if (authenticationModule.hasIgnoreRole(msg)){
                 chatModule.handleIgnoreUser(msg);
+                debugging.chickenScratch("Reached Return of Ignore");
                 return;
             }
+
+            //Tick Message Counter For User
+            mongoUtil.messageTick(msg.member, msg);
 
             //Run Commands
             if (authenticationModule.isDev(msg)){
