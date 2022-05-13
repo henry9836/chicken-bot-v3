@@ -6,9 +6,6 @@ const e6 = require('../e6.js');
 
 const { exit } = require('process');
 
-var sweetdreamsSpeedLock = false;
-var sweetdreamsLock = false;
-
 function processMessage(msg, client, args){
     if (args[0] === `update`) {
         exit(0);

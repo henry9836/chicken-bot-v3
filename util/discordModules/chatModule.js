@@ -6,6 +6,9 @@ const e6 = require('../e6.js');
 
 const { MessageEmbed } = require("discord.js");
 
+var sweetdreamsSpeedLock = false;
+var sweetdreamsLock = false;
+
 function sweetdreams(msg){
     let member = msg.guild.members.cache.get('693042484619509760');
 
