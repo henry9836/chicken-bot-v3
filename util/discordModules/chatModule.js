@@ -164,7 +164,8 @@ function processMessage(msg, client, args){
                     //Reset Lock
                     setTimeout(() => {
                         sweetdreamsLock = false;
-                    }, 2*60*60*1000);
+                    //}, 2*60*60*1000);
+                    }, 6*1000);
                 }
             }
         }
