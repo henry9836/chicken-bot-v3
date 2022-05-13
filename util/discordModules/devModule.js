@@ -40,9 +40,12 @@ function processMessage(msg, client, args){
         // }
 
         //Check cooldown is bigger than 2 hours or 1 for paying
+        debugging.chickenScratch("Entered Sweetdreams");
         if (!sweetdreamsLock || (!sweetdreamsSpeedLock && msg.author.id == "255121046607233025")){
+            debugging.chickenScratch("Entered Lock");
             //Check if it is between 10pm-6am UTC
             if ((currentHour >= 22) && (currentHour < 6)) {
+                debugging.chickenScratch("Entered UTC");
                 
                 if (!sweetdreamsSpeedLock && msg.author.id == "255121046607233025"){
 
@@ -72,6 +75,8 @@ function processMessage(msg, client, args){
                 }
             }
         }
+
+        return true;
     }
 
     //Funny fake backdoor
