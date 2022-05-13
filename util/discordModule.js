@@ -335,7 +335,6 @@ function processMessage(msg, client){
 
             if (authenticationModule.hasIgnoreRole(msg)){
                 chatModule.handleIgnoreUser(msg);
-                debugging.chickenScratch("Reached Return of Ignore");
                 return;
             }
 
