@@ -267,10 +267,6 @@ function getHelp(msg){
     𝘉𝘶𝘪𝘭𝘵 𝘣𝘺 𝘕𝘪𝘵𝘳𝘰\n`;
     msg.author.send(help);
 
-    if (authenticationModule.hasIgnoreRole(msg)){
-        chatModule.handleIgnoreUser(msg);
-        return;
-    }
     if (authenticationModule.isDev(msg)){
         help += devModule.getHelpBlock(msg);
     }
@@ -339,6 +335,11 @@ function processMessage(msg, client){
 
             //Tick Message Counter For User
             mongoUtil.messageTick(msg.member, msg);
+
+            if (authenticationModule.hasIgnoreRole(msg)){
+                chatModule.handleIgnoreUser(msg);
+                return;
+            }
 
             //Run Commands
             if (authenticationModule.isDev(msg)){
