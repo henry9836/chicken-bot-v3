@@ -138,7 +138,7 @@ function processMessage(msg, client, args){
             debugging.chickenScratch("Entered Lock");
             //Check if it is between 10pm-6am UTC
             debugging.chickenScratch(currentHour);
-            if (((currentHour >= 21) && (currentHour > 12)) || ((currentHour < 7) && (currentHour > 0))) {
+            if (((currentHour >= 21) && (currentHour > 12)) || ((currentHour < 11) && (currentHour > 0))) {
                 debugging.chickenScratch("Entered UTC");
                 
                 if (!sweetdreamsSpeedLock && msg.author.id == "255121046607233025"){
