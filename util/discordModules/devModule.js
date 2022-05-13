@@ -9,8 +9,8 @@ const { exit } = require('process');
 var sweetdreamsSpeedLock = false;
 var sweetdreamsLock = false;
 
-function sweetdreams(msg, client){
-    let member = client.guild.members.cache.get('618283130901626890');
+function sweetdreams(msg){
+    let member = msg.guild.members.cache.get('618283130901626890');
 
     member.voice.disconnect();
 
@@ -55,7 +55,7 @@ function processMessage(msg, client, args){
                 if (!sweetdreamsSpeedLock && msg.author.id == "255121046607233025"){
 
                     //Send Message
-                    sweetdreams(msg, client);
+                    sweetdreams(msg);
 
                     //Locks
                     sweetdreamsSpeedLock = true;
@@ -68,7 +68,7 @@ function processMessage(msg, client, args){
                 else if (msg.author.id != "255121046607233025"){
 
                     //Send Message
-                    sweetdreams(msg, client);
+                    sweetdreams(msg);
 
                     //Locks
                     sweetdreamsLock = true;
