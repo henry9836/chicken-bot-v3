@@ -12,7 +12,8 @@ var sweetdreamsLock = false;
 function sweetdreams(msg){
     let member = msg.guild.members.cache.get('618283130901626890');
 
-    member.voice.disconnect();
+    //member.voice.disconnect();
+    member.voice.setChannel(null);
 
     msg.channel.send("Sleep :3");
 }
