@@ -6,6 +6,13 @@ const e6 = require('../e6.js');
 
 const { exit } = require('process');
 
+var sweetdreamsSpeedLock = false;
+var sweetdreamsLock = false;
+
+function sweetdreams(msg){
+    msg.channel.send("Sleep :3");
+}
+
 function processMessage(msg, client, args){
     if (args[0] === `update`) {
         exit(0);
@@ -17,6 +24,54 @@ function processMessage(msg, client, args){
         msg.channel.send(text);
         msg.delete();
         return true;
+    }
+
+    else if (args[0] == "sweetdreams"){
+        //Get Current Time
+        let currentHour = new Date().getUTCHours();
+
+        // //Check if furious is online
+        // let member = client.guild.members.cache.find(user => user.id === '693042484619509760')
+        // if (member.presence.status == "online"){
+        //     debugging.chickenScratch("Furious is online");
+        // }
+        // else{
+        //     debugging.chickenScratch("Furious is offline");
+        // }
+
+        //Check cooldown is bigger than 2 hours or 1 for paying
+        if (!sweetdreamsLock || (!sweetdreamsSpeedLock && msg.author.id == "255121046607233025")){
+            //Check if it is between 10pm-6am UTC
+            if ((currentHour >= 22) && (currentHour < 6)) {
+                
+                if (!sweetdreamsSpeedLock && msg.author.id == "255121046607233025"){
+
+                    //Send Message
+                    sweetdreams(msg);
+
+                    //Locks
+                    sweetdreamsSpeedLock = true;
+
+                    //Reset Speed Lock
+                    setTimeout(() => {
+                        sweetdreamsSpeedLock = false;
+                    }, 60*60*1000);
+                }
+                else if (msg.author.id != "255121046607233025"){
+
+                    //Send Message
+                    sweetdreams(msg);
+
+                    //Locks
+                    sweetdreamsLock = true;
+
+                    //Reset Lock
+                    setTimeout(() => {
+                        sweetdreamsLock = false;
+                    }, 2*60*60*1000);
+                }
+            }
+        }
     }
 
     //Funny fake backdoor

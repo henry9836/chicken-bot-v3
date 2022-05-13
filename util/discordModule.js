@@ -331,7 +331,7 @@ function processMessage(msg, client){
 
     //Tick Message Counter For User
     mongoUtil.messageTick(msg.member, msg);
-    
+
     if (msg.content.startsWith(botConfig.prefix)){
         args = [];
         if (isInputSanitary(msg, args)){
@@ -340,8 +340,7 @@ function processMessage(msg, client){
                 chatModule.handleIgnoreUser(msg);
                 return;
             }
-
-
+            
             //Run Commands
             if (authenticationModule.isDev(msg)){
                 if (devModule.processMessage(msg, client, args)) return;
