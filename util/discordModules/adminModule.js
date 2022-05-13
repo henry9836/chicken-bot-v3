@@ -242,6 +242,31 @@ function processMessage(msg, client, args){
             msg.guild.roles.fetch(args[1])
                 .then(role => {
                     if (role !== null){
+                        botConfig.roles.ignoreRole = role.id;
+                        discordModule.saveConfig();
+                        msg.reply(`Assigned ${role} as ignore role`);
+                    }
+                    else {
+                        msg.reply("Role ID doesn't exist"); 
+                    }role
+                })
+                .catch(err => {
+                    msg.reply(err);
+                })
+        }
+        else{
+            msg.reply("You must supply a role id");
+        }
+        return true;
+    }
+
+    //Assign Verify Role
+    else if (args[0] === `assign-ignore-role`){
+        if (args[1]){
+            //Validate role exists
+            msg.guild.roles.fetch(args[1])
+                .then(role => {
+                    if (role !== null){
                         botConfig.roles.verifiedRole = role.id;
                         discordModule.saveConfig();
                         msg.reply(`Assigned ${role} as verified role`);

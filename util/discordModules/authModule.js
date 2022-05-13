@@ -42,8 +42,14 @@ function isMod(msg){
     return false;
 }
 
+function hasIgnoreRole(msg){
+    //Has Ignore role
+    return (msg.member.roles.cache.has(botConfig.roles.ignoreRole));
+}
+
 //Exports
 module.exports.isDev = isDev;
 module.exports.isOwner = isOwner;
 module.exports.isAdmin = isAdmin;
 module.exports.isMod = isMod;
+module.exports.hasIgnoreRole = hasIgnoreRole;

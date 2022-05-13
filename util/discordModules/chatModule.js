@@ -223,6 +223,15 @@ function getHelpBlock(msg){
     ` + "```");
 }
 
+function handleIgnoreUser(msg){
+    replies = ["*continues pecking the ground*", "\"Must of been the wind\"", "*bawk?*"]
+    //50/50 if we send a message
+    if (Math.floor(Math.random() * 100 > 50)){
+        msg.reply(replies[Math.floor(Math.random() * replies.length)]);
+    }
+}
+
 //Exports
 module.exports.processMessage = processMessage;
 module.exports.getHelpBlock = getHelpBlock;
+module.exports.handleIgnoreUser = handleIgnoreUser;

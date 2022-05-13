@@ -267,6 +267,10 @@ function getHelp(msg){
     𝘉𝘶𝘪𝘭𝘵 𝘣𝘺 𝘕𝘪𝘵𝘳𝘰\n`;
     msg.author.send(help);
 
+    if (authenticationModule.hasIgnoreRole(msg)){
+        chatModule.handleIgnoreUser(msg);
+        return;
+    }
     if (authenticationModule.isDev(msg)){
         help += devModule.getHelpBlock(msg);
     }
