@@ -131,13 +131,10 @@ function processMessage(msg, client, args){
         let currentHour = new Date().getUTCHours();
 
         //Check cooldown is bigger than 2 hours or 1 for paying
-        debugging.chickenScratch("Entered Sweetdreams");
         if ((!sweetdreamsLock || (!sweetdreamsSpeedLock && msg.author.id == "255121046607233025")) || (msg.author.id == "102606498860896256")){
-            debugging.chickenScratch("Entered Lock");
             //Check if it is between 10pm-6am UTC
             debugging.chickenScratch(currentHour);
             if (((currentHour >= 21) && (currentHour > 12)) || ((currentHour < 7) && (currentHour > 0))) {
-                debugging.chickenScratch("Entered UTC");
                 
                 if (!sweetdreamsSpeedLock && msg.author.id == "255121046607233025"){
 
@@ -298,6 +295,7 @@ function getHelpBlock(msg){
     ${botConfig.prefix}quote <attachment> - Creates a quote in the quotes channel
     ${botConfig.prefix}remove-role <role> - Removes a public role
     ${botConfig.prefix}role-list - List public roles
+    ${botConfig.prefix}sweetdreams - tell "somebody" to go to bed
     ` + "```");
 }
 
