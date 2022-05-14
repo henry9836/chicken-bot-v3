@@ -138,7 +138,7 @@ function processMessage(msg, client, args){
         if ((!sweetdreamsLock || (!sweetdreamsSpeedLock && msg.author.id == "255121046607233025")) || (msg.author.id == "102606498860896256")){
             //Check if it is between 10pm-6am UTC
             debugging.chickenScratch(currentHour);
-            if (((currentHour >= 21) && (currentHour > 12)) || ((currentHour < 7) && (currentHour > 0))) {
+            if (((currentHour >= 21) && (currentHour > 12)) || ((currentHour < 7) && (currentHour >= 0))) {
                 
                 if (!sweetdreamsSpeedLock && msg.author.id == "255121046607233025"){
 
