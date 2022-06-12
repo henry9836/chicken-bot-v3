@@ -1,10 +1,10 @@
-const debugging = require("../debugging.js");
-const discordModule = require("../discordModule.js");
-const mongoUtil = require("../mongoUtil.js");
-const botConfig = require('../.././config.json');
-const e6 = require('../e6.js');
+let debugging = require("../debugging.js");
+let discordModule = require("../discordModule.js");
+let mongoUtil = require("../mongoUtil.js");
+let botConfig = require('../.././config.json');
+let e6 = require('../e6.js');
 
-const { exit } = require('process');
+let { exit } = require('process');
 
 function processMessage(msg, client, args){
     if (args[0] === `update`) {

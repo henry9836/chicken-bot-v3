@@ -1,7 +1,7 @@
-const fs = require('fs');
+let fs = require('fs');
 
-const debugging = require("./debugging.js");
-const discord = require("./discordModule.js");
+let debugging = require("./debugging.js");
+let discord = require("./discordModule.js");
 
 var eventLoopActive = false;
 let filteredYear = 1971;
@@ -18,7 +18,7 @@ function initEvents(){
     try {
         //Read from file and split each event up
     debugging.chickenScratch("Loading Events");
-        const data = fs.readFileSync('./util/events', 'utf8');
+        let data = fs.readFileSync('./util/events', 'utf8');
         var events = data.split('\n');
 
         //Convert lines to events and dates and add them to our events list

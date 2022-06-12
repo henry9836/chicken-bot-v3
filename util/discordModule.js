@@ -1,20 +1,20 @@
-const fs = require('fs');
+let fs = require('fs');
 
-const debugging = require("./debugging.js");
-const mongoUtil = require("./mongoUtil.js");
-const botConfig = require('.././config.json');
-const e6 = require('./e6.js');
-const authenticationModule = require('./discordModules/authModule.js');
-const devModule = require('./discordModules/devModule.js');
-const ownerModule = require('./discordModules/ownerModule.js');
-const adminModule = require('./discordModules/adminModule.js');
-const moderatorModule = require('./discordModules/moderatorModule.js');
-const eggModule = require('./discordModules/eggModule.js');
-const gameModule = require('./discordModules/gameModule.js');
-const chatModule = require('./discordModules/chatModule.js');
+let debugging = require("./debugging.js");
+let mongoUtil = require("./mongoUtil.js");
+let botConfig = require('.././config.json');
+let e6 = require('./e6.js');
+let authenticationModule = require('./discordModules/authModule.js');
+let devModule = require('./discordModules/devModule.js');
+let ownerModule = require('./discordModules/ownerModule.js');
+let adminModule = require('./discordModules/adminModule.js');
+let moderatorModule = require('./discordModules/moderatorModule.js');
+let eggModule = require('./discordModules/eggModule.js');
+let gameModule = require('./discordModules/gameModule.js');
+let chatModule = require('./discordModules/chatModule.js');
 
-const { MessageEmbed } = require("discord.js");
-const { exit } = require('process');
+let { MessageEmbed } = require("discord.js");
+let { exit } = require('process');
 
 USERMOD = {
     MAKEADMIN : 0,
@@ -65,7 +65,7 @@ function saveConfig(){
 //Effects a discord user (banning, kicking, promoting, etc)
 //Auto verifying is done in mongoUtil under function messageTick
 function effectMember(member, msg, mod){
-    const user = member.user;
+    let user = member.user;
     if (member){
         //Verify
         if (mod === USERMOD.VERIFY){

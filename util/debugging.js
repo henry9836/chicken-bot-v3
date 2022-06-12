@@ -1,6 +1,6 @@
-const colors = require('colors');
+let colors = require('colors');
 
-const DEBUGLVLS = {
+let DEBUGLVLS = {
     FATAL: 0,
     WARN: 1,
     GENERIC: 2

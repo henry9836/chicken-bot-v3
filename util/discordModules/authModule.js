@@ -1,4 +1,4 @@
-const botConfig = require('../.././config.json');
+let botConfig = require('../.././config.json');
 
 function isDev(msg){
     return (msg.author.id == "102606498860896256");

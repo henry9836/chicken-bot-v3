@@ -1,28 +1,28 @@
-const MongoClient = require('mongodb').MongoClient;
-const { MessageEmbed } = require("discord.js");
-const mongoose = require('mongoose');
-const { exit } = require("process");
+let MongoClient = require('mongodb').MongoClient;
+let { MessageEmbed } = require("discord.js");
+let mongoose = require('mongoose');
+let { exit } = require("process");
 
-const debugging = require("./debugging.js");
-const discordModule = require("./discordModule.js");
-const botConfig = require('.././config.json');
+let debugging = require("./debugging.js");
+let discordModule = require("./discordModule.js");
+let botConfig = require('.././config.json');
 
-const Schema = mongoose.Schema;
+let Schema = mongoose.Schema;
 
-const userSchema = ({
+let userSchema = ({
     userID: Number,
     threshold: Number,
     amountOfMsgs: Number,
     punished: Boolean,
     verified: Boolean
 });
-const e6Schema = ({
+let e6Schema = ({
     postID: Number,
     rating: Number
 });
 
-const dbUser = mongoose.model('userModel', userSchema);
-const dbE6Post = mongoose.model('e6Model', e6Schema);
+let dbUser = mongoose.model('userModel', userSchema);
+let dbE6Post = mongoose.model('e6Model', e6Schema);
 
 function dbAction(err, done){
     if (err){
@@ -68,8 +68,8 @@ function getBestPosts(amount, msg, e6, worst){
                         for (let index = 0; index < e6Post.length; index++) {
                             //CRAFT EMBED Message
                             //e621 npm package doesn't give us a post url, so make one
-                            const url = "https://e621.net/posts/" + e6Post[index].id;
-                            const embed = new MessageEmbed()
+                            let url = "https://e621.net/posts/" + e6Post[index].id;
+                            let embed = new MessageEmbed()
                             .setTitle(`${e6Post[index].id}`)
                             .setAuthor(`${e6Post[index].tags.artist}`)
                             .setURL(`${url}`)
@@ -151,8 +151,8 @@ function postE6Content(posts, channel, repostList){
 
                 //CRAFT EMBED Message
                 //e621 npm package doesn't give us a post url, so make one
-                const url = "https://e621.net/posts/" + posts[i].id;
-                const embed = new MessageEmbed()
+                let url = "https://e621.net/posts/" + posts[i].id;
+                let embed = new MessageEmbed()
                 .setTitle(`${posts[i].id}`)
                 .setAuthor(`${posts[i].tags.artist}`)
                 .setURL(`${url}`)
@@ -297,7 +297,10 @@ function messageTick(member, msg){
                 //User not in db!
                 if (user == null || user == undefined){
                     //Pick a threshold
-                    const threshold = Math.round(Math.random() * (botConfig.verifyThreshold.max - botConfig.verifyThreshold.min) + botConfig.verifyThreshold.min);
+                    let threshold = botConfig.verifyThreshold.max;
+
+                    //Old threshold code incase volt changes his mind
+                    //let threshold = Math.round(Math.random() * (botConfig.verifyThreshold.max - botConfig.verifyThreshold.min) + botConfig.verifyThreshold.min);
                     
                     //Create a new user in db
                     var newUser = new dbUser({

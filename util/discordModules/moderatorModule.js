@@ -1,8 +1,8 @@
-const debugging = require("../debugging.js");
-const discordModule = require("../discordModule.js");
-const mongoUtil = require("../mongoUtil.js");
-const botConfig = require('../.././config.json');
-const e6 = require('../e6.js');
+let debugging = require("../debugging.js");
+let discordModule = require("../discordModule.js");
+let mongoUtil = require("../mongoUtil.js");
+let botConfig = require('../.././config.json');
+let e6 = require('../e6.js');
 
 function processMessage(msg, client, args){
     //PRUNE
@@ -27,14 +27,14 @@ function processMessage(msg, client, args){
     //KICK
     else if (args[0] === `kick`){
         //Kick the mentioned user
-        const punishedUser = msg.mentions.users.first();
+        let punishedUser = msg.mentions.users.first();
         discordModule.effectMember(msg.guild.member(punishedUser), msg, USERMOD.KICK);
         return true;
     }
 
     //BAN
     else if (args[0] === `ban`){
-        const punishedUser = msg.mentions.users.first();
+        let punishedUser = msg.mentions.users.first();
         discordModule.effectMember(msg.guild.member(punishedUser), msg, USERMOD.BAN);
         return true;
     }
@@ -42,7 +42,7 @@ function processMessage(msg, client, args){
     //Disable user from having verified role
     else if (args[0] === `punish`){
         if (args[1]){
-            const punishedUser = msg.mentions.members.first();
+            let punishedUser = msg.mentions.members.first();
             debugging.chickenScratch(`Punishing: ${punishedUser.id}`);
             mongoUtil.punish(punishedUser, msg);
         }
@@ -55,7 +55,7 @@ function processMessage(msg, client, args){
     //Allow user to have verified role
     else if (args[0] === `pardon`){
         if (args[1]){
-            const punishedUser = msg.mentions.members.first();
+            let punishedUser = msg.mentions.members.first();
             debugging.chickenScratch(`Pardoning: ${punishedUser.id}`);
             mongoUtil.pardon(punishedUser, msg);
         }

@@ -1,8 +1,30 @@
-const debugging = require("../debugging.js");
-const discordModule = require("../discordModule.js");
-const mongoUtil = require("../mongoUtil.js");
-const botConfig = require('../.././config.json');
-const e6 = require('../e6.js');
+let debugging = require("../debugging.js");
+let discordModule = require("../discordModule.js");
+let mongoUtil = require("../mongoUtil.js");
+let botConfig = require('../.././config.json');
+let e6 = require('../e6.js');
+
+var sweetdreamsSpeedLock = false;
+var sweetdreamsLock = false;
+
+//Sweetdreams command, sorry furi 
+function sweetdreams(msg){
+    //Flip coin
+    let coin = Math.floor(Math.random() * 100);
+
+    //"15%" chance of dc
+    if (coin >= 75){
+        //Get Furi
+        let member = msg.guild.members.cache.get('693042484619509760');
+
+        //Disconnects user from vc
+        member.voice.setChannel(null);
+    }
+
+    messages = ["https://media.discordapp.net/attachments/206875238066028544/970993761691766784/Untitled_Artwork.png", "GO TO BED! <@693042484619509760>", "Bedtime! <@693042484619509760> <:chicken_smile:236628343758389249>", "<:toothless_upright:955240038302613514> <@693042484619509760> *smothers you to sleep with wings*"];
+
+    msg.channel.send(messages[Math.floor(Math.random() * messages.length)]);
+}
 
 function processMessage(msg, client, args){
     if ((args[0] === `cluck`) || (args[0] === `bok`) || (args[0] === `bawk`) || (args[0] === `squark`)) {
@@ -26,7 +48,7 @@ function processMessage(msg, client, args){
 
     else if ((args[0] === `kill`) || (args[0] === `attack`)) {
         //Attack the mentioned user
-        const punishedUser = msg.mentions.users.first();
+        let punishedUser = msg.mentions.users.first();
 
         //Do not attack ourselves
         if (punishedUser.id == client.user.id){
@@ -67,6 +89,71 @@ function processMessage(msg, client, args){
         }
         else{
             return msg.channel.send('Pong!');
+        }
+    }
+
+    //Sweet Dreams
+    else if (args[0] == "sweetdreams"){
+        //If it is not the target user
+        if (msg.author.id != "693042484619509760"){
+            //Get Current Time
+            let currentHour = new Date().getUTCHours();
+
+            //Check cooldown is bigger than 2 hours or 1 for paying
+            if ((!sweetdreamsLock || (!sweetdreamsSpeedLock && msg.author.id == "255121046607233025")) || (msg.author.id == "102606498860896256")){
+                //Check if it is between 10pm-6am UTC
+                if (((currentHour >= 21) && (currentHour > 12)) || ((currentHour < 7) && (currentHour >= 0))) {
+                    
+                    if (!sweetdreamsSpeedLock && msg.author.id == "255121046607233025"){
+
+                        //Send Message
+                        sweetdreams(msg);
+
+                        //Locks
+                        sweetdreamsSpeedLock = true;
+
+                        //Reset Speed Lock
+                        setTimeout(() => {
+                            sweetdreamsSpeedLock = false;
+                        }, 60*60*1000);
+                    }
+                    else if (msg.author.id == "102606498860896256"){
+                        //Send Message
+                        sweetdreams(msg);
+                    }
+                    else if (msg.author.id != "255121046607233025"){
+
+                        //Send Message
+                        sweetdreams(msg);
+
+                        //Locks
+                        sweetdreamsLock = true;
+
+                        //Reset Lock
+                        setTimeout(() => {
+                            sweetdreamsLock = false;
+                        }, 2*60*60*1000);
+                    }
+                }
+                else{
+                    msg.reply("It is not bedtime for furious");
+                }
+            }
+            else{
+                msg.reply("`Command is on cooldown, try again later`")
+            }
+
+            return true;
+        }
+        else{
+            if (!sweetdreamsLock){
+                messages = ["<:toothless_upright:955240038302613514> *goodnight*", "*stares patiently*", "*bawk*"];
+                msg.reply(messages[Math.floor(Math.random() * messages.length)]);
+                return true;
+            }
+            else{
+                msg.reply("`Command is on cooldown, try again later`")
+            }
         }
     }
 

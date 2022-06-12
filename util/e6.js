@@ -1,15 +1,15 @@
-const debugging = require("./debugging.js");
-const discordModule = require("./discordModule.js");
-const mongoUtil = require("./mongoUtil.js");
-const botConfig = require('.././config.json');
-const e6Class = require("e621");
+let debugging = require("./debugging.js");
+let discordModule = require("./discordModule.js");
+let mongoUtil = require("./mongoUtil.js");
+let botConfig = require('.././config.json');
+let e6Class = require("e621");
 
 var e6 = undefined;
 var e6LoopActive = false;
 var e6channel = undefined;
 var orderTag = [""];
 
-const TAGUPDATE = {
+let TAGUPDATE = {
     NONE: 0,
     REMOVE: 1,
     ADD_WHITE: 2,
@@ -92,7 +92,7 @@ function updateSort(sort, msg){
 //Combine all the arrays into one cause we will take advantage of search engine formats
 function updateTags(updateType, args, msg){
 
-    const whiteSizeBefore = botConfig.e621.whitelists.length;
+    let whiteSizeBefore = botConfig.e621.whitelists.length;
 
     //Prune commas
     for (let index = 0; index < args.length; index++) {

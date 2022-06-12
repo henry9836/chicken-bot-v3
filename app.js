@@ -1,19 +1,19 @@
 console.log("[ Chicken-Bot 3.0 is starting... ]")
 console.log("[+] Loading Modules...")
 
-// const fs = require('fs');
-const botConfig = require('./config.json');
-const { Client, Intents } = require('discord.js');
-const { exit } = require("process");
-const semver = require('semver');
+// let fs = require('fs');
+let botConfig = require('./config.json');
+let { Client, Intents } = require('discord.js');
+let { exit } = require("process");
+let semver = require('semver');
 
-const debugging = require("./util/debugging.js");
-const discordModule = require("./util/discordModule.js");
-const mongoUtil = require("./util/mongoUtil.js");
-const e6 = require("./util/e6.js");
-const events = require("./util/eventsHandler.js");
+let debugging = require("./util/debugging.js");
+let discordModule = require("./util/discordModule.js");
+let mongoUtil = require("./util/mongoUtil.js");
+let e6 = require("./util/e6.js");
+let events = require("./util/eventsHandler.js");
 
-const client = new Client({
+let client = new Client({
     intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS],
 	partials: ['MESSAGE', 'CHANNEL', 'REACTION'],});
 
