@@ -79,12 +79,12 @@ client.on('messageReactionRemove', async (reaction, user) => {
 
 function main(){
     //Check node verison
-    if (semver.gte(process.version, '12.0.0')) {
+    if (semver.gte(process.version, '16.0.0')) {
         debugging.chickenScratch("Running Node Version: " + process.version);
     }
     else{
         //Bad Node Verison Certain discord.js calls are not supported :(
-        debugging.chickenScratch(`DETECTED UNSUPPORTED NODE VERSION: ${process.version}, THIS CAN CAUSE INSTABILTY AND CRASHES. PLEASE UPDATE TO NODE V12`, debugging.DEBUGLVLS.WARN);
+        debugging.chickenScratch(`DETECTED UNSUPPORTED NODE VERSION: ${process.version}, THIS CAN CAUSE INSTABILTY AND CRASHES. PLEASE UPDATE TO NODE V16`, debugging.DEBUGLVLS.WARN);
     }
 
     //Connect to Database
