@@ -12,7 +12,7 @@ while true; do
 
     #Start the bot
     echo $'[+] Starting Discord Bot...\n'
-    ../.bin/node ./app.js
+    node ./app.js
 
     #Crashed record and restart
     TIME=$( date '+%F_%H:%M:%S' )
