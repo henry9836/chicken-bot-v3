@@ -112,10 +112,11 @@ function processMessage(msg, client, args){
             let currentHour = new Date().getUTCHours();
 
             //Check cooldown is bigger than 2 hours or 1 for paying
+            //Don't allow premium users to also use non-premium queue
             if (sweetdreamsSpeedUnlocked[msg.author.id] || (!sweetdreamsLock && sweetdreamsSpeedUnlocked[msg.author.id] !== false)){
                 //Check if it is between 10pm-6am UTC
                 if (((currentHour >= 21) && (currentHour > 12)) || ((currentHour < 7) && (currentHour >= 0))) {
-                    // Time since last furi message
+                    //Time since last furi message
                     let timeAway = Date.now() - discordModule.lastFuriMessage;
 
                     //Check if last furi message was less than 10 minutes ago
@@ -132,8 +133,7 @@ function processMessage(msg, client, args){
                                 sweetdreamsSpeedUnlocked[msg.author.id] = true;
                             }, 60*60*1000);
                         }
-                        // Don't allow premium users to also use non-premium queue
-                        else if (sweetdreamsSpeedUnlocked[msg.author.id] !== false){
+                        else {
     
                             //Send Message
                             sweetdreams(msg);
