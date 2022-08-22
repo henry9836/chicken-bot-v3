@@ -9,7 +9,8 @@ var sweetdreamsLock = false;
 
 for (const name of [
     "255121046607233025", // Minuteman
-    "794073486686814239" // Kona
+    "794073486686814239", // Kona
+    "102606498860896256" // Nitro
 ]) {
     sweetdreamsSpeedUnlocked[name] = true;
 }
@@ -28,7 +29,7 @@ function sweetdreams(msg){
         member.voice.setChannel(null);
     }
 
-    messages = [
+    var messages = [
         "https://media.discordapp.net/attachments/206875238066028544/970993761691766784/Untitled_Artwork.png",
         "GO TO BED! <@693042484619509760>", "Bedtime! <@693042484619509760> <:chicken_smile:236628343758389249>",
         "<:toothless_upright:955240038302613514> <@693042484619509760> *smothers you to sleep with wings*"
@@ -111,7 +112,7 @@ function processMessage(msg, client, args){
             let currentHour = new Date().getUTCHours();
 
             //Check cooldown is bigger than 2 hours or 1 for paying
-            if ((!sweetdreamsLock || sweetdreamsSpeedUnlocked[msg.author.id]) || (msg.author.id == "102606498860896256")){
+            if (sweetdreamsSpeedUnlocked[msg.author.id] || (!sweetdreamsLock && sweetdreamsSpeedUnlocked[msg.author.id] !== false)){
                 //Check if it is between 10pm-6am UTC
                 if (((currentHour >= 21) && (currentHour > 12)) || ((currentHour < 7) && (currentHour >= 0))) {
                     // Time since last furi message
@@ -119,11 +120,7 @@ function processMessage(msg, client, args){
 
                     //Check if last furi message was less than 10 minutes ago
                     if (timeAway < 10 * 60 * 1000){
-                        if (msg.author.id == "102606498860896256"){
-                            //Send Message
-                            sweetdreams(msg);
-                        }
-                        else if (sweetdreamsSpeedUnlocked[msg.author.id]){
+                        if (sweetdreamsSpeedUnlocked[msg.author.id]){
                             //Send Message
                             sweetdreams(msg);
     
@@ -135,7 +132,8 @@ function processMessage(msg, client, args){
                                 sweetdreamsSpeedUnlocked[msg.author.id] = true;
                             }, 60*60*1000);
                         }
-                        else if (msg.author.id != "255121046607233025"){
+                        // Don't allow premium users to also use non-premium queue
+                        else if (sweetdreamsSpeedUnlocked[msg.author.id] !== false){
     
                             //Send Message
                             sweetdreams(msg);
@@ -150,7 +148,12 @@ function processMessage(msg, client, args){
                         }
                     }
                     else{
-                        msg.reply("Don't bully children while they're sleeping!");
+                        var messages = [
+                            "Don't bully children while they're sleeping!",
+                            "*glares disapprovingly*",
+                            "<:toothless_dounk:800760712880062465>"
+                        ];
+                        msg.reply(messages[Math.floor(Math.random() * messages.length)]);
                     }
                 }
                 else{
@@ -160,19 +163,17 @@ function processMessage(msg, client, args){
             else{
                 msg.reply("`Command is on cooldown, try again later`")
             }
-
-            return true;
         }
         else{
             if (!sweetdreamsLock){
-                messages = ["<:toothless_upright:955240038302613514> *goodnight*", "*stares patiently*", "*bawk*"];
+                var messages = ["<:toothless_upright:955240038302613514> *goodnight*", "*stares patiently*", "*bawk*"];
                 msg.reply(messages[Math.floor(Math.random() * messages.length)]);
-                return true;
             }
             else{
                 msg.reply("`Command is on cooldown, try again later`")
             }
         }
+        return true;
     }
 
     return false;
