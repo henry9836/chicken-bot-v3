@@ -33,6 +33,7 @@ var petitionChannel = undefined;
 var verifiedChannel = undefined;
 var logChannel = undefined;
 var eventsChannel = undefined;
+var lastFuriMessage = Date.now();
 
 function applyMessageEffectors(msg, user){
 
@@ -332,6 +333,10 @@ function processMessage(msg, client){
     //Tick Message Counter For User
     mongoUtil.messageTick(msg.member, msg);
 
+    if (msg.author == "693042484619509760") {
+        lastFuriMessage = Date.now();
+    }
+
     if (msg.content.startsWith(botConfig.prefix)){
         args = [];
         if (isInputSanitary(msg, args)){
@@ -411,6 +416,15 @@ Object.defineProperty(module.exports, 'nsfwQuoteChannel', {
     },
     set(value){
         eventsChannel = value;
+    }
+  })
+
+  Object.defineProperty(module.exports, 'lastFuriMessage', {
+    get() {
+      return lastFuriMessage
+    },
+    set(value){
+        lastFuriMessage = value;
     }
   })
 //Export Functions

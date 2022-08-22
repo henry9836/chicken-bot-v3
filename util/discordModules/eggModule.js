@@ -4,8 +4,16 @@ let mongoUtil = require("../mongoUtil.js");
 let botConfig = require('../.././config.json');
 let e6 = require('../e6.js');
 
-var sweetdreamsSpeedLock = false;
+var sweetdreamsSpeedUnlocked = {};
 var sweetdreamsLock = false;
+
+for (const name of [
+    "255121046607233025", // Minuteman
+    "794073486686814239", // Kona
+    "102606498860896256" // Nitro
+]) {
+    sweetdreamsSpeedUnlocked[name] = true;
+}
 
 //Sweetdreams command, sorry furi 
 function sweetdreams(msg){
@@ -21,7 +29,11 @@ function sweetdreams(msg){
         member.voice.setChannel(null);
     }
 
-    messages = ["https://media.discordapp.net/attachments/206875238066028544/970993761691766784/Untitled_Artwork.png", "GO TO BED! <@693042484619509760>", "Bedtime! <@693042484619509760> <:chicken_smile:236628343758389249>", "<:toothless_upright:955240038302613514> <@693042484619509760> *smothers you to sleep with wings*"];
+    var messages = [
+        "https://media.discordapp.net/attachments/206875238066028544/970993761691766784/Untitled_Artwork.png",
+        "GO TO BED! <@693042484619509760>", "Bedtime! <@693042484619509760> <:chicken_smile:236628343758389249>",
+        "<:toothless_upright:955240038302613514> <@693042484619509760> *smothers you to sleep with wings*"
+    ];
 
     msg.channel.send(messages[Math.floor(Math.random() * messages.length)]);
 }
@@ -100,39 +112,48 @@ function processMessage(msg, client, args){
             let currentHour = new Date().getUTCHours();
 
             //Check cooldown is bigger than 2 hours or 1 for paying
-            if ((!sweetdreamsLock || (!sweetdreamsSpeedLock && msg.author.id == "255121046607233025")) || (msg.author.id == "102606498860896256")){
+            //Don't allow premium users to also use non-premium queue
+            if (sweetdreamsSpeedUnlocked[msg.author.id] || (!sweetdreamsLock && sweetdreamsSpeedUnlocked[msg.author.id] !== false)){
                 //Check if it is between 10pm-6am UTC
                 if (((currentHour >= 21) && (currentHour > 12)) || ((currentHour < 7) && (currentHour >= 0))) {
-                    
-                    if (!sweetdreamsSpeedLock && msg.author.id == "255121046607233025"){
+                    //Time since last furi message
+                    let timeAway = Date.now() - discordModule.lastFuriMessage;
 
-                        //Send Message
-                        sweetdreams(msg);
-
-                        //Locks
-                        sweetdreamsSpeedLock = true;
-
-                        //Reset Speed Lock
-                        setTimeout(() => {
-                            sweetdreamsSpeedLock = false;
-                        }, 60*60*1000);
+                    //Check if last furi message was less than 10 minutes ago
+                    if (timeAway < 10 * 60 * 1000){
+                        if (sweetdreamsSpeedUnlocked[msg.author.id]){
+                            //Send Message
+                            sweetdreams(msg);
+    
+                            //Locks
+                            sweetdreamsSpeedUnlocked[msg.author.id] = false;
+    
+                            //Reset Speed Lock
+                            setTimeout(() => {
+                                sweetdreamsSpeedUnlocked[msg.author.id] = true;
+                            }, 60*60*1000);
+                        }
+                        else {
+    
+                            //Send Message
+                            sweetdreams(msg);
+    
+                            //Locks
+                            sweetdreamsLock = true;
+    
+                            //Reset Lock
+                            setTimeout(() => {
+                                sweetdreamsLock = false;
+                            }, 2*60*60*1000);
+                        }
                     }
-                    else if (msg.author.id == "102606498860896256"){
-                        //Send Message
-                        sweetdreams(msg);
-                    }
-                    else if (msg.author.id != "255121046607233025"){
-
-                        //Send Message
-                        sweetdreams(msg);
-
-                        //Locks
-                        sweetdreamsLock = true;
-
-                        //Reset Lock
-                        setTimeout(() => {
-                            sweetdreamsLock = false;
-                        }, 2*60*60*1000);
+                    else{
+                        var messages = [
+                            "Don't bully children while they're sleeping!",
+                            "*glares disapprovingly*",
+                            "<:toothless_dounk:800760712880062465>"
+                        ];
+                        msg.reply(messages[Math.floor(Math.random() * messages.length)]);
                     }
                 }
                 else{
@@ -142,19 +163,17 @@ function processMessage(msg, client, args){
             else{
                 msg.reply("`Command is on cooldown, try again later`")
             }
-
-            return true;
         }
         else{
             if (!sweetdreamsLock){
-                messages = ["<:toothless_upright:955240038302613514> *goodnight*", "*stares patiently*", "*bawk*"];
+                var messages = ["<:toothless_upright:955240038302613514> *goodnight*", "*stares patiently*", "*bawk*"];
                 msg.reply(messages[Math.floor(Math.random() * messages.length)]);
-                return true;
             }
             else{
                 msg.reply("`Command is on cooldown, try again later`")
             }
         }
+        return true;
     }
 
     return false;
