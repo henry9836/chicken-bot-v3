@@ -1,4 +1,3 @@
-
 let handlers = new Map();
 
 function listenReply(msg, handler, timeout = 10 * 60 * 1000) {
@@ -11,10 +10,10 @@ function processReply(msg) {
         let handler = handlers.get(msg.reference.messageId);
         if (handler) {
             let result = handler(msg);
-            if (result || result === undefined) {
+            if (result) {
                 handlers.delete(msg.reference.messageId);
+                return true;
             }
-            return !!result;
         }
     }
     return false;

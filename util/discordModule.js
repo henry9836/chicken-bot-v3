@@ -12,7 +12,7 @@ let moderatorModule = require('./discordModules/moderatorModule.js');
 let eggModule = require('./discordModules/eggModule.js');
 let gameModule = require('./discordModules/gameModule.js');
 let chatModule = require('./discordModules/chatModule.js');
-let { processReply } = require('./reply.js');
+let { processReply } = require('./discordModules/replyHandler.js');
 
 let { MessageEmbed } = require("discord.js");
 let { exit } = require('process');

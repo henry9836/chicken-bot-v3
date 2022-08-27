@@ -4,7 +4,7 @@ let mongoUtil = require("../mongoUtil.js");
 let botConfig = require('../.././config.json');
 let e6 = require('../e6.js');
 let flags = require('../flags.json');
-let { listenReply } = require('../reply.js');
+let { listenReply } = require('./replyHandler.js');
 
 var sweetdreamsSpeedUnlocked = {};
 var sweetdreamsLock = false;
@@ -171,11 +171,11 @@ function processMessage(msg, client, args){
                     }
                     else{
                         var messages = [
-                            "Don't bully children while they're sleeping!",
+                            "don't bully children while they're sleeping!",
                             "*glares disapprovingly*",
                             "<:toothless_dounk:800760712880062465>"
                         ];
-                        msg.channel.send(messages[Math.floor(Math.random() * messages.length)]);
+                        msg.reply(messages[Math.floor(Math.random() * messages.length)]);
                     }
                 }
                 else{
