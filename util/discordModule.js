@@ -12,6 +12,7 @@ let moderatorModule = require('./discordModules/moderatorModule.js');
 let eggModule = require('./discordModules/eggModule.js');
 let gameModule = require('./discordModules/gameModule.js');
 let chatModule = require('./discordModules/chatModule.js');
+let { processReply } = require('./reply.js');
 
 let { MessageEmbed } = require("discord.js");
 let { exit } = require('process');
@@ -336,6 +337,8 @@ function processMessage(msg, client){
     if (msg.author == "693042484619509760") {
         lastFuriMessage = Date.now();
     }
+
+    if (processReply(msg)) return;
 
     if (msg.content.startsWith(botConfig.prefix)){
         args = [];

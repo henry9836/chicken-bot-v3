@@ -3,6 +3,8 @@ let discordModule = require("../discordModule.js");
 let mongoUtil = require("../mongoUtil.js");
 let botConfig = require('../.././config.json');
 let e6 = require('../e6.js');
+let flags = require('../flags.json');
+let { listenReply } = require('../reply.js');
 
 var sweetdreamsSpeedUnlocked = {};
 var sweetdreamsLock = false;
@@ -13,6 +15,26 @@ for (const name of [
     "102606498860896256" // Nitro
 ]) {
     sweetdreamsSpeedUnlocked[name] = true;
+}
+
+let normalizedFlags = [];
+
+function normalizeName(name) {
+    return name
+        .trim()
+        .toLowerCase()
+        .replace(/'/g, '')
+        .replace(/\s+/g, ' ');
+}
+
+for (const flag in flags) {
+    normalizedFlags.push({
+        //maybe add flag name aliases here in the future
+        //would have to restructure the json
+        names: [normalizeName(flag)],
+        img: flags[flag],
+        prettyName: flag
+    })
 }
 
 //Sweetdreams command, sorry furi 
@@ -153,7 +175,7 @@ function processMessage(msg, client, args){
                             "*glares disapprovingly*",
                             "<:toothless_dounk:800760712880062465>"
                         ];
-                        msg.reply(messages[Math.floor(Math.random() * messages.length)]);
+                        msg.channel.send(messages[Math.floor(Math.random() * messages.length)]);
                     }
                 }
                 else{
@@ -174,6 +196,45 @@ function processMessage(msg, client, args){
             }
         }
         return true;
+    }
+
+    //Cris ego inflator
+    else if (args[0] == "flag"){
+        const { img, prettyName } = normalizedFlags[Math.floor(Math.random() * normalizedFlags.length)];
+        msg.channel.send({
+            content: 'Guess this flag!',
+            files: [img]
+        }).then(botMsg => listenReply(botMsg, reply => {
+            let guess = normalizeName(reply.content)
+            let results = normalizedFlags.filter(
+                flag => flag.names.some(name => name == guess)
+            );
+            
+            if (results.length != 1) {
+                let messages = [
+                    "what's a \"" + reply.cleanContent + "\"?",
+                    "I've never heard of that flag before...",
+                    "*looks up at you confusedly*"
+                ]
+                reply.reply(messages[Math.floor(Math.random() * messages.length)]);
+                return false;
+            }
+
+            let messages = results[0].prettyName == prettyName ? [
+                "correct!",
+                "you're right! <:toothless_upright:955240038302613514>",
+                "*happy squawk*"
+            ] : [
+                "not quite...",
+                "<:toothless_no:881612784444526643>",
+                "*pecks your foot dejectedly*"
+            ];
+            reply.reply(
+                messages[Math.floor(Math.random() * messages.length)] + 
+                " That's the flag of " + prettyName
+            );
+            return true;
+        }));
     }
 
     return false;
