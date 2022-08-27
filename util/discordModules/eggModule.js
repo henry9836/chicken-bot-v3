@@ -202,7 +202,7 @@ function processMessage(msg, client, args){
     else if (args[0] == "flag"){
         const { img, prettyName } = normalizedFlags[Math.floor(Math.random() * normalizedFlags.length)];
         msg.channel.send({
-            content: 'Guess this flag!',
+            content: 'What flag is this? Reply with your best guess!',
             files: [img]
         }).then(botMsg => listenReply(botMsg, reply => {
             let guess = normalizeName(reply.content)
@@ -235,6 +235,8 @@ function processMessage(msg, client, args){
             );
             return true;
         }));
+        
+        return true;
     }
 
     return false;
