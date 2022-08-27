@@ -24,6 +24,7 @@ function normalizeName(name) {
         .trim()
         .toLowerCase()
         .replace(/'/g, '')
+        .replace(/-/g, ' ')
         .replace(/\s+/g, ' ');
 }
 
@@ -203,7 +204,10 @@ function processMessage(msg, client, args){
         const { img, prettyName } = normalizedFlags[Math.floor(Math.random() * normalizedFlags.length)];
         msg.channel.send({
             content: 'What flag is this? Reply with your best guess!',
-            files: [img]
+            files: [{
+                attachment: img,
+                name: 'flag' + img.slice(img.lastIndexOf('.'))
+            }]
         }).then(botMsg => listenReply(botMsg, reply => {
             let guess = normalizeName(reply.content)
             let results = normalizedFlags.filter(
