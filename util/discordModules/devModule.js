@@ -48,13 +48,13 @@ function processMessage(msg, client, args){
     //Prune bot
     else if (args[0] === `prunebot`){
         let deleteNum = parseInt(args[1]);
-        message.channel.messages.fetch({
+        msg.channel.messages.fetch({
             limit: deleteNum // Change `100` to however many messages you want to fetch
         }).then((messages) => { 
             const botMessages = [];
             messages.filter(m => m.author.id === "830764856088723488").forEach(msg => botMessages.push(msg))
-            message.channel.bulkDelete(botMessages).then(() => {
-                discordModule.addToLogChannel(`Cleared ${deleteNum} Bot Messages in: ${message.channel.name}`);
+            msg.channel.bulkDelete(botMessages).then(() => {
+                discordModule.addToLogChannel(`Cleared ${deleteNum} Bot Messages in: ${msg.channel.name}`);
             });
         })
 
