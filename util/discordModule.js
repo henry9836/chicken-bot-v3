@@ -35,6 +35,10 @@ var verifiedChannel = undefined;
 var logChannel = undefined;
 var eventsChannel = undefined;
 var lastFuriMessage = Date.now();
+let lastVoltActivity = Date.now();
+let lastVoltMessage = Date.now();
+let voltSummoned = false;
+let lastVoltHalfmention = Date.now();
 
 function applyMessageEffectors(msg, user){
 
@@ -334,8 +338,22 @@ function processMessage(msg, client){
     //Tick Message Counter For User
     mongoUtil.messageTick(msg.member, msg);
 
-    if (msg.author == "693042484619509760") {
+    if (msg.author.id == "693042484619509760") {
         lastFuriMessage = Date.now();
+    }
+
+    if (msg.author.id == '269672239245295617') {
+        if (Date.now() - lastVoltMessage > 1000 * 60 * 60 * 2) {
+            lastVoltActivity = Date.now();
+            voltSummoned = Date.now() - lastVoltHalfmention < 1000 * 60 * 2;
+        }
+        lastVoltMessage = Date.now();
+    }
+
+    let voooooolt = /(v(o+)lt((y|ie|wu|uwu|u)?))|(m(o|(ooo+))d(s?))/g
+
+    if (msg.content.toLowerCase().split(' ').some(v => voooooolt.test(v))) {
+        lastVoltHalfmention = Date.now();
     }
 
     if (processReply(msg)) return;
@@ -428,6 +446,24 @@ Object.defineProperty(module.exports, 'nsfwQuoteChannel', {
     },
     set(value){
         lastFuriMessage = value;
+    }
+  })
+
+  Object.defineProperty(module.exports, 'voltSummoned', {
+    get() {
+      return voltSummoned
+    },
+    set(value){
+        voltSummoned = value;
+    }
+  })
+
+  Object.defineProperty(module.exports, 'lastVoltActivity', {
+    get() {
+      return lastVoltActivity
+    },
+    set(value){
+        lastVoltActivity = value;
     }
   })
 //Export Functions

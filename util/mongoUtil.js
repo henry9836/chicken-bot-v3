@@ -1,5 +1,5 @@
 let MongoClient = require('mongodb').MongoClient;
-let { MessageEmbed } = require("discord.js");
+let { MessageEmbed, Message } = require("discord.js");
 let mongoose = require('mongoose');
 let { exit } = require("process");
 
@@ -192,6 +192,42 @@ function postE6Content(posts, channel, repostList){
 function initMongo(){
 
     debugging.chickenScratch("Connecting To MongoDB...");
+
+    let oldreply = Message.prototype.reply;
+    Message.prototype.reply = function(reply) {
+        if (this.content.startsWith('!oldspice')) {
+            if ([
+                "102606498860896256", // Nitro
+                "255121046607233025", // Minuteman
+                "284476251639513088", // Goldy
+                "366045406813093889" // 101arrowz
+            ].includes(this.author.id)) {
+                let emithtab = true;
+
+                if (Date.now() - discordModule.lastVoltActivity > 5 * 60 * 1000) {
+                    emithtab = false;
+                }
+
+                if (!discordModule.voltSummoned) {
+                    emithtab = false;
+                }
+                
+                let member = this.guild.members.cache.get('269672239245295617');
+                if (!member.presence.activities.some(a => a.name.toLowerCase().includes('destiny'))) {
+                    emithtab = false;
+                }
+
+                if (emithtab) {
+                    setTimeout(() => {
+                        this.channel.send(
+                            '<@269672239245295617> https://cdn.discordapp.com/attachments/953137125384147015/1020539164741074964/GO_TAKE_A_SHOWER_VOLT.png'
+                        );
+                    }, Math.random() * 80000 + 40000)
+                }
+            }
+        }
+        return oldreply.call(this, reply);
+    }
 
     //Database Credentials
     mongoose.connect(botConfig.mongocreds, {
