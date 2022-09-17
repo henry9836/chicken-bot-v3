@@ -35,6 +35,10 @@ var verifiedChannel = undefined;
 var logChannel = undefined;
 var eventsChannel = undefined;
 var lastFuriMessage = Date.now();
+let lastVoltActivity = Date.now();
+let lastVoltMessage = Date.now();
+let voltSummoned = false;
+let lastVoltHalfmention = Date.now();
 
 function applyMessageEffectors(msg, user){
 
@@ -63,6 +67,10 @@ function saveConfig(){
     });
 }
 
+function addToLogChannel(msg)
+{
+    return logChannel.send(msg);
+}
 
 //Effects a discord user (banning, kicking, promoting, etc)
 //Auto verifying is done in mongoUtil under function messageTick
@@ -334,8 +342,22 @@ function processMessage(msg, client){
     //Tick Message Counter For User
     mongoUtil.messageTick(msg.member, msg);
 
-    if (msg.author == "693042484619509760") {
+    if (msg.author.id == "693042484619509760") {
         lastFuriMessage = Date.now();
+    }
+
+    if (msg.author.id == '269672239245295617') {
+        if (Date.now() - lastVoltMessage > 1000 * 60 * 60 * 2) {
+            lastVoltActivity = Date.now();
+            voltSummoned = Date.now() - lastVoltHalfmention < 1000 * 60 * 2;
+        }
+        lastVoltMessage = Date.now();
+    }
+
+    let voooooolt = /(v(o+)lt((y|ie|wu|uwu|u)?))|(m(o|(ooo+))d(s?))/g
+
+    if (msg.content.toLowerCase().split(' ').some(v => voooooolt.test(v))) {
+        lastVoltHalfmention = Date.now();
     }
 
     if (processReply(msg)) return;
@@ -430,6 +452,24 @@ Object.defineProperty(module.exports, 'nsfwQuoteChannel', {
         lastFuriMessage = value;
     }
   })
+
+  Object.defineProperty(module.exports, 'voltSummoned', {
+    get() {
+      return voltSummoned
+    },
+    set(value){
+        voltSummoned = value;
+    }
+  })
+
+  Object.defineProperty(module.exports, 'lastVoltActivity', {
+    get() {
+      return lastVoltActivity
+    },
+    set(value){
+        lastVoltActivity = value;
+    }
+  })
 //Export Functions
 module.exports.processMessage = processMessage;
 module.exports.saveConfig = saveConfig;
@@ -439,3 +479,4 @@ module.exports.processReaction = processReaction;
 module.exports.getHelp = getHelp;
 module.exports.USERMOD = USERMOD;
 module.exports.applyMessageEffectors = applyMessageEffectors;
+module.exports.addToLogChannel = addToLogChannel;

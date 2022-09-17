@@ -3,7 +3,9 @@ let discordModule = require("../discordModule.js");
 let mongoUtil = require("../mongoUtil.js");
 let botConfig = require('../.././config.json');
 let e6 = require('../e6.js');
-let flags = require('../flags.json');
+let flags = require('../dataFiles/flags.json');
+let spice = require('../dataFiles/spice.json');
+let emotes = require('../dataFiles/emotes.json');
 let { listenReply } = require('./replyHandler.js');
 
 var sweetdreamsSpeedUnlocked = {};
@@ -196,6 +198,24 @@ function processMessage(msg, client, args){
                 msg.reply("`Command is on cooldown, try again later`")
             }
         }
+        return true;
+    }
+
+    else if (args[0] == "oldspice") {
+        let prefixes = ["chicken_smile", "grimmel_yaaas", "hiccup_cage", "lightfury_look",
+            "lightfury_smug", "lightfury_wow", "night_fowory", "nightlight_bruh", "teethless",
+            "toopliss", "toopliss_retarded", "toopliss_think", "toopliss_upsidedown", 
+            "toothless_blyat", "toothless_bored", "toothless_cool", "toothless_dab", 
+            "toothless_drunk", "toothless_fingergun", "toothless_fingerguns", "toothless_flirt",
+            "toothless_gimmie", "toothless_laugh", "toothless_joy", "toothless_pog", 
+            "toothless_plead", "toothless_pepe", "toothless_pain", "toothless_omg",
+            "toothless_shrug", "toothless_stare", "toothless_smile", "toothless_skeptic", 
+            "toothless_troll", "toothless_upright", "toothless_upsidedown", "toothless_wdt", 
+            "toothless_wheeze", "toothless_wink", "toothless_wow"];
+        let spicy = emotes[prefixes[Math.floor(Math.random() * prefixes.length)]]
+        spicy += " " + spice[Math.floor(Math.random() * spice.length)];
+        msg.reply(spicy);
+
         return true;
     }
 

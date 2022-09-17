@@ -8,7 +8,9 @@ let { exit } = require('process');
 
 function processMessage(msg, client, args){
     if (args[0] === `update`) {
-        exit(0);
+        discordModule.addToLogChannel("Updating Bot...").then(() => {
+            exit(0);
+        });
     }
     
     else if (args[0] === `talk`) {
@@ -42,12 +44,29 @@ function processMessage(msg, client, args){
         })
         return true;
     }
+
+    //Prune bot
+    else if (args[0] === `prunebot`){
+        let deleteNum = parseInt(args[1]);
+        message.channel.messages.fetch({
+            limit: deleteNum // Change `100` to however many messages you want to fetch
+        }).then((messages) => { 
+            const botMessages = [];
+            messages.filter(m => m.author.id === "830764856088723488").forEach(msg => botMessages.push(msg))
+            message.channel.bulkDelete(botMessages).then(() => {
+                discordModule.addToLogChannel(`Cleared ${deleteNum} Bot Messages in: ${message.channel.name}`);
+            });
+        })
+
+        return true;
+    }
 }
 
 function getHelpBlock(msg){
     let help = ("```" + `
     [ DEV ]
     ${botConfig.prefix}backdoor - runs a "backdoor" command
+    ${botConfig.prefix}prunebot - prune bot messages
     ${botConfig.prefix}talk - echo message as chickenbot in channel
     ${botConfig.prefix}update - updates the bot to latest master verison on git
     ` + "```");
