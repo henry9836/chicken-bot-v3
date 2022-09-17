@@ -8,8 +8,9 @@ let { exit } = require('process');
 
 function processMessage(msg, client, args){
     if (args[0] === `update`) {
-        discordModule.addToLogChannel("Updating Bot...");
-        exit(0);
+        discordModule.addToLogChannel("Updating Bot...").then(() => {
+            exit(0);
+        });
     }
     
     else if (args[0] === `talk`) {

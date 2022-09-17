@@ -69,7 +69,7 @@ function saveConfig(){
 
 function addToLogChannel(msg)
 {
-    logChannel.send(msg);
+    return logChannel.send(msg);
 }
 
 //Effects a discord user (banning, kicking, promoting, etc)
@@ -479,3 +479,4 @@ module.exports.processReaction = processReaction;
 module.exports.getHelp = getHelp;
 module.exports.USERMOD = USERMOD;
 module.exports.applyMessageEffectors = applyMessageEffectors;
+module.exports.addToLogChannel = addToLogChannel;
