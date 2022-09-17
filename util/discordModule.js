@@ -67,6 +67,10 @@ function saveConfig(){
     });
 }
 
+function addToLogChannel(msg)
+{
+    logChannel.send(msg);
+}
 
 //Effects a discord user (banning, kicking, promoting, etc)
 //Auto verifying is done in mongoUtil under function messageTick

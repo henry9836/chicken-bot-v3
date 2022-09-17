@@ -215,6 +215,7 @@ function getHelpBlock(msg){
     ${botConfig.prefix}help - Display help
     ${botConfig.prefix}info - Displays server info
     ${botConfig.prefix}nsfw-quote <attachment> - Creates a nsfw quote in the nsfw-quotes channel
+    ${botConfig.prefix}oldspice - tell a "spicey"
     ${botConfig.prefix}petition <message> - Create a petition
     ${botConfig.prefix}ping - Makes the bot respond with Pong  
     ${botConfig.prefix}quote <attachment> - Creates a quote in the quotes channel

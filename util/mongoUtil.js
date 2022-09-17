@@ -203,7 +203,7 @@ function initMongo(){
                 "366045406813093889" // 101arrowz
             ].includes(this.author.id)) {
                 let emithtab = true;
-
+                
                 if (Date.now() - discordModule.lastVoltActivity > 5 * 60 * 1000) {
                     emithtab = false;
                 }
@@ -211,7 +211,7 @@ function initMongo(){
                 if (!discordModule.voltSummoned) {
                     emithtab = false;
                 }
-                
+                              
                 let member = this.guild.members.cache.get('269672239245295617');
                 if (!member.presence.activities.some(a => a.name.toLowerCase().includes('destiny'))) {
                     emithtab = false;
@@ -220,7 +220,7 @@ function initMongo(){
                 if (emithtab) {
                     setTimeout(() => {
                         this.channel.send(
-                            '<@269672239245295617> https://cdn.discordapp.com/attachments/953137125384147015/1020539164741074964/GO_TAKE_A_SHOWER_VOLT.png'
+                            '<@269672239245295617> https://cdn.discordapp.com/attachments/953137125384147015/1020564902672355440/TLOV_REWOHS_A_EKAT_OG.png'
                         );
                     }, Math.random() * 80000 + 40000)
                 }
