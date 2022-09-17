@@ -201,6 +201,13 @@ function processMessage(msg, client, args){
         return true;
     }
 
+    else if (args[0] == "oldspice") {
+        let prefixes = [];
+        let spicy = prefixes[Math.floor(Math.random() * prefixes.length)];
+        spicy += spice[Math.floor(Math.random() * spice.length)];
+        msg.reply(spicy);
+    }
+
     //Cris ego inflator
     else if (args[0] == "flag"){
         const { img, prettyName } = normalizedFlags[Math.floor(Math.random() * normalizedFlags.length)];
