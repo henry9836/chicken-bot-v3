@@ -11,6 +11,8 @@ function processMessage(msg, client, args){
         discordModule.addToLogChannel("Updating Bot...").then(() => {
             exit(0);
         });
+        
+        return true;
     }
     
     else if (args[0] === `talk`) {
