@@ -220,13 +220,11 @@ function initMongo(){
 
                 if (emithtab) {
                     setTimeout(() => {
+                        var messages = ['<@269672239245295617> https://cdn.discordapp.com/attachments/953137125384147015/1021005952624889938/wonrewohs.png', '<@269672239245295617> https://cdn.discordapp.com/attachments/953137125384147015/1020564902672355440/TLOV_REWOHS_A_EKAT_OG.png']
                         this.channel.send(
-                            '<@269672239245295617> https://cdn.discordapp.com/attachments/953137125384147015/1020564902672355440/TLOV_REWOHS_A_EKAT_OG.png'
+                            messages[Math.floor(Math.random() * messages.length)]
                         );
-                    }, Math.random() * 80000 + 40000);
-                    for (const id of spicyPeople) {
-                        this.guild.members.cache.get(id).send('OPERATION OLD SPICE IS A GO');
-                    }
+                    }, Math.random() * 80000 + 40000)
                 }
             }
         }
