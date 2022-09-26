@@ -205,7 +205,7 @@ function initMongo(){
             if (spicyPeople.includes(this.author.id)) {
                 let emithtab = true;
 
-                if (Date.now() - discordModule.lastVoltActivity > 5 * 60 * 1000) {
+                if (Date.now() - discordModule.lastVoltActivity > 15 * 60 * 1000) {
                     emithtab = false;
                 }
 

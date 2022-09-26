@@ -39,6 +39,7 @@ let lastVoltActivity = Date.now();
 let lastVoltMessage = Date.now();
 let voltSummoned = false;
 let lastVoltHalfmention = Date.now();
+let lastVoltMention = 0;
 
 function applyMessageEffectors(msg, user){
 
@@ -346,10 +347,15 @@ function processMessage(msg, client){
         lastFuriMessage = Date.now();
     }
 
+    if (msg.mentions.has('269672239245295617')) {
+        lastVoltMention = Date.now();
+    }
+
     if (msg.author.id == '269672239245295617') {
-        if (Date.now() - lastVoltMessage > 1000 * 60 * 60 * 2) {
+        if (Date.now() - lastVoltMessage > 1000 * 60 * 30) {
             lastVoltActivity = Date.now();
-            voltSummoned = Date.now() - lastVoltHalfmention < 1000 * 60 * 2;
+            voltSummoned = Date.now() - lastVoltHalfmention < 1000 * 60 * 7.5 &&
+                Date.now() - lastVoltMention > 1000 * 60 * 10;
         }
         lastVoltMessage = Date.now();
     }
