@@ -436,9 +436,11 @@ function getHelpBlock(msg){
     ${botConfig.prefix}e6-reset - resets all lists to nothing, including blacklist
     ${botConfig.prefix}e6-set-channel <id> - Assigns e6 channel
     ${botConfig.prefix}remove-mod <member> - removes the mod role from a user
+    ${botConfig.prefix}remove-role-prereq <roles> - removes role prerequisite for self assignment 
     ${botConfig.prefix}set-nsfw-quote-channel <id> - Assign nsfw quote channel
     ${botConfig.prefix}set-petition-channel <id> - Assigns the petition channel
     ${botConfig.prefix}set-quote-channel <id> - Assign quote channel
+    ${botConfig.prefix}set-role-prereq <prereq id> <roles> - sets role prerequisite for roles
     ${botConfig.prefix}set-verified-channel <id> - Assigns the verified channel
     ${botConfig.prefix}set-events-channel <id> - Assign events channel
     ${botConfig.prefix}remove-role-assignable <id> - removes a role from the assignable list
