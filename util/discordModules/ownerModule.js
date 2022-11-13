@@ -39,7 +39,7 @@ function processMessage(msg, client, args){
                     }
                 })
                 .catch(err => {
-                    msg.reply(err);
+                    msg.reply("Error:" + err);
                 })
         }
         else{

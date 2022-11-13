@@ -135,8 +135,27 @@ function processMessage(msg, client, args){
             for (let i = 0; i < botConfig.roles.publicRoles.length; i++) {
                 if (botConfig.roles.publicRoles[i][1] == message){
                     let role = msg.guild.roles.cache.get(botConfig.roles.publicRoles[i][0])
-                    msg.member.roles.add(role);
-                    msg.react("✅");
+
+                    //Role needs a prereq?
+                    if (botConfig.roles.publicRoles[i][2] != undefined)
+                    {
+                        if (msg.member.roles.cache.has(botConfig.roles.publicRoles[i][2]))
+                        {
+                            msg.member.roles.add(role);
+                            msg.react("✅");
+                        }
+                        else
+                        {
+                            msg.react("❌");
+                            msg.reply("You do not have the required role to add this role");
+                        }
+                    }
+                    //No prereq needed
+                    else
+                    {
+                        msg.member.roles.add(role);
+                        msg.react("✅");
+                    }
                 }
             }
         }

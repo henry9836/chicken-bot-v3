@@ -41,7 +41,7 @@ function processMessage(msg, client, args){
                     }
                 })
                 .catch(err => {
-                    msg.reply(err);
+                    msg.reply("Error:" + err);
                 })
         }
         else{
@@ -171,20 +171,106 @@ function processMessage(msg, client, args){
                     if (role !== null){
                         //Find the role and remove it
                         for (let j = 0; j < botConfig.roles.publicRoles.length; j++) {
-                            if (botConfig.roles.publicRoles[j] == role.id){
+                            if (botConfig.roles.publicRoles[j][0] == role.id){
                                 botConfig.roles.publicRoles.splice(j, 1);
+                                discordModule.saveConfig();
+                                msg.reply(`Removed ${role} role from public list`);
                                 break;
                             }
                         }
-                        discordModule.saveConfig();
-                        msg.reply(`Removed ${role} role from public list`);
                     }
                     else {
-                        msg.reply("Role ID doesn't exist"); 
+                        msg.reply(`Role ID ${args[i]} doesn't exist`); 
                     }
                 })
                 .catch(err => {
-                    msg.reply(err);
+                    msg.reply("Error:" + err);
+                })
+            }
+        }
+        else{
+            msg.reply("You must supply a role id");
+        }
+        return true;
+    }
+    //Update assignable roles to remove a prerequisite role
+    else if (args[0] === `remove-role-prereq`){
+        if (args[1]){
+            //For every role supplied
+            for (let i = 1; i < args.length; i++) {
+                //Validate role exists
+                msg.guild.roles.fetch(args[i])
+                .then(role => {
+                    if (role !== null){
+                        //Check that this role isn't already in our list
+                        for (let j = 0; j < botConfig.roles.publicRoles.length; j++) {
+                            if (botConfig.roles.publicRoles[j][0] == role.id){
+                                //Reimplement role
+                                botConfig.roles.publicRoles.splice(j, 1, [role.id, role.name]);
+                                discordModule.saveConfig();
+                                msg.reply(`Removed prerequisite role from ${role.name}`); 
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        debugging.chickenScratch("Entered null section");
+                        msg.reply(`Role ID ${args[i]} doesn't exist`); 
+                    }
+                })
+                .catch(err => {
+                    msg.reply("Error:" + err);
+                })
+            }
+        }
+        else{
+            msg.reply("You must supply a role id");
+        }
+        return true;
+    }
+    //Update assignable roles to have a prerequisite role
+    else if (args[0] === `set-role-prereq`){
+        if (args[2]){
+            //For every role supplied
+            for (let i = 2; i < args.length; i++) {
+                //Validate role exists
+                msg.guild.roles.fetch(args[i])
+                .then(role => {
+                    if (role !== null){
+                        //Check that this role isn't already in our list
+                        var found = false;
+                        var foundIterator = 0;
+                        for (let j = 0; j < botConfig.roles.publicRoles.length; j++) {
+                            if (botConfig.roles.publicRoles[j][0] == role.id){
+                                foundIterator = j;
+                                found = true;
+                                break;
+                            }
+                        }
+                        
+                        // Add role
+                        msg.guild.roles.fetch(args[1])
+                        .then(prereqRole => {
+                            if (found)
+                            {
+                                // If role exists remove it
+                                botConfig.roles.publicRoles.splice(foundIterator, 1);
+                            }
+                            botConfig.roles.publicRoles.push([role.id, role.name, prereqRole.id]);
+                            discordModule.saveConfig();
+                            msg.reply(`Assigned ${role} role to public list with prereq ${prereqRole}`);
+                        })
+                        .catch(err => {
+                            msg.reply("Error: " + err);
+                        })
+                    }
+                    else {
+                        debugging.chickenScratch("Entered null section");
+                        msg.reply(`Role ID ${args[i]} doesn't exist`); 
+                    }
+                })
+                .catch(err => {
+                    msg.reply("Error:" + err);
                 })
             }
         }
@@ -206,16 +292,12 @@ function processMessage(msg, client, args){
                         //Check that this role isn't already in our list
                         var found = false;
                         for (let j = 0; j < botConfig.roles.publicRoles.length; j++) {
-                            if (botConfig.roles.publicRoles[j] == role.id){
-                                found = true;
-                                break;
+                            if (botConfig.roles.publicRoles[j][0] == role.id){
+                                msg.reply(`${role} is already assigned to public list`);
+                                return true;
                             }
                         }
-                        if (found){
-                            msg.reply(`${role} is already assigned to public list`);
-                            return true;
-                        }
-
+                        
                         botConfig.roles.publicRoles.push([role.id, role.name]);
                         discordModule.saveConfig();
                         msg.reply(`Assigned ${role} role to public list`);
@@ -225,7 +307,7 @@ function processMessage(msg, client, args){
                     }
                 })
                 .catch(err => {
-                    msg.reply(err);
+                    msg.reply("Error:" + err);
                 })
             }
         }
@@ -251,7 +333,7 @@ function processMessage(msg, client, args){
                     }role
                 })
                 .catch(err => {
-                    msg.reply(err);
+                    msg.reply("Error:" + err);
                 })
         }
         else{
@@ -276,7 +358,7 @@ function processMessage(msg, client, args){
                     }role
                 })
                 .catch(err => {
-                    msg.reply(err);
+                    msg.reply("Error:" + err);
                 })
         }
         else{
@@ -301,7 +383,7 @@ function processMessage(msg, client, args){
                     }
                 })
                 .catch(err => {
-                    msg.reply(err);
+                    msg.reply("Error:" + err);
                 })
         }
         else{
