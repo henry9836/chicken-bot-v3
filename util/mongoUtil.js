@@ -48,7 +48,7 @@ function getBestPosts(amount, msg, e6, worst){
     dbE6Post.find().sort({rating:sortNum}).limit(500).exec(async function(err, posts){
         if (err){
             debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
-            channel.send("An Error Occured")
+            channel.send("An Error Occured Trying To Talk With My ChickenCoop! " + err);
         }
         else{
             var topPosts = posts.slice(0, amount);
@@ -110,7 +110,7 @@ function postE6Content(posts, channel, repostList){
     dbE6Post.find({}, function (err, archivedPosts){
         if (err){
             debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
-            channel.send("An Error Occured")
+            channel.send("An Error Occured: The ChickenCoop Fell Apart! " + err);
         }
         else{
             //Start the max post counter
