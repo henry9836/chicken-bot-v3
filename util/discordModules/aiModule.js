@@ -7,7 +7,7 @@ let configuration = new Configuration({
     apiKey: botConfig.OpenAIKey,
 });
 
-let maxReplies = 15;
+let maxReplies = 10;
 let minHoursBetweenSessions = 2;
 let maxHoursBetweenSessions = 18;
 var TargetTimestamp = 0;
