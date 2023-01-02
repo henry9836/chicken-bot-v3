@@ -94,7 +94,7 @@ async function UseMagicCorn(msg, client)
     // Is message in the general or verified channel?
     if (msg.channel.id != botConfig.channels.general && msg.channel.id != botConfig.channels.verified)
     {
-        debugging.chickenScratch("Not in channel ("+ msg.channel.id +")");
+        //debugging.chickenScratch("Not in channel ("+ msg.channel.id +")");
         return;
     }
 
