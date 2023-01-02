@@ -65,12 +65,6 @@ function processMessage(msg, client, args){
 
         return true;
     }
-
-    // Testing
-    else if (args[0] === `corn` || msg.author.id=="102606498860896256"){
-        //aiModule.UseMagicCorn(msg, client);
-        return true;
-    }
 }
 
 function getHelpBlock(msg){

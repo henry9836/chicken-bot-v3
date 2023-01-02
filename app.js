@@ -6,6 +6,7 @@ let botConfig = require('./config.json');
 let { Client, Intents } = require('discord.js');
 let { exit } = require("process");
 let semver = require('semver');
+let aiModule = require('./util/discordModules/aiModule.js');
 
 let debugging = require("./util/debugging.js");
 let discordModule = require("./util/discordModule.js");
@@ -92,6 +93,9 @@ function main(){
 
     //Initalise Events
     events.initEvents();
+
+    //Initlise AI
+    aiModule.GetTheMagicCornBag();
 
     //Connect To Discord API
     debugging.chickenScratch("Authenticating With Discord...")

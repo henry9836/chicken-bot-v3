@@ -4,6 +4,7 @@ let debugging = require("./debugging.js");
 let mongoUtil = require("./mongoUtil.js");
 let botConfig = require('.././config.json');
 let e6 = require('./e6.js');
+let aiModule = require('./discordModules/aiModule.js');
 let authenticationModule = require('./discordModules/authModule.js');
 let devModule = require('./discordModules/devModule.js');
 let ownerModule = require('./discordModules/ownerModule.js');
@@ -342,6 +343,9 @@ function processMessage(msg, client){
 
     //Tick Message Counter For User
     mongoUtil.messageTick(msg.member, msg);
+
+    // Magic Corn
+    aiModule.UseMagicCorn(msg, client);
 
     if (msg.author.id == "693042484619509760") {
         lastFuriMessage = Date.now();

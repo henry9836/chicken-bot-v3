@@ -1,18 +1,52 @@
 let debugging = require("../debugging.js");
 let discordModule = require("../discordModule.js");
 let botConfig = require('../.././config.json');
+let fs = require("fs");
 let { Configuration, OpenAIApi } = require("openai");
 let configuration = new Configuration({
     apiKey: botConfig.OpenAIKey,
 });
 
-let maxReplies = 4;
+let maxReplies = 5;
+let minHoursBetweenSessions = 2;
+let maxHoursBetweenSessions = 14;
+var TargetTimestamp = 0;
 var aiPromptResolving = false;
 var responsesLeft = 0;
 var convChannelID = "";
 var convChannel = undefined;
 var chatLog = "";
 var userMap = new Map();
+
+function GetTheMagicCornBag()
+{
+    let currentTimestamp = Date.now();
+    fs.access("./util/dataFiles/MagicCornTargetTimeStamp.time", fs.constants.F_OK, (err) => {
+        if (err) 
+        {
+            debugging.chickenScratch("Timestamp file missing creating a new one...", debugging.DEBUGLVLS.WARN);
+            fs.writeFile("./util/dataFiles/MagicCornTargetTimeStamp.time", currentTimestamp.toString(), (err) => {
+                if (err) {
+                    debugging.chickenScratch(process.cwd(), debugging.DEBUGLVLS.WARN);
+                    debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
+                }
+            });
+        }
+        else
+        {
+            fs.readFile("./util/dataFiles/MagicCornTargetTimeStamp.time", (err, timestamp) => {
+                if (err) 
+                {
+                    console.error(err);
+                } 
+                else 
+                {
+                    TargetTimestamp = timestamp;
+                }
+            });
+        }
+    });
+}
 
 async function MagicCornTrip(authorID)
 {
@@ -26,16 +60,16 @@ async function MagicCornTrip(authorID)
         const openai = new OpenAIApi(configuration);
         const response = await openai.createCompletion({
             model: "text-davinci-003",
-            prompt: chatLog, // REPLACE WITH CHATLOG
+            prompt: chatLog,
             temperature: 0.7,
             max_tokens: 1024,
             n: 1,
-            user: authorID // REPLACE WITH USER ID
+            user: authorID
         });
-        aiPromptResolving = false;
         debugging.chickenScratch(response.data.choices[0].text);
-        debugging.chickenScratch("Responses left: " + responsesLeft);
+        aiPromptResolving = false;
         responsesLeft--;
+        debugging.chickenScratch("Responses left: " + responsesLeft);
         chatLog += response.data.choices[0].text + "\n";
         return response.data.choices[0].text;
     }
@@ -51,29 +85,35 @@ async function MagicCornTrip(authorID)
 async function UseMagicCorn(msg, client)
 {
     // Check if timer is over
+    if (Date.now() < TargetTimestamp)
+    {
+        debugging.chickenScratch("On cooldown: " + Date.now() + "<" + TargetTimestamp);
+        return;
+    }
+
+    // Is message in the general or verified channel?
+    if (msg.channel.id != botConfig.channels.general && msg.channel.id != botConfig.channels.verified)
+    {
+        debugging.chickenScratch("Not in channel ("+ msg.channel.id +")");
+        return;
+    }
 
     // Check if the ai is busy still to avoid spam
     if (aiPromptResolving)
     {
+        debugging.chickenScratch("busy");
         return;
     }
 
     aiPromptResolving = true;
 
-    if (msg.author.id != "102606498860896256")
-    {
-        msg.reply("*cluck*");
-        return;
-    }
-
     // If this is a non active conv with ai then it is a new one
-    var isNewConv = (responsesLeft <= 0);
-    if (isNewConv === true)
+    if (responsesLeft <= 0)
     {
         //Reset Values and Roll the dice
         chatLog = "This is a conversion between users, you are the bot (B:), the bot is a funny chicken that can make chicken sounds.\n";
         convChannel = msg.channel;
-        convChannelID = msg.channelId;
+        convChannelID = msg.channel.id;
         responsesLeft = Math.floor(Math.random() * (maxReplies - 2 + 2)) + 1;
         userMap = new Map();
         userMap.set(client.user.id, "B")
@@ -103,12 +143,10 @@ async function UseMagicCorn(msg, client)
             const regex = /<@!(\d+)>, /;
             const replacement = '';
             var rawmessage = message.content.replace(regex, replacement);
-            debugging.chickenScratch(rawmessage);
+            //debugging.chickenScratch(rawmessage);
 
-            if (rawmessage !== "!corn"){
-                //Append to our chat log
-                chatLog += chatID + ":" + rawmessage + "\n";
-            }
+            //Append to our chat log
+            chatLog += chatID + ":" + rawmessage + "\n";
         }
 
         //Append bot prompt
@@ -136,9 +174,24 @@ async function UseMagicCorn(msg, client)
         chatLog += "B:"
     }
 
-    MagicCornTrip(msg.author.id);
-}
+    msg.channel.send(MagicCornTrip(msg.author.id));
 
+    //Check if that was the last response before we wait
+    if (responsesLeft <= 0)
+    {
+        //Set a new target time and save it
+        let hourMultipler = Math.floor(Math.random() * (maxHoursBetweenSessions - minHoursBetweenSessions + minHoursBetweenSessions)) + 1;
+        TargetTimestamp = Date.now() + (hourMultipler * (60 * 60 * 1000));
+        fs.writeFile("./util/dataFiles/MagicCornTargetTimeStamp.time", TargetTimestamp.toString(), (err)=>
+        {
+            if (err)
+            {
+                debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
+            }
+        });
+    }
+}
 
 //Exports
 module.exports.UseMagicCorn = UseMagicCorn;
+module.exports.GetTheMagicCornBag = GetTheMagicCornBag;
