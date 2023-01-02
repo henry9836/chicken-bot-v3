@@ -9,7 +9,7 @@ let configuration = new Configuration({
 
 let maxReplies = 5;
 let minHoursBetweenSessions = 2;
-let maxHoursBetweenSessions = 14;
+let maxHoursBetweenSessions = 18;
 var TargetTimestamp = 0;
 var aiPromptResolving = false;
 var responsesLeft = 0;
@@ -62,7 +62,7 @@ async function MagicCornTrip(authorID)
             model: "text-davinci-003",
             prompt: chatLog,
             temperature: 0.7,
-            max_tokens: 1024,
+            max_tokens: 2048,
             n: 1,
             user: authorID
         });
