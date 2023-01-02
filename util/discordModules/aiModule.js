@@ -175,7 +175,7 @@ async function UseMagicCorn(msg, client)
         chatLog += "B:"
     }
 
-    msg.channel.send(MagicCornTrip(msg.author.id));
+    msg.channel.send(await MagicCornTrip(msg.author.id));
 
     //Check if that was the last response before we wait
     if (responsesLeft <= 0)
