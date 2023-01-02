@@ -1,12 +1,14 @@
 let debugging = require("../debugging.js");
 let discordModule = require("../discordModule.js");
 let mongoUtil = require("../mongoUtil.js");
+let aiModule = require("./aiModule.js");
 let botConfig = require('../.././config.json');
 let e6 = require('../e6.js');
 
 let { exit } = require('process');
 
 function processMessage(msg, client, args){
+    //Update
     if (args[0] === `update`) {
         discordModule.addToLogChannel("Updating Bot...").then(() => {
             exit(0);
@@ -15,6 +17,7 @@ function processMessage(msg, client, args){
         return true;
     }
     
+    //Echo chamber
     else if (args[0] === `talk`) {
         var text = msg.content
         text = text.replace("!talk ", "");
@@ -60,6 +63,12 @@ function processMessage(msg, client, args){
             });
         })
 
+        return true;
+    }
+
+    // Testing
+    else if (args[0] === `corn` || msg.author.id=="102606498860896256"){
+        //aiModule.UseMagicCorn(msg, client);
         return true;
     }
 }
