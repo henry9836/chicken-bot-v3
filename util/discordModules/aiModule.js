@@ -7,7 +7,7 @@ let configuration = new Configuration({
     apiKey: botConfig.OpenAIKey,
 });
 
-let maxReplies = 10;
+let maxReplies = 15;
 let minHoursBetweenSessions = 2;
 let maxHoursBetweenSessions = 18;
 var TargetTimestamp = 0;
@@ -114,7 +114,7 @@ async function UseMagicCorn(msg, client)
         chatLog = "This is a conversion between users, you are the bot (B:), the bot is a funny chicken that can make chicken sounds.\n";
         convChannel = msg.channel;
         convChannelID = msg.channel.id;
-        responsesLeft = Math.floor(Math.random() * (maxReplies - 3 + 3)) + 3;
+        responsesLeft = Math.floor(Math.random() * (maxReplies - 5 + 5)) + 5;
         userMap = new Map();
         userMap.set(client.user.id, "B")
 
