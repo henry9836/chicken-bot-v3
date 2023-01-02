@@ -7,10 +7,11 @@ let configuration = new Configuration({
     apiKey: botConfig.OpenAIKey,
 });
 
-let maxReplies = 10;
+let maxReplies = 15;
 let minHoursBetweenSessions = 2;
 let maxHoursBetweenSessions = 18;
 var TargetTimestamp = 0;
+var cooldownTimestamp = 0;
 var aiPromptResolving = false;
 var responsesLeft = 0;
 var convChannelID = "";
@@ -61,7 +62,7 @@ async function MagicCornTrip(authorID)
         const response = await openai.createCompletion({
             model: "text-davinci-003",
             prompt: chatLog,
-            temperature: 0.7,
+            temperature: (Math.floor(Math.random() * (9 - 7 + 1)) + 7) * 0.1,
             max_tokens: 2048,
             n: 1,
             user: authorID
@@ -71,6 +72,7 @@ async function MagicCornTrip(authorID)
         responsesLeft--;
         debugging.chickenScratch("Responses left: " + responsesLeft);
         chatLog += response.data.choices[0].text + "\n";
+        cooldownTimestamp = Date.now() + ((Math.floor(Math.random() * (300 - 1 + 1 ) + 1)) * 1000);
         return response.data.choices[0].text;
     }
     catch (error)
@@ -82,10 +84,22 @@ async function MagicCornTrip(authorID)
     return "ERROR";
 }
 
+function DealMagicCorn()
+{
+    TargetTimestamp = Date.now();
+}
+
 async function UseMagicCorn(msg, client)
 {
     // Check if timer is over
     if (Date.now() < TargetTimestamp)
+    {
+        //debugging.chickenScratch("On cooldown: " + Date.now() + "<" + TargetTimestamp);
+        return;
+    }
+
+    // Check if timer is over
+    if (Date.now() < cooldownTimestamp)
     {
         debugging.chickenScratch("On cooldown: " + Date.now() + "<" + TargetTimestamp);
         return;
@@ -111,7 +125,7 @@ async function UseMagicCorn(msg, client)
     if (responsesLeft <= 0)
     {
         //Reset Values and Roll the dice
-        chatLog = "This is a conversion between users, you are the bot (B:), the bot is a funny chicken that can make chicken sounds.\n";
+        chatLog = "This is a conversion between users, you are the bot (B:), the bot is a funny chicken that can make chicken sounds. Do not repeat yourself.\n";
         convChannel = msg.channel;
         convChannelID = msg.channel.id;
         responsesLeft = Math.floor(Math.random() * (maxReplies - 5 + 5)) + 5;
@@ -196,3 +210,4 @@ async function UseMagicCorn(msg, client)
 //Exports
 module.exports.UseMagicCorn = UseMagicCorn;
 module.exports.GetTheMagicCornBag = GetTheMagicCornBag;
+module.exports.DealMagicCorn = DealMagicCorn;

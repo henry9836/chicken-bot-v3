@@ -65,6 +65,14 @@ function processMessage(msg, client, args){
 
         return true;
     }
+
+    //Magic Corn Override
+    else if (args[0] === `magiccorn`)
+    {
+        aiModule.DealMagicCorn();
+        msg.delete();
+        return true;
+    }
 }
 
 function getHelpBlock(msg){
