@@ -7,7 +7,7 @@ let configuration = new Configuration({
     apiKey: botConfig.OpenAIKey,
 });
 
-let maxReplies = 5;
+let maxReplies = 10;
 let minHoursBetweenSessions = 2;
 let maxHoursBetweenSessions = 18;
 var TargetTimestamp = 0;
@@ -84,7 +84,6 @@ async function MagicCornTrip(authorID)
 
 async function UseMagicCorn(msg, client)
 {
-    debugging.chickenScratch("Entered UseMagicCorn");
     // Check if timer is over
     if (Date.now() < TargetTimestamp)
     {
@@ -95,7 +94,7 @@ async function UseMagicCorn(msg, client)
     // Is message in the general or verified channel?
     if (msg.channel.id != botConfig.channels.general && msg.channel.id != botConfig.channels.verified)
     {
-        debugging.chickenScratch("Not in channel ("+ msg.channel.id +")");
+        //debugging.chickenScratch("Not in channel ("+ msg.channel.id +")");
         return;
     }
 
@@ -115,7 +114,7 @@ async function UseMagicCorn(msg, client)
         chatLog = "This is a conversion between users, you are the bot (B:), the bot is a funny chicken that can make chicken sounds.\n";
         convChannel = msg.channel;
         convChannelID = msg.channel.id;
-        responsesLeft = Math.floor(Math.random() * (maxReplies - 2 + 2)) + 1;
+        responsesLeft = Math.floor(Math.random() * (maxReplies - 3 + 3)) + 3;
         userMap = new Map();
         userMap.set(client.user.id, "B")
 
