@@ -1,5 +1,5 @@
 #!/bin/bash
-pushd /home/asurobot/chicken-bot/
+pushd /home/nitro/chicken-bot
 while true; do
 
     #Apply any updates
