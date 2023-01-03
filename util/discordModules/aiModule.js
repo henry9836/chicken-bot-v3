@@ -7,6 +7,8 @@ let configuration = new Configuration({
     apiKey: botConfig.OpenAIKey,
 });
 
+let maxBusyCalls = 50;
+var chatAttemptsWhileBusy = 0;
 let maxReplies = 15;
 let minHoursBetweenSessions = 2;
 let maxHoursBetweenSessions = 18;
@@ -116,8 +118,13 @@ async function UseMagicCorn(msg, client)
     if (aiPromptResolving)
     {
         debugging.chickenScratch("busy");
+        if (chatAttemptsWhileBusy > maxBusyCalls)
+        {
+            aiPromptResolving = false;
+        }
         return;
     }
+    chatAttemptsWhileBusy = 0;
 
     aiPromptResolving = true;
 
