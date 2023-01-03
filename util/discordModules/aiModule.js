@@ -168,6 +168,12 @@ async function UseMagicCorn(msg, client)
     }
     else
     {
+        // Do not handle conversions in the wrong channel
+        if (convChannelID != msg.channel.id)
+        {
+            return;
+        }
+
         //Get our chat ID
         var chatID = userMap.get(msg.author.id);
         if (chatID === undefined)
