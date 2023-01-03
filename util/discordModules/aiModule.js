@@ -101,7 +101,7 @@ async function UseMagicCorn(msg, client)
     // Check if timer is over
     if (Date.now() < cooldownTimestamp)
     {
-        debugging.chickenScratch("On cooldown: " + Date.now() + "<" + TargetTimestamp);
+        debugging.chickenScratch("On cooldown: " + Date.now() + "<" + cooldownTimestamp);
         return;
     }
 
