@@ -91,10 +91,10 @@ function DealMagicCorn()
     TargetTimestamp = Date.now();
 }
 
-async function GetChat()
+async function GetChat(amountToFetch)
 {
     try{
-        var messages = await convChannel.messages.fetch({ limit: 10 });
+        var messages = await convChannel.messages.fetch({ limit: amountToFetch });
 
         // Cannot get messages
         if (messages == undefined)
@@ -110,6 +110,34 @@ async function GetChat()
         aiPromptResolving = false;
     }
     return undefined;
+}
+
+function FilterChat()
+{
+    //Compare the messages to our chat log and append new messages
+    for (const message of [...messages.values()].reverse()) {
+        // Get our chat ID
+        var chatID = userMap.get(message.author.id);
+        if (chatID === undefined)
+        {
+            chatID = userMap.size;
+            userMap.set(message.author.id, chatID);
+        }
+
+        // Remove the user tag at the start of the message
+        const regex = /<@!(\d+)>, /;
+        const replacement = '';
+        var rawmessage = message.content.replace(regex, replacement);
+
+        // Is this message in our chat log already?
+        if (chatLog.includes(rawmessage))
+        {
+            continue;
+        }
+
+        // Append to our chat log
+        chatLog += chatID + ":" + rawmessage + "\n";
+    }
 }
 
 async function UseMagicCorn(msg, client)
@@ -161,32 +189,14 @@ async function UseMagicCorn(msg, client)
         userMap.set(client.user.id, "B")
 
         // Retrieve the last 10 messages
-        var messages = GetChat();
-
-        // Cannot get messages
+        var messages = GetChat(10);
         if (messages == undefined)
         {
             return;
         }
 
-        for (const message of [...messages.values()].reverse()) {
-            //Get our chat ID
-            var chatID = userMap.get(message.author.id);
-            if (chatID === undefined)
-            {
-                chatID = userMap.size;
-                userMap.set(message.author.id, chatID);
-            }
-
-            // Remove the user tag at the start of the message
-            const regex = /<@!(\d+)>, /;
-            const replacement = '';
-            var rawmessage = message.content.replace(regex, replacement);
-            //debugging.chickenScratch(rawmessage);
-
-            //Append to our chat log
-            chatLog += chatID + ":" + rawmessage + "\n";
-        }
+        //Filter Chat
+        FilterChat();
 
         //Append bot prompt
         chatLog += "B:"
@@ -199,39 +209,15 @@ async function UseMagicCorn(msg, client)
             return;
         }
 
-        // Retrieve the last 10 messages
-        var messages = GetChat();
-
-        // Cannot get messages
+        // Retrieve the last 5 messages
+        var messages = GetChat(5);
         if (messages == undefined)
         {
             return;
         }
 
-        //Compare the messages to our chat log and append new messages
-        for (const message of [...messages.values()].reverse()) {
-            // Get our chat ID
-            var chatID = userMap.get(message.author.id);
-            if (chatID === undefined)
-            {
-                chatID = userMap.size;
-                userMap.set(message.author.id, chatID);
-            }
-
-            // Remove the user tag at the start of the message
-            const regex = /<@!(\d+)>, /;
-            const replacement = '';
-            var rawmessage = message.content.replace(regex, replacement);
-
-            // Is this message in our chat log?
-            if (chatLog.includes(rawmessage))
-            {
-                continue;
-            }
-
-            // Append to our chat log
-            chatLog += chatID + ":" + rawmessage + "\n";
-        }
+        //Filter Chat
+        FilterChat();
 
         //Append bot prompt
         chatLog += "B:"
