@@ -99,7 +99,6 @@ async function GetChat(amountToFetch)
         // Cannot get messages
         if (messages == undefined)
         {
-            debugging.chickenScratch("123 4565Cannot get messages", debugging.DEBUGLVLS.WARN);
             throw(1);
         }
 
@@ -190,14 +189,11 @@ async function UseMagicCorn(msg, client)
         userMap.set(client.user.id, "B")
 
         // Retrieve the last 10 messages
-        var messages = GetChat(10);
+        var messages = await GetChat(10);
         if (messages == undefined)
         {
             return;
         }
-
-        debugging.chickenScratch("Messages:");
-        debugging.chickenScratch(messages);
 
         //Filter Chat
         FilterChat(messages);
@@ -214,7 +210,7 @@ async function UseMagicCorn(msg, client)
         }
 
         // Retrieve the last 5 messages
-        var messages = GetChat(5);
+        var messages = await GetChat(5);
         if (messages == undefined)
         {
             return;
