@@ -112,7 +112,7 @@ async function GetChat(amountToFetch)
     return undefined;
 }
 
-function FilterChat()
+function FilterChat(messages)
 {
     //Compare the messages to our chat log and append new messages
     for (const message of [...messages.values()].reverse()) {
@@ -196,7 +196,7 @@ async function UseMagicCorn(msg, client)
         }
 
         //Filter Chat
-        FilterChat();
+        FilterChat(messages);
 
         //Append bot prompt
         chatLog += "B:"
@@ -217,7 +217,7 @@ async function UseMagicCorn(msg, client)
         }
 
         //Filter Chat
-        FilterChat();
+        FilterChat(messages);
 
         //Append bot prompt
         chatLog += "B:"
