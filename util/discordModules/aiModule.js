@@ -99,6 +99,7 @@ async function GetChat(amountToFetch)
         // Cannot get messages
         if (messages == undefined)
         {
+            debugging.chickenScratch("123 Cannot get messages", debugging.DEBUGLVLS.WARN);
             throw(1);
         }
 
