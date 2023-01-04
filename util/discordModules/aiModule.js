@@ -91,6 +91,27 @@ function DealMagicCorn()
     TargetTimestamp = Date.now();
 }
 
+async function GetChat()
+{
+    try{
+        var messages = await convChannel.messages.fetch({ limit: 10 });
+
+        // Cannot get messages
+        if (messages == undefined)
+        {
+            throw(1);
+        }
+
+        return messages;
+    }
+    catch(err){
+        debugging.chickenScratch("Cannot get messages", debugging.DEBUGLVLS.WARN);
+        responsesLeft = 0;
+        aiPromptResolving = false;
+    }
+    return undefined;
+}
+
 async function UseMagicCorn(msg, client)
 {
     // Check if timer is over
@@ -132,7 +153,7 @@ async function UseMagicCorn(msg, client)
     if (responsesLeft <= 0)
     {
         //Reset Values and Roll the dice
-        chatLog = "This is a conversion between users, you are the bot (B:), the bot is a funny chicken that can make chicken sounds. Do not repeat yourself.\n";
+        chatLog = "This is a conversion between users, you are the bot (B:), the bot is a funny chicken that can make chicken sounds. Do not repeat yourself. You should prioritize responding to questions rather than short statements. \n";
         convChannel = msg.channel;
         convChannelID = msg.channel.id;
         responsesLeft = Math.floor(Math.random() * (maxReplies - 5 + 5)) + 5;
@@ -140,14 +161,11 @@ async function UseMagicCorn(msg, client)
         userMap.set(client.user.id, "B")
 
         // Retrieve the last 10 messages
-        var messages = await convChannel.messages.fetch({ limit: 10 });
+        var messages = GetChat();
 
         // Cannot get messages
         if (messages == undefined)
         {
-            debugging.chickenScratch("Cannot get messages", debugging.DEBUGLVLS.WARN);
-            responsesLeft = 0;
-            aiPromptResolving = false;
             return;
         }
 
@@ -181,21 +199,39 @@ async function UseMagicCorn(msg, client)
             return;
         }
 
-        //Get our chat ID
-        var chatID = userMap.get(msg.author.id);
-        if (chatID === undefined)
+        // Retrieve the last 10 messages
+        var messages = GetChat();
+
+        // Cannot get messages
+        if (messages == undefined)
         {
-            chatID = userMap.size;
-            userMap.set(msg.author.id, chatID);
+            return;
         }
 
-        // Remove the user tag at the start of the message
-        const regex = /<@!(\d+)>, /;
-        const replacement = '';
-        var rawmessage = msg.content.replace(regex, replacement);
+        //Compare the messages to our chat log and append new messages
+        for (const message of [...messages.values()].reverse()) {
+            // Get our chat ID
+            var chatID = userMap.get(message.author.id);
+            if (chatID === undefined)
+            {
+                chatID = userMap.size;
+                userMap.set(message.author.id, chatID);
+            }
 
-        //Append to our chat log
-        chatLog += rawmessage;
+            // Remove the user tag at the start of the message
+            const regex = /<@!(\d+)>, /;
+            const replacement = '';
+            var rawmessage = message.content.replace(regex, replacement);
+
+            // Is this message in our chat log?
+            if (chatLog.includes(rawmessage))
+            {
+                continue;
+            }
+
+            // Append to our chat log
+            chatLog += chatID + ":" + rawmessage + "\n";
+        }
 
         //Append bot prompt
         chatLog += "B:"
