@@ -99,7 +99,7 @@ async function GetChat(amountToFetch)
         // Cannot get messages
         if (messages == undefined)
         {
-            debugging.chickenScratch("123 Cannot get messages", debugging.DEBUGLVLS.WARN);
+            debugging.chickenScratch("123 4565Cannot get messages", debugging.DEBUGLVLS.WARN);
             throw(1);
         }
 
@@ -195,6 +195,9 @@ async function UseMagicCorn(msg, client)
         {
             return;
         }
+
+        debugging.chickenScratch("Messages:");
+        debugging.chickenScratch(messages);
 
         //Filter Chat
         FilterChat(messages);
