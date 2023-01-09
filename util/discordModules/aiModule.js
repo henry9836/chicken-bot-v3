@@ -75,6 +75,7 @@ async function MagicCornTrip(authorID)
         debugging.chickenScratch("Responses left: " + responsesLeft);
         chatLog += response.data.choices[0].text + "\n";
         cooldownTimestamp = Date.now() + ((Math.floor(Math.random() * (300 - 1 + 1 ) + 1)) * 1000);
+        maxBusyCalls = 0;
         return response.data.choices[0].text;
     }
     catch (error)
@@ -167,9 +168,11 @@ async function UseMagicCorn(msg, client)
     if (aiPromptResolving)
     {
         debugging.chickenScratch("busy");
+        maxBusyCalls++;
         if (chatAttemptsWhileBusy > maxBusyCalls)
         {
             aiPromptResolving = false;
+            maxBusyCalls = 0;
         }
         return;
     }
@@ -187,6 +190,7 @@ async function UseMagicCorn(msg, client)
         responsesLeft = Math.floor(Math.random() * (maxReplies - 5 + 5)) + 5;
         userMap = new Map();
         userMap.set(client.user.id, "B")
+        maxBusyCalls = 0;
 
         // Retrieve the last 10 messages
         var messages = await GetChat(10);
