@@ -65,7 +65,7 @@ async function MagicCornTrip(authorID)
             model: "text-davinci-003",
             prompt: chatLog,
             temperature: (Math.floor(Math.random() * (9 - 7 + 1)) + 7) * 0.1,
-            max_tokens: 4096,
+            max_tokens: 4000,
             n: 1,
             user: authorID
         });
