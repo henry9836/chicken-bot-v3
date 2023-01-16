@@ -7,7 +7,7 @@ let configuration = new Configuration({
     apiKey: botConfig.OpenAIKey,
 });
 
-let maxBusyCalls = 50;
+let maxBusyCalls = 30;
 var chatAttemptsWhileBusy = 0;
 let maxReplies = 15;
 let minHoursBetweenSessions = 2;
@@ -65,7 +65,7 @@ async function MagicCornTrip(authorID)
             model: "text-davinci-003",
             prompt: chatLog,
             temperature: (Math.floor(Math.random() * (9 - 7 + 1)) + 7) * 0.1,
-            max_tokens: 2048,
+            max_tokens: 4096,
             n: 1,
             user: authorID
         });
@@ -75,7 +75,7 @@ async function MagicCornTrip(authorID)
         debugging.chickenScratch("Responses left: " + responsesLeft);
         chatLog += response.data.choices[0].text + "\n";
         cooldownTimestamp = Date.now() + ((Math.floor(Math.random() * (300 - 1 + 1 ) + 1)) * 1000);
-        maxBusyCalls = 0;
+        chatAttemptsWhileBusy = 0;
         return response.data.choices[0].text;
     }
     catch (error)
@@ -168,11 +168,11 @@ async function UseMagicCorn(msg, client)
     if (aiPromptResolving)
     {
         debugging.chickenScratch("busy");
-        maxBusyCalls++;
+        chatAttemptsWhileBusy++;
         if (chatAttemptsWhileBusy > maxBusyCalls)
         {
             aiPromptResolving = false;
-            maxBusyCalls = 0;
+            chatAttemptsWhileBusy = 0;
         }
         return;
     }
@@ -190,7 +190,7 @@ async function UseMagicCorn(msg, client)
         responsesLeft = Math.floor(Math.random() * (maxReplies - 5 + 5)) + 5;
         userMap = new Map();
         userMap.set(client.user.id, "B")
-        maxBusyCalls = 0;
+        chatAttemptsWhileBusy = 0;
 
         // Retrieve the last 10 messages
         var messages = await GetChat(10);
