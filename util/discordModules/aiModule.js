@@ -7,6 +7,7 @@ let configuration = new Configuration({
     apiKey: botConfig.OpenAIKey,
 });
 
+let maxCooldown = 180; //3 mins
 let maxBusyCalls = 30;
 var chatAttemptsWhileBusy = 0;
 let maxReplies = 15;
@@ -74,7 +75,7 @@ async function MagicCornTrip(authorID)
         responsesLeft--;
         debugging.chickenScratch("Responses left: " + responsesLeft);
         chatLog += response.data.choices[0].text + "\n";
-        cooldownTimestamp = Date.now() + ((Math.floor(Math.random() * (300 - 1 + 1 ) + 1)) * 1000);
+        cooldownTimestamp = Date.now() + ((Math.floor(Math.random() * (maxCooldown - 1 + 1 ) + 1)) * 1000);
         chatAttemptsWhileBusy = 0;
         return response.data.choices[0].text;
     }
