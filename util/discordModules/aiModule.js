@@ -21,8 +21,8 @@ var convChannelID = "";
 var convChannel = undefined;
 var chatLog = "";
 var userMap = new Map();
-var brain = "This is a conversion between users, you are the bot (B:), the bot is a funny chicken that can make chicken sounds. Do not repeat yourself. You should prioritize responding to questions rather than short statements. ";
-var brainClean = brain;
+var brain = "This is a conversion between users, you are the bot (B:), the bot is a funny chicken that can make chicken sounds. Do not repeat yourself. You can only talk in english. You should prioritize responding to questions rather than short statements. ";
+let brainClean = brain;
 
 function GetTheMagicCornBag()
 {
