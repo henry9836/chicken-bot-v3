@@ -254,6 +254,7 @@ function Brainwash(prompt)
 {
     brain = brainClean;
     brain += prompt;
+    debugging.chickenScratch(brain)
 }
 
 
