@@ -21,7 +21,7 @@ var convChannelID = "";
 var convChannel = undefined;
 var chatLog = "";
 var userMap = new Map();
-var brain = "This is a conversion between users, you are the bot (B:), the bot is a funny chicken that can make chicken sounds. Do not repeat yourself. You should prioritize responding to questions rather than short statements. \n";
+var brain = "This is a conversion between users, you are the bot (B:), the bot is a funny chicken that can make chicken sounds. Do not repeat yourself. You should prioritize responding to questions rather than short statements.";
 var brainClean = brain;
 
 function GetTheMagicCornBag()
@@ -188,7 +188,7 @@ async function UseMagicCorn(msg, client)
     if (responsesLeft <= 0)
     {
         //Reset Values and Roll the dice
-        chatLog = brain;
+        chatLog = brain + "\n";
         convChannel = msg.channel;
         convChannelID = msg.channel.id;
         responsesLeft = Math.floor(Math.random() * (maxReplies - 5 + 5)) + 5;

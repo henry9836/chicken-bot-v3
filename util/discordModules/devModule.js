@@ -77,7 +77,7 @@ function processMessage(msg, client, args){
     else if (args[0] == `brainwash`)
     {
         msg.delete();
-        aiModule.Brainwash((msg.content.replace("!brainwash ", "")) + "\n")
+        aiModule.Brainwash((msg.content.replace("!brainwash ", "")))
         return true;
     }
 }
