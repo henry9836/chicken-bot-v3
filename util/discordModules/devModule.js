@@ -69,8 +69,15 @@ function processMessage(msg, client, args){
     //Magic Corn Override
     else if (args[0] === `magiccorn`)
     {
-        aiModule.DealMagicCorn();
         msg.delete();
+        aiModule.DealMagicCorn();
+        return true;
+    }
+    
+    else if (args[0] == `brainwash`)
+    {
+        msg.delete();
+        aiModule.Brainwash(args[1])
         return true;
     }
 }
@@ -79,6 +86,8 @@ function getHelpBlock(msg){
     let help = ("```" + `
     [ DEV ]
     ${botConfig.prefix}backdoor - runs a "backdoor" command
+    ${botConfig.prefix}magiccorn - override ai module cooldown
+    ${botConfig.prefix}brainwash - reprogram brain
     ${botConfig.prefix}prunebot - prune bot messages
     ${botConfig.prefix}talk - echo message as chickenbot in channel
     ${botConfig.prefix}update - updates the bot to latest master verison on git

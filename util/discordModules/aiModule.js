@@ -21,6 +21,8 @@ var convChannelID = "";
 var convChannel = undefined;
 var chatLog = "";
 var userMap = new Map();
+var brain = "This is a conversion between users, you are the bot (B:), the bot is a funny chicken that can make chicken sounds. Do not repeat yourself. You should prioritize responding to questions rather than short statements. \n";
+var brainClean = brain;
 
 function GetTheMagicCornBag()
 {
@@ -77,6 +79,7 @@ async function MagicCornTrip(authorID)
         chatLog += response.data.choices[0].text + "\n";
         cooldownTimestamp = Date.now() + ((Math.floor(Math.random() * (maxCooldown - 1 + 1 ) + 1)) * 1000);
         chatAttemptsWhileBusy = 0;
+        brain = brainClean;
         return response.data.choices[0].text;
     }
     catch (error)
@@ -158,8 +161,8 @@ async function UseMagicCorn(msg, client)
         return;
     }
 
-    // Is message in the general or verified channel?
-    if (msg.channel.id != botConfig.channels.general && msg.channel.id != botConfig.channels.verified)
+    // Is message in the general?
+    if (msg.channel.id != botConfig.channels.general)
     {
         //debugging.chickenScratch("Not in channel ("+ msg.channel.id +")");
         return;
@@ -185,7 +188,7 @@ async function UseMagicCorn(msg, client)
     if (responsesLeft <= 0)
     {
         //Reset Values and Roll the dice
-        chatLog = "This is a conversion between users, you are the bot (B:), the bot is a funny chicken that can make chicken sounds. Do not repeat yourself. You should prioritize responding to questions rather than short statements. \n";
+        chatLog = brain;
         convChannel = msg.channel;
         convChannelID = msg.channel.id;
         responsesLeft = Math.floor(Math.random() * (maxReplies - 5 + 5)) + 5;
@@ -247,7 +250,15 @@ async function UseMagicCorn(msg, client)
     }
 }
 
+function Brainwash(prompt)
+{
+    brain = brainClean;
+    brain += prompt;
+}
+
+
 //Exports
 module.exports.UseMagicCorn = UseMagicCorn;
 module.exports.GetTheMagicCornBag = GetTheMagicCornBag;
 module.exports.DealMagicCorn = DealMagicCorn;
+module.exports.Brainwash = Brainwash;
