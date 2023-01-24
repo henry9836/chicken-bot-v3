@@ -183,6 +183,8 @@ async function UseMagicCorn(msg, client)
 
     aiPromptResolving = true;
 
+    debugging.chickenScratch(chatLog)
+
     // If this is a non active conv with ai then it is a new one
     if (responsesLeft <= 0)
     {
