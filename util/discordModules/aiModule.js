@@ -209,6 +209,8 @@ function FilterChat(messages)
     // Cull all users in ignore list
     messages = messages.filter(message => !ignoreList.includes(message.author.id));
 
+    debugging.chickenScratch(typeof messages)
+
     // Trim to max length
     messages = messages.slice(0, maxChatHistroyToUse);
 
