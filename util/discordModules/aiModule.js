@@ -206,15 +206,11 @@ async function GetChat(amountToFetch)
 // Filter the chat messages
 function FilterChat(Inmessages)
 {
-    debugging.chickenScratch(typeof Inmessages)
-    
     // Convert to Array
     var messages = Array.from(Inmessages.values());
 
     // Cull all users in ignore list
     messages = messages.filter(message => !ignoreList.includes(message.author.id));
-
-    debugging.chickenScratch(typeof messages)
 
     // Trim to max length
     messages = messages.slice(0, maxChatHistroyToUse);
