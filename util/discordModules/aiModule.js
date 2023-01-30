@@ -326,7 +326,7 @@ function Awaken(msg)
     }
 
     // Are we still cooling down?
-    if (Date.now() < TargetTimestamp)
+    if (Date.now() > TargetTimestamp)
     {
         var randomColldownMessage = cooldownMessages[Math.floor(Math.random() * cooldownMessages.length)];
         randomColldownMessage += GetAproxCooldownTimeRemaining();
