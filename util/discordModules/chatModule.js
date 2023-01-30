@@ -1,14 +1,60 @@
 let debugging = require("../debugging.js");
 let discordModule = require("../discordModule.js");
 let mongoUtil = require("../mongoUtil.js");
+let aiModule = require("./aiModule.js");
 let botConfig = require('../.././config.json');
 let e6 = require('../e6.js');
 
 let { MessageEmbed } = require("discord.js");
 
 function processMessage(msg, client, args){
+
+    //Avatar grabber
+    if (args[0] === `avatar`){
+        //No users supplied just grab author info
+        if (!msg.mentions.users.size){
+            //Create an embed message
+            let embed = new MessageEmbed()
+                .setTitle(`${msg.author.username}`)
+                .setURL(`${msg.author.displayAvatarURL()}`)
+                .setImage(`${msg.author.displayAvatarURL({format: 'png', dynamic: true})}`);
+
+            msg.reply(embed);
+            return true;
+        }
+        //Return a list of users
+        let listOfAvatars = msg.mentions.users.map(user =>{
+            let embed = new MessageEmbed()
+                .setTitle(`${user.username}`)
+                .setURL(`${user.displayAvatarURL()}`)
+                .setImage(`${user.displayAvatarURL({format: 'png', dynamic: true})}`);
+
+            msg.reply(embed);
+            return true;
+        });
+        return true;
+    }
+
+    // Activate AI
+    else if(args[0] === `awaken`){
+        aiModule.Awaken(msg);
+        return true;
+    }
+
+    // Add to AI IgnoreList
+    else if(args[0] === `ignoreme`){
+        aiModule.UpdateIgnoreList(msg, true);
+        return true;
+    }
+
+    // Remove from AI IgnoreList
+    else if(args[0] === `pardonignore`){
+        aiModule.UpdateIgnoreList(msg, false);
+        return true;
+    }
+
     //Get best rated e6 posts
-    if(args[0] === `e6-best`){
+    else if(args[0] === `e6-best`){
         if (msg.channel.nsfw){
             e6.gib_best(msg, args, false);
         }
@@ -103,31 +149,6 @@ function processMessage(msg, client, args){
         return true;
     }
 
-    //Avatar grabber
-    else if (args[0] === `avatar`){
-        //No users supplied just grab author info
-        if (!msg.mentions.users.size){
-            //Create an embed message
-            let embed = new MessageEmbed()
-                .setTitle(`${msg.author.username}`)
-                .setURL(`${msg.author.displayAvatarURL()}`)
-                .setImage(`${msg.author.displayAvatarURL({format: 'png', dynamic: true})}`);
-
-            msg.reply(embed);
-            return true;
-        }
-        //Return a list of users
-        let listOfAvatars = msg.mentions.users.map(user =>{
-            let embed = new MessageEmbed()
-                .setTitle(`${user.username}`)
-                .setURL(`${user.displayAvatarURL()}`)
-                .setImage(`${user.displayAvatarURL({format: 'png', dynamic: true})}`);
-
-            msg.reply(embed);
-            return true;
-        });
-        return true;
-    }
     //Add a public role
     else if (args[0] === `add-role`){
         if (args[1]){
@@ -228,13 +249,16 @@ function getHelpBlock(msg){
     return ("```" + `
     [ Public ]
     ${botConfig.prefix}avatar <member> - Displays users profile picture
+    ${botConfig.prefix}awaken - Awakens the chicken
     ${botConfig.prefix}add-role <role> - Assigns a public role
     ${botConfig.prefix}e6-best <num> - Grabs the highest rated e6 posts on the discord
     ${botConfig.prefix}e6-worst <num> - Grabs the lowest rated e6 posts on the discord
     ${botConfig.prefix}help - Display help
+    ${botConfig.prefix}ignoreme - Awakened chicken will ignore you
     ${botConfig.prefix}info - Displays server info
     ${botConfig.prefix}nsfw-quote <attachment> - Creates a nsfw quote in the nsfw-quotes channel
     ${botConfig.prefix}oldspice - tell a "spicy"
+    ${botConfig.prefix}pardonignore - Awakened chicken will listen to you
     ${botConfig.prefix}petition <message> - Create a petition
     ${botConfig.prefix}ping - Makes the bot respond with Pong  
     ${botConfig.prefix}quote <attachment> - Creates a quote in the quotes channel

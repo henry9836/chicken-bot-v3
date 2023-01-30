@@ -1,6 +1,7 @@
 let debugging = require("../debugging.js");
 let discordModule = require("../discordModule.js");
 let mongoUtil = require("../mongoUtil.js");
+let aiModule = require("./aiModule.js");
 let botConfig = require('../.././config.json');
 let e6 = require('../e6.js');
 
@@ -22,6 +23,12 @@ function processMessage(msg, client, args){
             })
             return true;
         }
+    }
+
+    //Silence AI
+    else if (args[0] === `shut`){
+        aiModule.Shut();
+        return true;
     }
 
     //KICK
@@ -161,6 +168,7 @@ function getHelpBlock(msg){
     ${botConfig.prefix}pardon <member> - allows user to be verified
     ${botConfig.prefix}punish <member> - removes verified from user
     ${botConfig.prefix}prune <amount> - removes last amount of messages (max is 100)
+    ${botConfig.prefix}shut - silences awakened chicken
     ` + "```");
     msg.author.send(help);
 }

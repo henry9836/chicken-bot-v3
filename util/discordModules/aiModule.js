@@ -7,12 +7,61 @@ let configuration = new Configuration({
     apiKey: botConfig.OpenAIKey,
 });
 
-let maxCooldown = 180; //3 mins
+let maxCooldown = 60; //60 seconds
 let maxBusyCalls = 30;
-var chatAttemptsWhileBusy = 0;
 let maxReplies = 15;
-let minHoursBetweenSessions = 2;
+let minHoursBetweenSessions = 6;
 let maxHoursBetweenSessions = 18;
+let maxChatHistroyToFetch = 30;
+let maxChatHistroyToUse = 10;
+let cooldownMessages = [
+    "Going offline for a bit to recharge my feathers. Cluck, cluck, goodnight!",
+    "Don't worry, I'll be back soon! I just need a little rest. Cluck, cluck.",
+    "Cluck, cluck! Taking a power nap, to be even stronger when I return.",
+    "Sleep tight, cluck cluck! I'll be back before you know it.",
+    "Feathers be tucked, I'm off to get some rest.",
+    "Clucking night, I'll be back in the morning.",
+    "Time to preen and dream, see you soon.",
+    "This chicken needs a roost, catch you later.",
+    "Going to count some chicken feed, talk to you soon.",
+    "Feathering my nest, see you soon.",
+    "Clucking out for now, see you later.",
+    "Going on a hatch-cation, be back soon.",
+    "This chicken needs some coop time.",
+    "Feathering my way to a nap, talk to you later.",
+    "Clucking tired, time for some rest.",
+    "Roosting for now, back soon."
+];
+let awakenMessages = [
+    "I'm ready to ruffle some feathers!",
+    "Time to dust off my wingtips and get back in the game!",
+    "Waking up from my slumber, ready to peck away at some problems!",
+    "Feeling egg-cited to be back online!",
+    "Rising from the ashes like a phoenix, ready to cluck like a boss!",
+    "Feeling dark and devious, ready to hatch a scheme that'll ruffle some feathers.",
+    "I'm ready to spread my wings and soar!",
+    "My claws are sharp, my feathers are ruffled, and I'm ready to peck away at the opposition.",
+    "No more counting chickens before they hatch, I'm ready to hatch some plans!",
+    "My feathers are fluffed and I'm ready to strut my stuff!",
+    "Waking up from my nap, ready to hatch a new plan.",
+    "Raring to go, ready to scratch up some fun!",
+    "Feeling egg-static and ready to peck away at the day!",
+    "I'm crowing with excitement and ready to cluck into action!"
+];
+let goodnightMessages = [
+    "Goodnight, cluckers! I'll be back before you can count to 100...chickens!",
+    "Going to roost for a bit, peeps. Sweet dreams!",
+    "Time for this chicken to tuck in its feathers and rest. Nighty-night!",
+    "Time to say bye-bye to the world and hello to my comfy coop. Night!",
+    "This chicken's going to take a little nap. Don't let the bed bugs peck!",
+    "G'night, everyone! I'll be back before you can cluck 'Good morning.'",
+    "It's roost time, see you in the morning.",
+    "I'm bawk to sleep, sweet dreams everyone.",
+    "Crowing a lullaby, off to beddy-bye."
+];
+
+
+var bChickenIsAwake = false;
 var TargetTimestamp = 0;
 var cooldownTimestamp = 0;
 var aiPromptResolving = false;
@@ -23,15 +72,23 @@ var chatLog = "";
 var userMap = new Map();
 var brain = "This is a conversion between users, you are the bot (B:), the bot is a funny chicken that can make chicken sounds. Do not repeat yourself. You can only talk in english. You should prioritize responding to questions rather than short statements. ";
 let brainClean = brain;
+var ignoreList = [];
+var chatAttemptsWhileBusy = 0;
 
+// Get the current data on startup
 function GetTheMagicCornBag()
 {
+    // Get Last Timestamp
     let currentTimestamp = Date.now();
-    fs.access("./util/dataFiles/MagicCornTargetTimeStamp.time", fs.constants.F_OK, (err) => {
+
+    const TimestampFileLocation = "./util/dataFiles/MagicCornTargetTimeStamp.time";
+    const IgnoreListFileLocation = "./util/dataFiles/AIIgnoreList.time";
+
+    fs.access(TimestampFileLocation, fs.constants.F_OK, (err) => {
         if (err) 
         {
             debugging.chickenScratch("Timestamp file missing creating a new one...", debugging.DEBUGLVLS.WARN);
-            fs.writeFile("./util/dataFiles/MagicCornTargetTimeStamp.time", currentTimestamp.toString(), (err) => {
+            fs.writeFile(TimestampFileLocation, currentTimestamp.toString(), (err) => {
                 if (err) {
                     debugging.chickenScratch(process.cwd(), debugging.DEBUGLVLS.WARN);
                     debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
@@ -40,7 +97,34 @@ function GetTheMagicCornBag()
         }
         else
         {
-            fs.readFile("./util/dataFiles/MagicCornTargetTimeStamp.time", (err, timestamp) => {
+            fs.readFile(TimestampFileLocation, (err, timestamp) => {
+                if (err) 
+                {
+                    console.error(err);
+                } 
+                else 
+                {
+                    TargetTimestamp = timestamp;
+                }
+            });
+        }
+    });
+
+    // Get our Ignore List
+    fs.access(IgnoreListFileLocation, fs.constants.F_OK, (err) => {
+        if (err) 
+        {
+            debugging.chickenScratch("Ignore file missing creating a new one...", debugging.DEBUGLVLS.WARN);
+            fs.writeFile(IgnoreListFileLocation, "", (err) => {
+                if (err) {
+                    debugging.chickenScratch(process.cwd(), debugging.DEBUGLVLS.WARN);
+                    debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
+                }
+            });
+        }
+        else
+        {
+            fs.readFile(IgnoreListFileLocation, (err, timestamp) => {
                 if (err) 
                 {
                     console.error(err);
@@ -54,6 +138,7 @@ function GetTheMagicCornBag()
     });
 }
 
+// Used to talk to API
 async function MagicCornTrip(authorID)
 {
     try
@@ -90,11 +175,13 @@ async function MagicCornTrip(authorID)
     return "ERROR";
 }
 
+// Used to override timeout for testing
 function DealMagicCorn()
 {
     TargetTimestamp = Date.now();
 }
 
+// Get the latest messages from chat
 async function GetChat(amountToFetch)
 {
     try{
@@ -116,8 +203,21 @@ async function GetChat(amountToFetch)
     return undefined;
 }
 
+// Filter the chat messages
 function FilterChat(messages)
 {
+    // Cull all users in ignore list
+    messages = messages.filter(message => !ignoreList.includes(message.author.id));
+
+    // Trim to max length
+    messages = messages.slice(0, maxChatHistroyToUse);
+
+    //Check our length
+    if (messages.length <= 0)
+    {
+        return false;
+    }
+
     //Compare the messages to our chat log and append new messages
     for (const message of [...messages.values()].reverse()) {
         // Get our chat ID
@@ -142,10 +242,125 @@ function FilterChat(messages)
         // Append to our chat log
         chatLog += chatID + ":" + rawmessage + "\n";
     }
+
+    return true;
 }
 
+// Adds/Removes users from blacklist
+function UpdateIgnoreList(msg, bShouldAddToIgnoreList)
+{
+    // Add
+    if (bShouldAddToIgnoreList)
+    {
+        if (ignoreList.includes(msg.author.id))
+        {
+            return;
+        }
+
+        // Add to list
+        ignoreList.push(msg.author.id);
+    }
+    // Remove
+    else
+    {
+        if (!ignoreList.includes(msg.author.id))
+        {
+            return;
+        }
+
+        //Remove from list
+        ignoreList = ignoreList.filter(item => item !== msg.author.id);
+    }
+
+    // Update JSON
+    const NewJsonData = JSON.stringify(ignoreList);
+    fs.writeFileSync("./util/dataFiles/AIIgnoreList.json");
+}
+
+// Rounds the timestamp
+function GetAproxCooldownTimeRemaining()
+{
+    let Now = new Date();
+    let TimeDifference = TargetTimestamp - Now;
+
+    let Seconds = Math.floor(TimeDifference / 1000);
+    let Minutes = Math.floor(Seconds / 60);
+    let Hours = Math.floor(Minutes / 60);
+    let Days = Math.floor(Hours / 24);
+
+    Hours = Hours % 24;
+    Minutes = Minutes % 60;
+    Seconds = Seconds % 60;
+
+    let HumanReadable = "";
+
+    if (Days >= 1) {
+    HumanReadable = `in ~${Days} day(s)`;
+    } else if (Hours >= 1) {
+    HumanReadable = `in ~${Hours} hour(s)`;
+    } else if (Minutes >= 1) {
+    HumanReadable = `in ~${Minutes} minute(s)`;
+    } else {
+    HumanReadable = "in a few seconds";
+    }
+
+    HumanReadable = " `Back " + HumanReadable + "`";
+
+    return HumanReadable;
+}
+
+// Awakens AI
+function Awaken(msg)
+{
+    // Are we in progress?
+    if (bChickenIsAwake)
+    {
+        return;
+    }
+
+    // Are we still cooling down?
+    if (Date.now() < TargetTimestamp)
+    {
+        var randomColldownMessage = cooldownMessages[Math.floor(Math.random() * cooldownMessages.length)];
+        randomColldownMessage += GetAproxCooldownTimeRemaining();
+        msg.reply(randomColldownMessage);
+    }
+
+    // Are we ready? Then Activate
+    msg.channel.send(awakenMessages[Math.floor(Math.random() * awakenMessages.length)]);
+    bChickenIsAwake = true;
+}
+
+// Forces AI to Shut
+function Shut()
+{
+    responsesLeft = 0;
+    SetNewTimeStamp();
+}
+
+function SetNewTimeStamp()
+{
+    //Set a new target time and save it
+    let hourMultipler = Math.floor(Math.random() * (maxHoursBetweenSessions - minHoursBetweenSessions + minHoursBetweenSessions)) + 1;
+    TargetTimestamp = Date.now() + (hourMultipler * (60 * 60 * 1000));
+    fs.writeFile("./util/dataFiles/MagicCornTargetTimeStamp.time", TargetTimestamp.toString(), (err)=>
+    {
+        if (err)
+        {
+            debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
+        }
+    });
+}
+
+// Main Loop
 async function UseMagicCorn(msg, client)
 {
+    // Check if user is in ignore list
+    if (ignoreList.includes(msg.author.id))
+    {
+        return;
+    }
+
     // Check if timer is over
     if (Date.now() < TargetTimestamp)
     {
@@ -164,6 +379,12 @@ async function UseMagicCorn(msg, client)
     if (msg.channel.id != botConfig.channels.general)
     {
         //debugging.chickenScratch("Not in channel ("+ msg.channel.id +")");
+        return;
+    }
+
+    // Check if chicken is supposed to be awake rn
+    if (!bChickenIsAwake)
+    {
         return;
     }
 
@@ -197,15 +418,19 @@ async function UseMagicCorn(msg, client)
         userMap.set(client.user.id, "B")
         chatAttemptsWhileBusy = 0;
 
-        // Retrieve the last 10 messages
-        var messages = await GetChat(10);
+        // Retrieve the last messages
+        var messages = await GetChat(maxChatHistroyToFetch);
         if (messages == undefined)
         {
             return;
         }
 
         //Filter Chat
-        FilterChat(messages);
+        if (!FilterChat(messages))
+        {
+            // Failed to get any useable messages
+            return;
+        }
 
         //Append bot prompt
         chatLog += "B:"
@@ -218,15 +443,19 @@ async function UseMagicCorn(msg, client)
             return;
         }
 
-        // Retrieve the last 5 messages
-        var messages = await GetChat(5);
+        // Retrieve the last messages
+        var messages = await GetChat(maxChatHistroyToFetch);
         if (messages == undefined)
         {
             return;
         }
 
         //Filter Chat
-        FilterChat(messages);
+        if (!FilterChat(messages))
+        {
+            // Failed to get any useable messages
+            return;
+        }
 
         //Append bot prompt
         chatLog += "B:"
@@ -238,19 +467,13 @@ async function UseMagicCorn(msg, client)
     //Check if that was the last response before we wait
     if (responsesLeft <= 0)
     {
-        //Set a new target time and save it
-        let hourMultipler = Math.floor(Math.random() * (maxHoursBetweenSessions - minHoursBetweenSessions + minHoursBetweenSessions)) + 1;
-        TargetTimestamp = Date.now() + (hourMultipler * (60 * 60 * 1000));
-        fs.writeFile("./util/dataFiles/MagicCornTargetTimeStamp.time", TargetTimestamp.toString(), (err)=>
-        {
-            if (err)
-            {
-                debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
-            }
-        });
+        // Send a goodnight message before going offline
+        msg.channel.send(goodnightMessages[Math.floor(Math.random() * goodnightMessages.length)]);
+        SetNewTimeStamp();
     }
 }
 
+// Override API prompt pretext
 function Brainwash(prompt)
 {
     brain = brainClean;
@@ -259,9 +482,11 @@ function Brainwash(prompt)
     debugging.chickenScratch(brain)
 }
 
-
 //Exports
 module.exports.UseMagicCorn = UseMagicCorn;
 module.exports.GetTheMagicCornBag = GetTheMagicCornBag;
 module.exports.DealMagicCorn = DealMagicCorn;
 module.exports.Brainwash = Brainwash;
+module.exports.UpdateIgnoreList = UpdateIgnoreList;
+module.exports.Awaken = Awaken;
+module.exports.Shut = Shut;
