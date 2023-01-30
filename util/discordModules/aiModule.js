@@ -346,6 +346,7 @@ function Shut(msg)
 function SetNewTimeStamp()
 {
     //Set a new target time and save it
+    bChickenIsAwake = false;
     let hourMultipler = Math.floor(Math.random() * (maxHoursBetweenSessions - minHoursBetweenSessions + minHoursBetweenSessions)) + 1;
     TargetTimestamp = Date.now() + (hourMultipler * (60 * 60 * 1000));
     fs.writeFile("./util/dataFiles/MagicCornTargetTimeStamp.time", TargetTimestamp.toString(), (err)=>
