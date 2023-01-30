@@ -74,6 +74,13 @@ function processMessage(msg, client, args){
         return true;
     }
     
+    else if (args[0] == `shut`)
+    {
+        msg.delete();
+        aiModule.Shut(msg);
+        return true;
+    }
+
     else if (args[0] == `brainwash`)
     {
         msg.delete();

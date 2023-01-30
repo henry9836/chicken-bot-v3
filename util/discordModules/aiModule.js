@@ -331,6 +331,7 @@ function Awaken(msg)
         var randomColldownMessage = cooldownMessages[Math.floor(Math.random() * cooldownMessages.length)];
         randomColldownMessage += GetAproxCooldownTimeRemaining();
         msg.reply(randomColldownMessage);
+        return;
     }
 
     // Are we ready? Then Activate
