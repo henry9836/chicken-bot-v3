@@ -27,7 +27,7 @@ function processMessage(msg, client, args){
 
     //Silence AI
     else if (args[0] === `shut`){
-        aiModule.Shut();
+        aiModule.Shut(msg);
         return true;
     }
 

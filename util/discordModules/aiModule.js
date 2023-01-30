@@ -332,9 +332,10 @@ function Awaken(msg)
 }
 
 // Forces AI to Shut
-function Shut()
+function Shut(msg)
 {
     responsesLeft = 0;
+    msg.channel.send(goodnightMessages[Math.floor(Math.random() * goodnightMessages.length)]);
     SetNewTimeStamp();
 }
 
