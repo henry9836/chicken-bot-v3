@@ -61,7 +61,6 @@ let goodnightMessages = [
 ];
 
 
-var bChickenIsAwake = false;
 var TargetTimestamp = 0;
 var cooldownTimestamp = 0;
 var aiPromptResolving = false;
@@ -74,6 +73,7 @@ var brain = "This is a conversion between users, you are the bot (B:), the bot i
 let brainClean = brain;
 var ignoreList = [];
 var chatAttemptsWhileBusy = 0;
+var awake = false;
 
 // Get the current data on startup
 function GetTheMagicCornBag()
@@ -313,32 +313,26 @@ function GetAproxCooldownTimeRemaining()
 }
 
 // Awakens AI
-function Awaken(msg)
+function GetTimeoutEstimate(msg)
 {
-    // Are we in progress?
-    if (bChickenIsAwake)
-    {
-        return;
-    }
-
     // Are we still cooling down?
     if (Date.now() < TargetTimestamp)
     {
         var randomColldownMessage = cooldownMessages[Math.floor(Math.random() * cooldownMessages.length)];
         randomColldownMessage += GetAproxCooldownTimeRemaining();
         msg.reply(randomColldownMessage);
-        return;
     }
-
-    // Are we ready? Then Activate
-    msg.channel.send(awakenMessages[Math.floor(Math.random() * awakenMessages.length)]);
-    bChickenIsAwake = true;
+    else
+    {
+        msg.reply("I am awake, Cluck!");
+    }
 }
 
 // Forces AI to Shut
 function Shut(msg)
 {
     responsesLeft = 0;
+    awake = false;
     msg.channel.send(goodnightMessages[Math.floor(Math.random() * goodnightMessages.length)]);
     SetNewTimeStamp();
 }
@@ -346,7 +340,6 @@ function Shut(msg)
 function SetNewTimeStamp()
 {
     //Set a new target time and save it
-    bChickenIsAwake = false;
     let hourMultipler = Math.floor(Math.random() * (maxHoursBetweenSessions - minHoursBetweenSessions + minHoursBetweenSessions)) + 1;
     TargetTimestamp = Date.now() + (hourMultipler * (60 * 60 * 1000));
     fs.writeFile("./util/dataFiles/MagicCornTargetTimeStamp.time", TargetTimestamp.toString(), (err)=>
@@ -388,12 +381,6 @@ async function UseMagicCorn(msg, client)
         return;
     }
 
-    // Check if chicken is supposed to be awake rn
-    if (!bChickenIsAwake)
-    {
-        return;
-    }
-
     // Check if the ai is busy still to avoid spam
     if (aiPromptResolving)
     {
@@ -415,7 +402,15 @@ async function UseMagicCorn(msg, client)
     // If this is a non active conv with ai then it is a new one
     if (responsesLeft <= 0)
     {
-        //Reset Values and Roll the dice
+        // Send a greeting message
+        if (!awake)
+        {
+            msg.channel.send(awakenMessages[Math.floor(Math.random() * awakenMessages.length)]);
+            awake = true;
+            return;
+        }
+
+        // Reset Values and Roll the dice
         chatLog = brainClean + "\n";
         convChannel = msg.channel;
         convChannelID = msg.channel.id;
@@ -474,6 +469,7 @@ async function UseMagicCorn(msg, client)
     if (responsesLeft <= 0)
     {
         // Send a goodnight message before going offline
+        awake = false;
         msg.channel.send(goodnightMessages[Math.floor(Math.random() * goodnightMessages.length)]);
         SetNewTimeStamp();
     }
@@ -494,5 +490,5 @@ module.exports.GetTheMagicCornBag = GetTheMagicCornBag;
 module.exports.DealMagicCorn = DealMagicCorn;
 module.exports.Brainwash = Brainwash;
 module.exports.UpdateIgnoreList = UpdateIgnoreList;
-module.exports.Awaken = Awaken;
+module.exports.GetTimeoutEstimate = GetTimeoutEstimate;
 module.exports.Shut = Shut;

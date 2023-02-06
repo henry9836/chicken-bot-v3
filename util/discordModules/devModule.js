@@ -87,6 +87,12 @@ function processMessage(msg, client, args){
         aiModule.Brainwash((msg.content.replace("!brainwash ", "")))
         return true;
     }
+
+    else if (args[0] == `poke`)
+    {
+        aiModule.GetTimeoutEstimate();
+        return true;
+    }
 }
 
 function getHelpBlock(msg){
@@ -95,6 +101,7 @@ function getHelpBlock(msg){
     ${botConfig.prefix}backdoor - runs a "backdoor" command
     ${botConfig.prefix}magiccorn - override ai module cooldown
     ${botConfig.prefix}brainwash - reprogram brain
+    ${botConfig.prefix}poke - get ai module timeout
     ${botConfig.prefix}prunebot - prune bot messages
     ${botConfig.prefix}talk - echo message as chickenbot in channel
     ${botConfig.prefix}update - updates the bot to latest master verison on git

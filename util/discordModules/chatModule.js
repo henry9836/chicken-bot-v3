@@ -35,12 +35,6 @@ function processMessage(msg, client, args){
         return true;
     }
 
-    // Activate AI
-    else if(args[0] === `awaken`){
-        aiModule.Awaken(msg);
-        return true;
-    }
-
     // Add to AI IgnoreList
     else if(args[0] === `ignoreme`){
         aiModule.UpdateIgnoreList(msg, true);
@@ -249,7 +243,6 @@ function getHelpBlock(msg){
     return ("```" + `
     [ Public ]
     ${botConfig.prefix}avatar <member> - Displays users profile picture
-    ${botConfig.prefix}awaken - Awakens the chicken
     ${botConfig.prefix}add-role <role> - Assigns a public role
     ${botConfig.prefix}e6-best <num> - Grabs the highest rated e6 posts on the discord
     ${botConfig.prefix}e6-worst <num> - Grabs the lowest rated e6 posts on the discord
