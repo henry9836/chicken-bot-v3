@@ -407,6 +407,7 @@ async function UseMagicCorn(msg, client)
         {
             msg.channel.send(awakenMessages[Math.floor(Math.random() * awakenMessages.length)]);
             awake = true;
+            aiPromptResolving = false;
             return;
         }
 
