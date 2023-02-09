@@ -84,26 +84,33 @@ function GetTheMagicCornBag()
     const TimestampFileLocation = "./util/dataFiles/MagicCornTargetTimeStamp.time";
     const IgnoreListFileLocation = "./util/dataFiles/AIIgnoreList.time";
 
+    debugging.chickenScratch("1", debugging.DEBUGLVLS.FATAL);
     fs.access(TimestampFileLocation, fs.constants.F_OK, (err) => {
         if (err) 
         {
+            debugging.chickenScratch("1.2", debugging.DEBUGLVLS.FATAL);
             debugging.chickenScratch("Timestamp file missing creating a new one...", debugging.DEBUGLVLS.WARN);
             fs.writeFile(TimestampFileLocation, currentTimestamp.toString(), (err) => {
-                if (err) {
+                if (err) 
+                {
                     debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
                 }
             });
         }
         else
         {
+            debugging.chickenScratch("1.3", debugging.DEBUGLVLS.FATAL);
             fs.readFile(TimestampFileLocation, (err, timestamp) => {
                 if (err) 
                 {
-                    debugging.chickenScratch(err);
+                    debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
                 } 
                 else 
                 {
+                    debugging.chickenScratch("2", debugging.DEBUGLVLS.FATAL);
                     TargetTimestamp = timestamp;
+                    debugging.chickenScratch(timestamp, debugging.DEBUGLVLS.FATAL);
+                    debugging.chickenScratch(TargetTimestamp, debugging.DEBUGLVLS.FATAL);
                 }
             });
         }
