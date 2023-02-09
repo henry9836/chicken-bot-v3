@@ -3,6 +3,7 @@ let discordModule = require("../discordModule.js");
 let mongoUtil = require("../mongoUtil.js");
 let aiModule = require("./aiModule.js");
 let botConfig = require('../.././config.json');
+let fs = require("fs");
 let e6 = require('../e6.js');
 
 let { exit } = require('process');
