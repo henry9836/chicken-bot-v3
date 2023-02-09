@@ -119,7 +119,7 @@ function GetTheMagicCornBag()
     fs.access(IgnoreListFileLocation, fs.constants.F_OK, (err) => {
         if (err) {
           debugging.chickenScratch("Ignore file missing, creating a new one...", debugging.DEBUGLVLS.WARN);
-          fs.writeFile(IgnoreListFileLocation, "", (err) => {
+          fs.writeFile(IgnoreListFileLocation, JSON.stringify(ignoreList), (err) => {
             if (err) {
               debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
             }
