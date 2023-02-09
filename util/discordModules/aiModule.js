@@ -129,7 +129,14 @@ function GetTheMagicCornBag()
             if (err) {
               debugging.chickenScratch(err);
             } else {
-              ignoreList = JSON.parse(data);
+                try{
+                    ignoreList = JSON.parse(data);
+                }
+                catch(err)
+                {
+                    ignoreList = [];
+                    debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
+                }
             }
           });
         }
