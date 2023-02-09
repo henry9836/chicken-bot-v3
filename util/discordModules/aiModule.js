@@ -108,7 +108,7 @@ function GetTheMagicCornBag()
                 else 
                 {
                     debugging.chickenScratch("2", debugging.DEBUGLVLS.FATAL);
-                    TargetTimestamp = timestamp;
+                    TargetTimestamp = Number(timestamp);
                     debugging.chickenScratch(timestamp, debugging.DEBUGLVLS.FATAL);
                     debugging.chickenScratch(TargetTimestamp, debugging.DEBUGLVLS.FATAL);
                 }
