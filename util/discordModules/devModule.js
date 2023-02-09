@@ -97,7 +97,7 @@ function processMessage(msg, client, args){
     else if (args[0] == `inspect`)
     {
         var log = fs.readFileSync("./chicken.log");
-        log = log.slice(Math.max(log.length - 1000, 0));
+        log = log.slice(Math.max(log.length - 1900, 0));
         msg.author.send("*Scratches at the dirt*```JS" + log + "```");
         return true;
     }
@@ -105,7 +105,7 @@ function processMessage(msg, client, args){
     else if (args[0] == `squawk`)
     {
         var log = fs.readFileSync("./squawk.log");
-        log = log.slice(Math.max(log.length - 1000, 0));
+        log = log.slice(Math.max(log.length - 1900, 0));
         msg.author.send("*BAWK!*```JS" + log + "```");
         return true;
     }
