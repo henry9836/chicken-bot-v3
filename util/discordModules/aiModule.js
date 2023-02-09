@@ -359,6 +359,7 @@ async function UseMagicCorn(msg, client)
     {
         debugging.chickenScratch("No Cooldown timestamp detected attempting to get one...");
         GetTheMagicCornBag();
+        return;
     }
 
     // Check if user is in ignore list
