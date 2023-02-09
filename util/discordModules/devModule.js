@@ -76,21 +76,20 @@ function processMessage(msg, client, args){
     
     else if (args[0] == `shut`)
     {
-        msg.delete();
         aiModule.Shut(msg);
         return true;
     }
 
     else if (args[0] == `brainwash`)
     {
+        aiModule.Brainwash((msg.content.replace("!brainwash ", "")));
         msg.delete();
-        aiModule.Brainwash((msg.content.replace("!brainwash ", "")))
         return true;
     }
 
     else if (args[0] == `poke`)
     {
-        aiModule.GetTimeoutEstimate();
+        aiModule.GetTimeoutEstimate(msg);
         return true;
     }
 }

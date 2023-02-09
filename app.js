@@ -94,7 +94,7 @@ function main(){
     //Initalise Events
     events.initEvents();
 
-    //Initlise AI
+    //Initalise AI
     aiModule.GetTheMagicCornBag();
 
     //Connect To Discord API

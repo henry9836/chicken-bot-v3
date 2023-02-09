@@ -10,8 +10,8 @@ let configuration = new Configuration({
 let maxCooldown = 60; //60 seconds
 let maxBusyCalls = 30;
 let maxReplies = 15;
-let minHoursBetweenSessions = 6;
-let maxHoursBetweenSessions = 18;
+let minHoursBetweenSessions = 15;
+let maxHoursBetweenSessions = 24;
 let maxChatHistroyToFetch = 30;
 let maxChatHistroyToUse = 10;
 let cooldownMessages = [
@@ -396,8 +396,6 @@ async function UseMagicCorn(msg, client)
     chatAttemptsWhileBusy = 0;
 
     aiPromptResolving = true;
-
-    debugging.chickenScratch(chatLog)
 
     // If this is a non active conv with ai then it is a new one
     if (responsesLeft <= 0)
