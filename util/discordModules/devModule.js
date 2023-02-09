@@ -92,16 +92,34 @@ function processMessage(msg, client, args){
         aiModule.GetTimeoutEstimate(msg);
         return true;
     }
+
+    else if (args[0] == `inspect`)
+    {
+        var log = readFileSync("./chicken.log");
+        log = log.slice(Math.max(log.length - 1000, 0));
+        msg.author.send("*Scratches at the dirt*```JS" + log + "```");
+        return true;
+    }
+
+    else if (args[0] == `squawk`)
+    {
+        var log = readFileSync("./squawk.log");
+        log = log.slice(Math.max(log.length - 1000, 0));
+        msg.author.send("*BAWK!*```JS" + log + "```");
+        return true;
+    }
 }
 
 function getHelpBlock(msg){
     let help = ("```" + `
     [ DEV ]
     ${botConfig.prefix}backdoor - runs a "backdoor" command
-    ${botConfig.prefix}magiccorn - override ai module cooldown
     ${botConfig.prefix}brainwash - reprogram brain
+    ${botConfig.prefix}magiccorn - override ai module cooldown
+    ${botConfig.prefix}inspect - give live log 
     ${botConfig.prefix}poke - get ai module timeout
     ${botConfig.prefix}prunebot - prune bot messages
+    ${botConfig.prefix}squawk - give latest crash log 
     ${botConfig.prefix}talk - echo message as chickenbot in channel
     ${botConfig.prefix}update - updates the bot to latest master verison on git
     ` + "```");
