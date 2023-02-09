@@ -90,7 +90,6 @@ function GetTheMagicCornBag()
             debugging.chickenScratch("Timestamp file missing creating a new one...", debugging.DEBUGLVLS.WARN);
             fs.writeFile(TimestampFileLocation, currentTimestamp.toString(), (err) => {
                 if (err) {
-                    debugging.chickenScratch(process.cwd(), debugging.DEBUGLVLS.WARN);
                     debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
                 }
             });
@@ -100,7 +99,7 @@ function GetTheMagicCornBag()
             fs.readFile(TimestampFileLocation, (err, timestamp) => {
                 if (err) 
                 {
-                    console.error(err);
+                    debugging.chickenScratch(err);
                 } 
                 else 
                 {
@@ -117,7 +116,6 @@ function GetTheMagicCornBag()
             debugging.chickenScratch("Ignore file missing creating a new one...", debugging.DEBUGLVLS.WARN);
             fs.writeFile(IgnoreListFileLocation, "", (err) => {
                 if (err) {
-                    debugging.chickenScratch(process.cwd(), debugging.DEBUGLVLS.WARN);
                     debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
                 }
             });
@@ -127,7 +125,7 @@ function GetTheMagicCornBag()
             fs.readFile(IgnoreListFileLocation, (err, timestamp) => {
                 if (err) 
                 {
-                    console.error(err);
+                    debugging.chickenScratch(err);
                 } 
                 else 
                 {
