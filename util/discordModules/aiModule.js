@@ -100,47 +100,40 @@ function GetTheMagicCornBag()
         else
         {
             debugging.chickenScratch("1.3", debugging.DEBUGLVLS.FATAL);
-            fs.readFileSync(TimestampFileLocation, (err, timestamp) => {
-                if (err) 
-                {
-                    debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
-                } 
-                else 
-                {
-                    debugging.chickenScratch("2", debugging.DEBUGLVLS.FATAL);
-                    TargetTimestamp = Number(timestamp);
-                    debugging.chickenScratch(timestamp, debugging.DEBUGLVLS.FATAL);
-                    debugging.chickenScratch(TargetTimestamp, debugging.DEBUGLVLS.FATAL);
-                }
-            });
+            try 
+            {
+                var timestamp = fs.readFileSync(TimestampFileLocation);
+                TargetTimestamp = Number(timestamp.toString());
+                debugging.chickenScratch("2", debugging.DEBUGLVLS.FATAL);
+                debugging.chickenScratch(timestamp, debugging.DEBUGLVLS.FATAL);
+                debugging.chickenScratch(TargetTimestamp, debugging.DEBUGLVLS.FATAL);
+            } 
+            catch (err) 
+            {
+                debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
+            }
         }
     });
 
     // Get our Ignore List
     fs.access(IgnoreListFileLocation, fs.constants.F_OK, (err) => {
-        if (err) 
-        {
-            debugging.chickenScratch("Ignore file missing creating a new one...", debugging.DEBUGLVLS.WARN);
-            fs.writeFile(IgnoreListFileLocation, "", (err) => {
-                if (err) {
-                    debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
-                }
-            });
+        if (err) {
+          debugging.chickenScratch("Ignore file missing, creating a new one...", debugging.DEBUGLVLS.WARN);
+          fs.writeFile(IgnoreListFileLocation, "", (err) => {
+            if (err) {
+              debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
+            }
+          });
+        } else {
+          fs.readFile(IgnoreListFileLocation, (err, data) => {
+            if (err) {
+              debugging.chickenScratch(err);
+            } else {
+              ignoreList = JSON.parse(data);
+            }
+          });
         }
-        else
-        {
-            fs.readFileSync(IgnoreListFileLocation, (err, IgnoreData) => {
-                if (err) 
-                {
-                    debugging.chickenScratch(err);
-                } 
-                else 
-                {
-                    ignoreList = JSON.parse(data);
-                }
-            });
-        }
-    });
+      });
 }
 
 // Used to talk to API
