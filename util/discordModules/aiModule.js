@@ -355,6 +355,13 @@ function SetNewTimeStamp()
 async function UseMagicCorn(msg, client)
 {
     return;
+    // Checks if we have a timestamp
+    if (TargetTimestamp == 0)
+    {
+        debugging.chickenScratch("No Cooldown timestamp detected attempting to get one...");
+        GetTheMagicCornBag();
+    }
+
     // Check if user is in ignore list
     if (ignoreList.includes(msg.author.id))
     {

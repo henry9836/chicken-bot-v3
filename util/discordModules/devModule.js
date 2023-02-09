@@ -95,7 +95,7 @@ function processMessage(msg, client, args){
 
     else if (args[0] == `inspect`)
     {
-        var log = readFileSync("./chicken.log");
+        var log = fs.readFileSync("./chicken.log");
         log = log.slice(Math.max(log.length - 1000, 0));
         msg.author.send("*Scratches at the dirt*```JS" + log + "```");
         return true;
@@ -103,7 +103,7 @@ function processMessage(msg, client, args){
 
     else if (args[0] == `squawk`)
     {
-        var log = readFileSync("./squawk.log");
+        var log = fs.readFileSync("./squawk.log");
         log = log.slice(Math.max(log.length - 1000, 0));
         msg.author.send("*BAWK!*```JS" + log + "```");
         return true;
