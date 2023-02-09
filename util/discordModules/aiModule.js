@@ -82,7 +82,7 @@ function GetTheMagicCornBag()
     let currentTimestamp = Date.now();
 
     const TimestampFileLocation = "./util/dataFiles/MagicCornTargetTimeStamp.time";
-    const IgnoreListFileLocation = "./util/dataFiles/AIIgnoreList.time";
+    const IgnoreListFileLocation = "./util/dataFiles/AIIgnoreList.json";
 
     debugging.chickenScratch("1", debugging.DEBUGLVLS.FATAL);
     fs.access(TimestampFileLocation, fs.constants.F_OK, (err) => {
@@ -100,7 +100,7 @@ function GetTheMagicCornBag()
         else
         {
             debugging.chickenScratch("1.3", debugging.DEBUGLVLS.FATAL);
-            fs.readFile(TimestampFileLocation, (err, timestamp) => {
+            fs.readFileSync(TimestampFileLocation, (err, timestamp) => {
                 if (err) 
                 {
                     debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
@@ -129,14 +129,14 @@ function GetTheMagicCornBag()
         }
         else
         {
-            fs.readFile(IgnoreListFileLocation, (err, timestamp) => {
+            fs.readFileSync(IgnoreListFileLocation, (err, IgnoreData) => {
                 if (err) 
                 {
                     debugging.chickenScratch(err);
                 } 
                 else 
                 {
-                    TargetTimestamp = timestamp;
+                    ignoreList = JSON.parse(data);
                 }
             });
         }
