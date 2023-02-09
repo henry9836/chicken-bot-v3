@@ -354,6 +354,7 @@ function SetNewTimeStamp()
 // Main Loop
 async function UseMagicCorn(msg, client)
 {
+    return;
     // Check if user is in ignore list
     if (ignoreList.includes(msg.author.id))
     {
