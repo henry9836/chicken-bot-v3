@@ -354,7 +354,6 @@ function SetNewTimeStamp()
 // Main Loop
 async function UseMagicCorn(msg, client)
 {
-    return;
     // Checks if we have a timestamp
     if (TargetTimestamp == 0)
     {
