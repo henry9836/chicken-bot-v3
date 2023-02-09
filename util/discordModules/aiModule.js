@@ -362,6 +362,7 @@ async function UseMagicCorn(msg, client)
     // Checks if we have a timestamp
     if (TargetTimestamp == 0)
     {
+        debugging.chickenScratch(TargetTimestamp);
         debugging.chickenScratch("No Cooldown timestamp detected attempting to get one...");
         GetTheMagicCornBag();
         return;
