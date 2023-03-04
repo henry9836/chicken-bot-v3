@@ -60,7 +60,6 @@ let goodnightMessages = [
     "Crowing a lullaby, off to beddy-bye."
 ];
 
-
 var TargetTimestamp = 0;
 var cooldownTimestamp = 0;
 var aiPromptResolving = false;
@@ -84,11 +83,9 @@ function GetTheMagicCornBag()
     const TimestampFileLocation = "./util/dataFiles/MagicCornTargetTimeStamp.time";
     const IgnoreListFileLocation = "./util/dataFiles/AIIgnoreList.json";
 
-    debugging.chickenScratch("1", debugging.DEBUGLVLS.FATAL);
     fs.access(TimestampFileLocation, fs.constants.F_OK, (err) => {
         if (err) 
         {
-            debugging.chickenScratch("1.2", debugging.DEBUGLVLS.FATAL);
             debugging.chickenScratch("Timestamp file missing creating a new one...", debugging.DEBUGLVLS.WARN);
             fs.writeFile(TimestampFileLocation, currentTimestamp.toString(), (err) => {
                 if (err) 
@@ -99,14 +96,10 @@ function GetTheMagicCornBag()
         }
         else
         {
-            debugging.chickenScratch("1.3", debugging.DEBUGLVLS.FATAL);
             try 
             {
                 var timestamp = fs.readFileSync(TimestampFileLocation);
                 TargetTimestamp = Number(timestamp.toString());
-                debugging.chickenScratch("2", debugging.DEBUGLVLS.FATAL);
-                debugging.chickenScratch(timestamp, debugging.DEBUGLVLS.FATAL);
-                debugging.chickenScratch(TargetTimestamp, debugging.DEBUGLVLS.FATAL);
             } 
             catch (err) 
             {
@@ -345,7 +338,7 @@ function Shut(msg)
 function SetNewTimeStamp()
 {
     //Set a new target time and save it
-    let hourMultipler = Math.floor(Math.random() * (maxHoursBetweenSessions - minHoursBetweenSessions + minHoursBetweenSessions)) + 1;
+    let hourMultipler = Math.floor(Math.random() * (maxHoursBetweenSessions - minHoursBetweenSessions)) + minHoursBetweenSessions;
     TargetTimestamp = Date.now() + (hourMultipler * (60 * 60 * 1000));
     fs.writeFile("./util/dataFiles/MagicCornTargetTimeStamp.time", TargetTimestamp.toString(), (err)=>
     {
@@ -362,8 +355,6 @@ async function UseMagicCorn(msg, client)
     // Checks if we have a timestamp
     if (TargetTimestamp == 0)
     {
-        debugging.chickenScratch(TargetTimestamp);
-        debugging.chickenScratch(typeof(TargetTimestamp));
         debugging.chickenScratch("No Cooldown timestamp detected attempting to get one...");
         GetTheMagicCornBag();
         return;
@@ -385,7 +376,7 @@ async function UseMagicCorn(msg, client)
     // Check if timer is over
     if (Date.now() < cooldownTimestamp)
     {
-        debugging.chickenScratch("On cooldown: " + Date.now() + "<" + cooldownTimestamp);
+        //debugging.chickenScratch("On cooldown: " + Date.now() + "<" + cooldownTimestamp);
         return;
     }
 
@@ -399,7 +390,7 @@ async function UseMagicCorn(msg, client)
     // Check if the ai is busy still to avoid spam
     if (aiPromptResolving)
     {
-        debugging.chickenScratch("busy");
+        debugging.chickenScratch("API Busy...");
         chatAttemptsWhileBusy++;
         if (chatAttemptsWhileBusy > maxBusyCalls)
         {
@@ -428,7 +419,7 @@ async function UseMagicCorn(msg, client)
         chatLog = brainClean + "\n";
         convChannel = msg.channel;
         convChannelID = msg.channel.id;
-        responsesLeft = Math.floor(Math.random() * (maxReplies - 5 + 5)) + 5;
+        responsesLeft = Math.floor(Math.random() * (maxReplies - 5)) + 5;
         userMap = new Map();
         userMap.set(client.user.id, "B")
         chatAttemptsWhileBusy = 0;

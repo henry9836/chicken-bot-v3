@@ -13,6 +13,7 @@ while true; do
     #Start the bot
     echo $'[+] Starting Discord Bot...\n'
     (node ./app.js) &> chicken.log
+    date >> chicken.log
     mv chicken.log squawk.log
 
     #Crashed record and restart
