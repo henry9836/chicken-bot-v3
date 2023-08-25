@@ -7,6 +7,7 @@ let configuration = new Configuration({
     apiKey: botConfig.OpenAIKey,
 });
 
+let failedAttempts = 0;
 let maxCooldown = 60; //60 seconds
 let maxBusyCalls = 30;
 let maxReplies = 15;
@@ -162,12 +163,22 @@ async function MagicCornTrip(authorID)
         chatLog += response.data.choices[0].text + "\n";
         cooldownTimestamp = Date.now() + ((Math.floor(Math.random() * (maxCooldown - 1 + 1 ) + 1)) * 1000);
         chatAttemptsWhileBusy = 0;
+        failedAttempts = 0;
         return response.data.choices[0].text;
     }
     catch (error)
     {
+        failedAttempts++;
         debugging.chickenScratch(error, debugging.DEBUGLVLS.WARN);
         aiPromptResolving = false;
+    }
+
+    // Don't continue with errors if it goes too long
+    if (failedAttempts > 3){
+        responsesLeft = 0;
+        awake = false;
+        SetNewTimeStamp();
+        return goodnightMessages[Math.floor(Math.random() * goodnightMessages.length)];
     }
 
     return "ERROR";
