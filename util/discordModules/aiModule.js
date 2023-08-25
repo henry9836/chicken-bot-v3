@@ -8,6 +8,7 @@ let configuration = new Configuration({
 });
 
 let failedAttempts = 0;
+let maxTimeBetweenMessages = 15 * 60 * 1000; // 15 mins
 let maxCooldown = 60; //60 seconds
 let maxBusyCalls = 30;
 let maxReplies = 15;
@@ -62,6 +63,7 @@ let goodnightMessages = [
 ];
 
 var TargetTimestamp = 0;
+var LastMessageTimestamp = 0;
 var cooldownTimestamp = 0;
 var aiPromptResolving = false;
 var responsesLeft = 0;
@@ -75,11 +77,26 @@ var ignoreList = [];
 var chatAttemptsWhileBusy = 0;
 var awake = false;
 
+// Don't comment if it has been more than 15 mins since last message
+function IsValidTimeForMessage() {
+    if (LastMessageTimestamp === 0){
+        LastMessageTimestamp = Date.now();
+        return true;
+    }
+
+    let result = (Date.now() - LastMessageTimestamp) > maxTimeBetweenMessages;
+
+    LastMessageTimestamp = Date.now();
+
+    return result;
+}
+
 // Get the current data on startup
 function GetTheMagicCornBag()
 {
     // Get Last Timestamp
     let currentTimestamp = Date.now();
+    LastMessageTimestamp = 0;
 
     const TimestampFileLocation = "./util/dataFiles/MagicCornTargetTimeStamp.time";
     const IgnoreListFileLocation = "./util/dataFiles/AIIgnoreList.json";
@@ -176,6 +193,7 @@ async function MagicCornTrip(authorID)
     // Don't continue with errors if it goes too long
     if (failedAttempts > 3){
         responsesLeft = 0;
+        LastMessageTimestamp = 0;
         awake = false;
         SetNewTimeStamp();
         return goodnightMessages[Math.floor(Math.random() * goodnightMessages.length)];
@@ -188,6 +206,7 @@ async function MagicCornTrip(authorID)
 function DealMagicCorn()
 {
     TargetTimestamp = Date.now();
+    LastMessageTimestamp = 0;
 }
 
 // Get the latest messages from chat
@@ -341,6 +360,7 @@ function GetTimeoutEstimate(msg)
 function Shut(msg)
 {
     responsesLeft = 0;
+    LastMessageTimestamp = 0;
     awake = false;
     msg.channel.send(goodnightMessages[Math.floor(Math.random() * goodnightMessages.length)]);
     SetNewTimeStamp();
@@ -363,9 +383,6 @@ function SetNewTimeStamp()
 // Main Loop
 async function UseMagicCorn(msg, client)
 {
-    // TODO: REMOVE THIS AS CHICKEN IS NOW BRAINDEAD
-    return;
-
     // Checks if we have a timestamp
     if (TargetTimestamp == 0)
     {
@@ -398,6 +415,16 @@ async function UseMagicCorn(msg, client)
     if (msg.channel.id != botConfig.channels.general)
     {
         //debugging.chickenScratch("Not in channel ("+ msg.channel.id +")");
+        return;
+    }
+
+    // It's been too long between messages shutdown
+    if (!IsValidTimeForMessage()){
+        responsesLeft = 0;
+        LastMessageTimestamp = 0;
+        awake = false;
+        msg.channel.send(goodnightMessages[Math.floor(Math.random() * goodnightMessages.length)]);
+        SetNewTimeStamp();
         return;
     }
 
