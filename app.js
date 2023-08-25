@@ -11,14 +11,11 @@ let aiModule = require('./util/discordModules/aiModule.js');
 let debugging = require("./util/debugging.js");
 let discordModule = require("./util/discordModule.js");
 let mongoUtil = require("./util/mongoUtil.js");
-let e6 = require("./util/e6.js");
 let events = require("./util/eventsHandler.js");
 
 let client = new Client({
     intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS],
 	partials: ['MESSAGE', 'CHANNEL', 'REACTION'],});
-
-var e6Started = false;
 
 //Go into main func
 main();
@@ -35,11 +32,6 @@ client.on('message', msg => {
     //Ignore our own messages
     if (msg.author == client.user){
         return;
-    }
-
-    //E6 not initalised
-    if (e6.e6 === undefined){
-        e6.initE6(msg.guild)
     }
 
     //Process Message

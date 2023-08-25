@@ -3,7 +3,6 @@ let discordModule = require("../discordModule.js");
 let mongoUtil = require("../mongoUtil.js");
 let aiModule = require("./aiModule.js");
 let botConfig = require('../.././config.json');
-let e6 = require('../e6.js');
 
 let { MessageEmbed } = require("discord.js");
 
@@ -47,22 +46,6 @@ function processMessage(msg, client, args){
         return true;
     }
 
-    //Get best rated e6 posts
-    else if(args[0] === `e6-best`){
-        if (msg.channel.nsfw){
-            e6.gib_best(msg, args, false);
-        }
-        msg.delete();
-        return true;
-    }
-    //Get worst rated e6 posts
-    else if(args[0] === `e6-worst`){
-        if (msg.channel.nsfw){
-            e6.gib_best(msg, args, true);
-        }
-        msg.delete();
-        return true;
-    }
     //Petition
     else if (args[0] === `petition`){
         if (args.length > 1){
@@ -244,8 +227,6 @@ function getHelpBlock(msg){
     [ Public ]
     ${botConfig.prefix}avatar <member> - Displays users profile picture
     ${botConfig.prefix}add-role <role> - Assigns a public role
-    ${botConfig.prefix}e6-best <num> - Grabs the highest rated e6 posts on the discord
-    ${botConfig.prefix}e6-worst <num> - Grabs the lowest rated e6 posts on the discord
     ${botConfig.prefix}help - Display help
     ${botConfig.prefix}ignoreme - Awakened chicken will ignore you
     ${botConfig.prefix}info - Displays server info

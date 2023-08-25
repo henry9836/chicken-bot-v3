@@ -2,7 +2,6 @@ let debugging = require("../debugging.js");
 let discordModule = require("../discordModule.js");
 let mongoUtil = require("../mongoUtil.js");
 let botConfig = require('../.././config.json');
-let e6 = require('../e6.js');
 
 let { exit } = require('process');
 
@@ -391,34 +390,6 @@ function processMessage(msg, client, args){
         }
         return true;
     }
-    //----
-    //E6
-    //----
-    else if (args[0] === `e6-reset`){
-        e6.clearTags();
-        msg.reply("Done.");
-        return true;
-    }
-
-    //Assign E6 channel
-    else if (args[0] === `e6-set-channel`){
-        if (args.length > 1){
-            //Validate role exists
-            let channel = msg.guild.channels.cache.get(args[1])
-            if (channel !== undefined){
-                botConfig.e621.e6Channel = channel.id;
-                discordModule.saveConfig();
-                msg.reply(`Assigned ${channel} as e621 channel`);
-            }
-            else{
-                msg.reply("Channel ID doesn't exist or hidden")
-            }
-        }
-        else{
-            msg.reply("Please specify a channel id");
-        }
-        return true;
-    }
 
     return false;
 }
@@ -433,8 +404,6 @@ function getHelpBlock(msg){
     ${botConfig.prefix}assign-verified-role <id> - assigns the verified role
     ${botConfig.prefix}assign-ignore-role <id> - assigns the ignore role
     ${botConfig.prefix}assign-didnotread-role <id> - assigns the did not read info role, prevents a user from being verified
-    ${botConfig.prefix}e6-reset - resets all lists to nothing, including blacklist
-    ${botConfig.prefix}e6-set-channel <id> - Assigns e6 channel
     ${botConfig.prefix}remove-mod <member> - removes the mod role from a user
     ${botConfig.prefix}remove-role-prereq <roles> - removes role prerequisite for self assignment 
     ${botConfig.prefix}set-nsfw-quote-channel <id> - Assign nsfw quote channel

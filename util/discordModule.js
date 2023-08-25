@@ -3,7 +3,6 @@ let fs = require('fs');
 let debugging = require("./debugging.js");
 let mongoUtil = require("./mongoUtil.js");
 let botConfig = require('.././config.json');
-let e6 = require('./e6.js');
 let aiModule = require('./discordModules/aiModule.js');
 let authenticationModule = require('./discordModules/authModule.js');
 let devModule = require('./discordModules/devModule.js');
@@ -242,20 +241,7 @@ function effectMember(member, msg, mod){
 
 //Process a reaction
 function processReaction(reaction, user){
-    //If we are in the e6 channel
-    if (reaction.message.channel.id == botConfig.e621.e6Channel){
-        //console.log(reaction);
-        //get both up and down count
-        try{
-            let ups = reaction.message.reactions.cache.get('👍').count;
-            let downs = reaction.message.reactions.cache.get('👎').count;
-            let rating = ups - downs;
 
-            //add then update db
-            mongoUtil.updatePostRating(reaction.message, rating);
-        }
-        catch(err){}
-    }
 }
 
 function isInputSanitary(msg, args){

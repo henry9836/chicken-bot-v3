@@ -352,6 +352,9 @@ function SetNewTimeStamp()
 // Main Loop
 async function UseMagicCorn(msg, client)
 {
+    // TODO: REMOVE THIS AS CHICKEN IS NOW BRAINDEAD
+    return;
+
     // Checks if we have a timestamp
     if (TargetTimestamp == 0)
     {

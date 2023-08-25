@@ -2,7 +2,7 @@ let debugging = require("../debugging.js");
 let discordModule = require("../discordModule.js");
 let mongoUtil = require("../mongoUtil.js");
 let botConfig = require('../.././config.json');
-let e6 = require('../e6.js');
+
 let flags = require('../dataFiles/flags.json');
 let spice = require('../dataFiles/spice.json');
 let emotes = require('../dataFiles/emotes.json');

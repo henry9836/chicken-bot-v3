@@ -34,60 +34,63 @@ function dbAction(err, done){
 }
 
 //Get top rated posts by the server
-function getBestPosts(amount, msg, e6, worst){
+function getBestPosts(amount, msg, e6, worst) {
 
-    var sortNum = -1;
-    if (worst){
-        sortNum = 1;
-    }
-
-    if (amount > 50){
-        amount = 50;
-    }
-
-    dbE6Post.find().sort({rating:sortNum}).limit(500).exec(async function(err, posts){
-        if (err){
-            debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
-            channel.send("<@102606498860896256> An Error Occured Trying To Talk With My ChickenCoop! ```" + err + "```");
-        }
-        else{
-            var topPosts = posts.slice(0, amount);
-            var randomPosts = posts.filter(post => {
-                return post.rating == topPosts[amount - 1].rating;
-            });
-            posts = topPosts.filter(post => 
-                post != topPosts[amount - 1].rating)
-                .concat(randomPosts.sort(() => Math.random() - 0.5))
-                .slice(0, amount)
-
-            //Send the posts
-            for (i = 0; i < posts.length; i++) {
-                try {
-                    await e6.getPosts("id:"+posts[i].postID)
-                    .then((e6Post, rating) => {
-                        for (let index = 0; index < e6Post.length; index++) {
-                            //CRAFT EMBED Message
-                            //e621 npm package doesn't give us a post url, so make one
-                            let url = "https://e621.net/posts/" + e6Post[index].id;
-                            let embed = new MessageEmbed()
-                            .setTitle(`${e6Post[index].id}`)
-                            .setAuthor(`${e6Post[index].tags.artist}`)
-                            .setURL(`${url}`)
-                            .setImage(`${e6Post[index].file.url}`)
-        
-                            msg.author.send(embed);
-                        }
-                    })
-                }
-                catch (err){
-                    debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
-                }
-                await new Promise(resolve => {
-                    setTimeout(resolve, 500);
-                })
-            }
-        }
-    });
+    // DISABLED
+    return;
+    //
+    // var sortNum = -1;
+    // if (worst){
+    //     sortNum = 1;
+    // }
+    //
+    // if (amount > 50){
+    //     amount = 50;
+    // }
+    //
+    // dbE6Post.find().sort({rating:sortNum}).limit(500).exec(async function(err, posts){
+    //     if (err){
+    //         debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
+    //         channel.send("<@102606498860896256> An Error Occured Trying To Talk With My ChickenCoop! ```" + err + "```");
+    //     }
+    //     else{
+    //         var topPosts = posts.slice(0, amount);
+    //         var randomPosts = posts.filter(post => {
+    //             return post.rating == topPosts[amount - 1].rating;
+    //         });
+    //         posts = topPosts.filter(post =>
+    //             post != topPosts[amount - 1].rating)
+    //             .concat(randomPosts.sort(() => Math.random() - 0.5))
+    //             .slice(0, amount)
+    //
+    //         //Send the posts
+    //         for (i = 0; i < posts.length; i++) {
+    //             try {
+    //                 await e6.getPosts("id:"+posts[i].postID)
+    //                 .then((e6Post, rating) => {
+    //                     for (let index = 0; index < e6Post.length; index++) {
+    //                         //CRAFT EMBED Message
+    //                         //e621 npm package doesn't give us a post url, so make one
+    //                         let url = "https://e621.net/posts/" + e6Post[index].id;
+    //                         let embed = new MessageEmbed()
+    //                         .setTitle(`${e6Post[index].id}`)
+    //                         .setAuthor(`${e6Post[index].tags.artist}`)
+    //                         .setURL(`${url}`)
+    //                         .setImage(`${e6Post[index].file.url}`)
+    //
+    //                         msg.author.send(embed);
+    //                     }
+    //                 })
+    //             }
+    //             catch (err){
+    //                 debugging.chickenScratch(err, debugging.DEBUGLVLS.WARN);
+    //             }
+    //             await new Promise(resolve => {
+    //                 setTimeout(resolve, 500);
+    //             })
+    //         }
+    //     }
+    //});
 }
 
 function updatePostRating(msg, rating){
