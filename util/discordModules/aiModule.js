@@ -84,7 +84,7 @@ function IsValidTimeForMessage() {
         return true;
     }
 
-    let result = (Date.now() - LastMessageTimestamp) > maxTimeBetweenMessages;
+    let result = (Date.now() - LastMessageTimestamp) < maxTimeBetweenMessages;
 
     LastMessageTimestamp = Date.now();
 
