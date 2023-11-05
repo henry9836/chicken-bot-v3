@@ -221,6 +221,10 @@ function processMessage(msg, client, args){
 
     //Cris ego inflator
     else if (args[0] == "flag"){
+        if (msg.channel.id != "352299132959850497") {
+            // ban !flag outside #bot-spam
+            return true;
+        }
         const { img, prettyName } = normalizedFlags[Math.floor(Math.random() * normalizedFlags.length)];
         msg.channel.send({
             content: 'What flag is this? Reply with your best guess!',
