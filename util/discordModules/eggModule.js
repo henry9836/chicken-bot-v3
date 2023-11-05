@@ -221,7 +221,7 @@ function processMessage(msg, client, args){
 
     //Cris ego inflator
     else if (args[0] == "flag"){
-        if (msg.channel.id != "352299132959850497") {
+        if (msg.channel.id != botConfig.channels.botSpam) {
             // ban !flag outside #bot-spam
             return true;
         }

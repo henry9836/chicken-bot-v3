@@ -21,11 +21,13 @@
     "max" : 50
   },
   "channels":{
+    "general": "",
     "quotes" : "",
     "verified": "",
     "log": "",
     "nsfwquotes" : "",
-    "petitions" : ""
+    "petitions" : "",
+    "botSpam": ""
   },
   "roles" : {
     "adminRole" : "",

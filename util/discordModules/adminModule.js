@@ -159,6 +159,27 @@ function processMessage(msg, client, args){
         return true;
     }
 
+    // Assign Bot Spam channel
+    else if (args[0] === `set-bot-spam-channel`){
+        if (args.length > 1){
+            //Validate role exists
+            let channel = msg.guild.channels.cache.get(args[1])
+            if (channel !== undefined){
+                botConfig.channels.botSpam = channel.id;
+                discordModule.saveConfig();
+                discordModule.botSpamChannel = channel;
+                msg.reply(`Assigned ${channel} as bot spam channel`);
+            }
+            else{
+                msg.reply("Channel ID doesn't exist or hidden")
+            }
+        }
+        else{
+            msg.reply("Please specify a channel id");
+        }
+        return true;
+    }
+
     //Stop role from being assigned by everyone
     else if (args[0] === `remove-role-assignable`){
         if (args[1]){

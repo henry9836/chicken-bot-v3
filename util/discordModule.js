@@ -34,6 +34,7 @@ var petitionChannel = undefined;
 var verifiedChannel = undefined;
 var logChannel = undefined;
 var eventsChannel = undefined;
+var botSpamChannel = undefined;
 var lastFuriMessage = Date.now();
 let lastVoltActivity = Date.now();
 let lastVoltMessage = Date.now();
@@ -316,7 +317,12 @@ function reassignChannelsJank(msg){
     }
     if (eventsChannel == undefined){
         if (botConfig.channels.events != ""){
-            eventsChannel = msg.guild.channels.cache.get(botConfig.channels.eventsChannel)
+            eventsChannel = msg.guild.channels.cache.get(botConfig.channels.events)
+        }
+    }
+    if (botSpamChannel == undefined) {
+        if (botConfig.channels.botSpam != "") {
+            botSpamChannel = msg.guild.channels.cache.get(botConfig.channels.botSpam)
         }
     }
 }
@@ -437,6 +443,14 @@ Object.defineProperty(module.exports, 'nsfwQuoteChannel', {
     },
     set(value){
         eventsChannel = value;
+    }
+  })
+  Object.defineProperty(module.exports, 'botSpamChannel', {
+    get() {
+      return botSpamChannel
+    },
+    set(value){
+        botSpamChannel = value;
     }
   })
 
