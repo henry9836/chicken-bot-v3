@@ -433,6 +433,7 @@ function getHelpBlock(msg){
     ${botConfig.prefix}set-role-prereq <prereq id> <roles> - sets role prerequisite for roles
     ${botConfig.prefix}set-verified-channel <id> - Assigns the verified channel
     ${botConfig.prefix}set-events-channel <id> - Assign events channel
+    ${botConfig.prefix}set-bot-spam-channel <id> - Assign bot spam channel
     ${botConfig.prefix}remove-role-assignable <id> - removes a role from the assignable list
     ` + "```");
     msg.author.send(help);
