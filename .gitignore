@@ -3,6 +3,9 @@ token
 mongocreds
 config.json
 
+# Other
+package-lock.json
+
 # Logs
 logs
 *.log

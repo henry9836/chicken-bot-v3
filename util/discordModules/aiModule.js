@@ -2,8 +2,9 @@ let debugging = require("../debugging.js");
 let discordModule = require("../discordModule.js");
 let botConfig = require('../.././config.json');
 let fs = require("fs");
-let { Configuration, OpenAIApi } = require("openai");
-let configuration = new Configuration({
+
+import OpenAI from 'openai';
+let openai = new OpenAI({
     apiKey: botConfig.OpenAIKey,
 });
 
@@ -165,7 +166,7 @@ async function MagicCornTrip(authorID)
         // This includes prompt context and the bot response)
         // https://beta.openai.com/tokenizer
         const openai = new OpenAIApi(configuration);
-        const response = await openai.createCompletion({
+        const response = await openai.completions.create({
             model: "text-davinci-003",
             prompt: chatLog,
             temperature: (Math.floor(Math.random() * (9 - 7 + 1)) + 7) * 0.1,
@@ -177,11 +178,11 @@ async function MagicCornTrip(authorID)
         aiPromptResolving = false;
         responsesLeft--;
         debugging.chickenScratch("Responses left: " + responsesLeft);
-        chatLog += response.data.choices[0].text + "\n";
+        chatLog += response.choices[0].text + "\n";
         cooldownTimestamp = Date.now() + ((Math.floor(Math.random() * (maxCooldown - 1 + 1 ) + 1)) * 1000);
         chatAttemptsWhileBusy = 0;
         failedAttempts = 0;
-        return response.data.choices[0].text;
+        return response.choices[0].text;
     }
     catch (error)
     {
